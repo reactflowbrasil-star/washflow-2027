@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useDeferredValue } from 'react';
 import {
   Vehicle,
   ServiceItem,
@@ -401,38 +401,44 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   );
 
   // Find an exact plate match using the cached searchable fields.
+  const vehicleExactPlateIndex = useMemo(() => {
+    const index = new Map<string, Vehicle>();
+    for (const { vehicle, unifiedNumber, oldNumber: indexedOldNumber } of vehicleSearchIndex) {
+      if (vehicle.plate.type === 'unified' && unifiedNumber) {
+        const key = `u:${vehicle.plate.provinceCode}:${vehicle.plate.letter?.toUpperCase() || ''}:${unifiedNumber}`;
+        if (!index.has(key)) index.set(key, vehicle);
+      } else if (vehicle.plate.type === 'old' && indexedOldNumber) {
+        const key = `o:${vehicle.plate.oldCityName || ''}:${indexedOldNumber}`;
+        if (!index.has(key)) index.set(key, vehicle);
+      }
+    }
+    return index;
+  }, [vehicleSearchIndex]);
+
   const matchedExistingVehicle = useMemo(() => {
     if (plateType === 'unified') {
       const cleanPlateNum = normalizeDigits(plateNumber);
       if (!cleanPlateNum) return undefined;
-      return vehicleSearchIndex.find(({ vehicle, unifiedNumber }) =>
-        vehicle.plate.type === 'unified' &&
-        vehicle.plate.provinceCode === provinceCode &&
-        vehicle.plate.letter?.toUpperCase() === plateLetter.toUpperCase() &&
-        unifiedNumber === cleanPlateNum
-      )?.vehicle;
+      return vehicleExactPlateIndex.get(`u:${provinceCode}:${plateLetter.toUpperCase()}:${cleanPlateNum}`);
     }
     const cleanOldNum = normalizeDigits(oldNumber);
     if (!cleanOldNum) return undefined;
-    return vehicleSearchIndex.find(({ vehicle, oldNumber: indexedOldNumber }) =>
-      vehicle.plate.type === 'old' &&
-      vehicle.plate.oldCityName === oldCity &&
-      indexedOldNumber === cleanOldNum
-    )?.vehicle;
-  }, [vehicleSearchIndex, plateType, provinceCode, plateLetter, oldCity, plateNumber, oldNumber]);
+    return vehicleExactPlateIndex.get(`o:${oldCity}:${cleanOldNum}`);
+  }, [vehicleExactPlateIndex, plateType, provinceCode, plateLetter, oldCity, plateNumber, oldNumber]);
 
   // Active query digits/text
   const activePlateDigits = normalizeDigits(
     (plateType === 'unified' ? plateNumber : oldNumber).trim()
   );
+  const deferredPlateDigits = useDeferredValue(activePlateDigits);
 
   // Live matching vehicles suggestions for autocomplete dropdown (como três  sem)
   const matchingVehicleSuggestions = useMemo(() => {
-    if (!showPlateSuggestions || activePlateDigits.length < 3 || vehicleSearchIndex.length === 0) {
+    if (!showPlateSuggestions || deferredPlateDigits.length < 3 || vehicleSearchIndex.length === 0) {
       return [];
     }
 
-    const query = activePlateDigits.toUpperCase();
+    const query = deferredPlateDigits.toUpperCase();
     const topMatches: Array<{ vehicle: Vehicle; score: number }> = [];
 
     for (const entry of vehicleSearchIndex) {
@@ -461,7 +467,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     }
 
     return topMatches.map(({ vehicle }) => vehicle);
-  }, [vehicleSearchIndex, activePlateDigits, plateType, provinceCode, plateLetter, showPlateSuggestions]);
+  }, [vehicleSearchIndex, deferredPlateDigits, plateType, provinceCode, plateLetter, showPlateSuggestions]);
 
   // Handle selecting an existing vehicle from live search suggestions
   const handleSelectExistingVehicle = (v: Vehicle, isSilent = false) => {
@@ -1244,9 +1250,6 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   // Today's Sales Calculation (Car Wash + Carpet Laundry + Garage Parking)
   const now = new Date();
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  const todayWashes = vehicles.flatMap((v) =>
-    (v.washHistory || []).filter((w) => isDateToday(w.date))
-  );
     const todaySalesTotals = useMemo(() => {
     let washRevenue = 0;
     let washCount = 0;
@@ -1372,22 +1375,26 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   };
 
   // Active Yard Vehicles & Categorized Lists (Scoped to Active Branch)
-  const activeYardCars = vehicles.filter((v) => {
-    if (!v.washStage) return false;
-    if (activeBranchId) {
-      const vBranch = v.currentBayBranchId || v.branchId || 'branch-1';
-      return vBranch === activeBranchId;
+  const { activeYardCars, waitingCars, washingCars, readyCars, unpaidCars } = useMemo(() => {
+    const active: Vehicle[] = [];
+    const waiting: Vehicle[] = [];
+    const washing: Vehicle[] = [];
+    const ready: Vehicle[] = [];
+    const unpaid: Vehicle[] = [];
+
+    for (const vehicle of vehicles) {
+      if (!vehicle.washStage) continue;
+      const vehicleBranch = vehicle.currentBayBranchId || vehicle.branchId || 'branch-1';
+      if (activeBranchId && vehicleBranch !== activeBranchId) continue;
+      active.push(vehicle);
+      if (vehicle.washStage === 'Aguardando') waiting.push(vehicle);
+      else if (vehicle.washStage === 'Concluído') ready.push(vehicle);
+      else washing.push(vehicle);
+      if (vehicle.washHistory?.[0]?.paymentStatus === 'unpaid') unpaid.push(vehicle);
     }
-    return true;
-  });
-  const waitingCars = activeYardCars.filter((v) => v.washStage === 'Aguardando');
-  const washingCars = activeYardCars.filter(
-    (v) => v.washStage && v.washStage !== 'Aguardando' && v.washStage !== 'Concluído'
-  );
-  const readyCars = activeYardCars.filter((v) => v.washStage === 'Concluído');
-  const unpaidCars = activeYardCars.filter(
-    (v) => v.washHistory?.[0]?.paymentStatus === 'unpaid'
-  );
+
+    return { activeYardCars: active, waitingCars: waiting, washingCars: washing, readyCars: ready, unpaidCars: unpaid };
+  }, [vehicles, activeBranchId]);
   const activeCarsInBaysCount = activeYardCars.length;
   const readyCarsCount = readyCars.length;
   const queueVehicles = waitingCars;
@@ -1395,13 +1402,13 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   // Active Workspace Tab Filter
   const [activeListTab, setActiveListTab] = useState<'all' | 'waiting' | 'washing' | 'unpaid' | 'ready' | 'sales'>('waiting');
 
-  const displayedYardCars = activeYardCars.filter((v) => {
-    if (activeListTab === 'waiting') return v.washStage === 'Aguardando';
-    if (activeListTab === 'washing') return v.washStage && v.washStage !== 'Aguardando' && v.washStage !== 'Concluído';
-    if (activeListTab === 'ready') return v.washStage === 'Concluído';
-    if (activeListTab === 'unpaid') return v.washHistory?.[0]?.paymentStatus === 'unpaid';
-    return true;
-  });
+  const displayedYardCars = useMemo(() => {
+    if (activeListTab === 'waiting') return waitingCars;
+    if (activeListTab === 'washing') return washingCars;
+    if (activeListTab === 'ready') return readyCars;
+    if (activeListTab === 'unpaid') return unpaidCars;
+    return activeYardCars;
+  }, [activeListTab, activeYardCars, waitingCars, washingCars, readyCars, unpaidCars]);
 
   // Action: Start Washing a waiting vehicle
   const handleStartWashing = (vehicleId: string) => {
@@ -1515,8 +1522,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     : 0;
 
   // Low Stock Items check
-  const lowStockItems = getSavedInventory().filter(
-    (item) => item.quantity <= item.minAlertLevel
+  const lowStockItems = useMemo(
+    () => getSavedInventory().filter((item) => item.quantity <= item.minAlertLevel),
+    [vehicles]
   );
 
   return (
