@@ -19,6 +19,7 @@ import {
   Branch,
 } from '@/types';
 import { PlateDisplay } from '@/components/ui/PlateDisplay';
+import { PlateCameraScanner, PlateScanResult } from '@/components/ui/PlateCameraScanner';
 import { ReceiptModal } from '@/components/ui/ReceiptModal';
 import { ZReportModal } from '@/components/ui/ZReportModal';
 import { DebtManagementModal } from '@/components/ui/DebtManagementModal';
@@ -353,6 +354,19 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   const lastAutoFilledIdRef = useRef<string | null>(null);
   const clearedVehicleIdRef = useRef<string | null>(null);
   const plateContainerRef = useRef<HTMLDivElement>(null);
+
+  const applyScannedPlate = (result: PlateScanResult) => {
+    if (result.type === 'unified') {
+      setPlateType('unified');
+      if (result.provinceCode) setProvinceCode(result.provinceCode);
+      if (result.letter) setPlateLetter(result.letter);
+      if (result.number) setPlateNumber(result.number);
+    } else {
+      setPlateType('old');
+      if (result.oldNumber) setOldNumber(result.oldNumber);
+    }
+    setShowPlateSuggestions(true);
+  };
 
   // Close suggestions dropdown on outside click
   useEffect(() => {
@@ -1893,6 +1907,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
 
               {/* License Plate Inputs - Realistic Kurdistan / Traffic Design */}
               <div ref={plateContainerRef} className="relative space-y-2">
+                <div className="flex justify-end">
+                  <PlateCameraScanner currentType={plateType} onRead={applyScannedPlate} />
+                </div>
                 {plateType === 'unified' ? (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">

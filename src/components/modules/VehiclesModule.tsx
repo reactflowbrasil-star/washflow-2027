@@ -14,6 +14,7 @@ import {
 } from '@/types';
 import { VehicleSectionKey } from '@/components/layout/Sidebar';
 import { PlateDisplay } from '@/components/ui/PlateDisplay';
+import { PlateCameraScanner, PlateScanResult } from '@/components/ui/PlateCameraScanner';
 import { ReceiptModal } from '@/components/ui/ReceiptModal';
 import { NfcStickerModal } from '@/components/ui/NfcStickerModal';
 import { SubscriptionModal } from '@/components/ui/SubscriptionModal';
@@ -143,6 +144,18 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
   const [vehicleSize, setVehicleSize] = useState<VehicleSize>('sedan');
   const [hasNfcSticker, setHasNfcSticker] = useState(true);
   const [customerPin, setCustomerPin] = useState('');
+
+  const applyScannedPlate = (result: PlateScanResult) => {
+    if (result.type === 'unified') {
+      setPlateType('unified');
+      if (result.provinceCode) setProvinceCode(result.provinceCode);
+      if (result.letter) setPlateLetter(result.letter);
+      if (result.number) setPlateNumber(result.number);
+    } else {
+      setPlateType('old');
+      if (result.oldNumber) setOldNumber(result.oldNumber);
+    }
+  };
 
   // Live duplicate/match vehicle detection in Add/Edit modal
   const existingMatchedVehicle = useMemo(() => {
@@ -1756,7 +1769,10 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
             <form onSubmit={handleSaveEdit} className="space-y-3.5 text-xs">
               {/* Plate Switcher */}
               <div>
-                <label className="text-slate-700 dark:text-slate-300 block mb-1 font-bold">Tipo Placa:</label>
+                <div className="mb-1 flex items-center justify-between gap-2">
+                  <label className="text-slate-700 dark:text-slate-300 font-bold">Tipo Placa:</label>
+                  <PlateCameraScanner currentType={plateType} onRead={applyScannedPlate} />
+                </div>
                 <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
                   <button
                     type="button"
@@ -2032,7 +2048,10 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
             <form onSubmit={handleAddVehicle} className="space-y-3.5 text-xs">
               {/* Plate Switcher */}
               <div>
-                <label className="text-slate-700 block mb-1 font-bold">Tipo Placa:</label>
+                <div className="mb-1 flex items-center justify-between gap-2">
+                  <label className="text-slate-700 font-bold">Tipo Placa:</label>
+                  <PlateCameraScanner currentType={plateType} onRead={applyScannedPlate} />
+                </div>
                 <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
                   <button
                     type="button"
