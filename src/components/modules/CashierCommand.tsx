@@ -310,14 +310,17 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   };
 
   // Unpaid Debt Cars Calculation
-  const unpaidRecordsList = vehicles.flatMap((v) =>
-    (v.washHistory || [])
-      .filter((w) => w.paymentStatus === 'unpaid' || w.paymentMethod === 'debt')
-      .map((w) => ({ vehicle: v, record: w }))
+  const unpaidRecordsList = useMemo(
+    () => vehicles.flatMap((vehicle) =>
+      (vehicle.washHistory || [])
+        .filter((wash) => wash.paymentStatus === 'unpaid' || wash.paymentMethod === 'debt')
+        .map((record) => ({ vehicle, record }))
+    ),
+    [vehicles]
   );
-  const totalDebtOutstanding = unpaidRecordsList.reduce(
-    (sum, item) => sum + (Number(item.record.price) || 0),
-    0
+  const totalDebtOutstanding = useMemo(
+    () => unpaidRecordsList.reduce((sum, item) => sum + (Number(item.record.price) || 0), 0),
+    [unpaidRecordsList]
   );
 
   // Settle Debt Record
@@ -384,30 +387,39 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     };
   }, []);
 
-  // Find if current entered plate matches an existing customer in database
-  const matchedExistingVehicle = useMemo(() => {
-    const cleanPlateNum = normalizeDigits(plateNumber.trim());
-    const cleanOldNum = normalizeDigits(oldNumber.trim());
+  // Build normalized search fields only when the vehicle list changes.
+  const vehicleSearchIndex = useMemo(
+    () => vehicles.map((vehicle) => ({
+      vehicle,
+      unifiedNumber: normalizeDigits(vehicle.plate.number || ''),
+      oldNumber: normalizeDigits(vehicle.plate.oldNumber || ''),
+      phone: normalizeDigits(vehicle.phone || ''),
+      owner: (vehicle.ownerName || '').toUpperCase(),
+      model: (vehicle.carModel || '').toUpperCase(),
+    })),
+    [vehicles]
+  );
 
-    return vehicles.find((v) => {
-      if (plateType === 'unified' && v.plate.type === 'unified') {
-        return (
-          cleanPlateNum !== '' &&
-          v.plate.provinceCode === provinceCode &&
-          v.plate.letter?.toUpperCase() === plateLetter.toUpperCase() &&
-          normalizeDigits(v.plate.number || '') === cleanPlateNum
-        );
-      }
-      if (plateType === 'old' && v.plate.type === 'old') {
-        return (
-          cleanOldNum !== '' &&
-          v.plate.oldCityName === oldCity &&
-          normalizeDigits(v.plate.oldNumber || '') === cleanOldNum
-        );
-      }
-      return false;
-    });
-  }, [vehicles, plateType, provinceCode, plateLetter, plateNumber, oldCity, oldNumber]);
+  // Find an exact plate match using the cached searchable fields.
+  const matchedExistingVehicle = useMemo(() => {
+    if (plateType === 'unified') {
+      const cleanPlateNum = normalizeDigits(plateNumber);
+      if (!cleanPlateNum) return undefined;
+      return vehicleSearchIndex.find(({ vehicle, unifiedNumber }) =>
+        vehicle.plate.type === 'unified' &&
+        vehicle.plate.provinceCode === provinceCode &&
+        vehicle.plate.letter?.toUpperCase() === plateLetter.toUpperCase() &&
+        unifiedNumber === cleanPlateNum
+      )?.vehicle;
+    }
+    const cleanOldNum = normalizeDigits(oldNumber);
+    if (!cleanOldNum) return undefined;
+    return vehicleSearchIndex.find(({ vehicle, oldNumber: indexedOldNumber }) =>
+      vehicle.plate.type === 'old' &&
+      vehicle.plate.oldCityName === oldCity &&
+      indexedOldNumber === cleanOldNum
+    )?.vehicle;
+  }, [vehicleSearchIndex, plateType, provinceCode, plateLetter, oldCity, plateNumber, oldNumber]);
 
   // Active query digits/text
   const activePlateDigits = normalizeDigits(
@@ -416,54 +428,40 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
 
   // Live matching vehicles suggestions for autocomplete dropdown (como três  sem)
   const matchingVehicleSuggestions = useMemo(() => {
-    if (!activePlateDigits || activePlateDigits.length < 1) return [];
+    if (!showPlateSuggestions || activePlateDigits.length < 3 || vehicleSearchIndex.length === 0) {
+      return [];
+    }
 
-    const query = activePlateDigits.toLowerCase();
+    const query = activePlateDigits.toUpperCase();
+    const topMatches: Array<{ vehicle: Vehicle; score: number }> = [];
 
-    return vehicles
-      .filter((v) => {
-        const unifiedNum = normalizeDigits(v.plate.number || '');
-        const oldNum = normalizeDigits(v.plate.oldNumber || '');
-        const phoneClean = normalizeDigits(v.phone || '');
-        const ownerLower = (v.ownerName || '').toLowerCase();
-        const modelLower = (v.carModel || '').toLowerCase();
+    for (const entry of vehicleSearchIndex) {
+      const { vehicle, unifiedNumber, oldNumber, phone, owner, model } = entry;
+      const plateMatch = unifiedNumber.includes(query) || oldNumber.includes(query);
+      const textMatch = phone.includes(query) || owner.includes(query) || model.includes(query);
+      if (!plateMatch && !textMatch) continue;
 
-        return (
-          unifiedNum.includes(query) ||
-          oldNum.includes(query) ||
-          phoneClean.includes(query) ||
-          ownerLower.includes(query) ||
-          modelLower.includes(query)
-        );
-      })
-      .sort((a, b) => {
-        // 1. Exact match on plate number first
-        const aExact =
-          normalizeDigits(a.plate.number || '') === query ||
-          normalizeDigits(a.plate.oldNumber || '') === query;
-        const bExact =
-          normalizeDigits(b.plate.number || '') === query ||
-          normalizeDigits(b.plate.oldNumber || '') === query;
-        if (aExact && !bExact) return -1;
-        if (!aExact && bExact) return 1;
+      let score = (plateMatch ? 100 : 0) + (textMatch ? 20 : 0);
+      if (unifiedNumber === query || oldNumber === query) score += 1000;
+      if (
+        plateType === 'unified' &&
+        vehicle.plate.type === 'unified' &&
+        vehicle.plate.provinceCode === provinceCode &&
+        vehicle.plate.letter?.toUpperCase() === plateLetter.toUpperCase()
+      ) score += 10;
+      score += Math.min(vehicle.totalWashes || 0, 9);
 
-        // 2. Matching selected province/letter
-        if (plateType === 'unified') {
-          const aMatch =
-            a.plate.provinceCode === provinceCode &&
-            a.plate.letter?.toUpperCase() === plateLetter.toUpperCase();
-          const bMatch =
-            b.plate.provinceCode === provinceCode &&
-            b.plate.letter?.toUpperCase() === plateLetter.toUpperCase();
-          if (aMatch && !bMatch) return -1;
-          if (!aMatch && bMatch) return 1;
-        }
+      const insertAt = topMatches.findIndex((item) => score > item.score);
+      if (insertAt === -1) {
+        if (topMatches.length < 6) topMatches.push({ vehicle, score });
+      } else {
+        topMatches.splice(insertAt, 0, { vehicle, score });
+        if (topMatches.length > 6) topMatches.pop();
+      }
+    }
 
-        // 3. Higher visits first
-        return (b.totalWashes || 0) - (a.totalWashes || 0);
-      })
-      .slice(0, 6);
-  }, [vehicles, activePlateDigits, plateType, provinceCode, plateLetter]);
+    return topMatches.map(({ vehicle }) => vehicle);
+  }, [vehicleSearchIndex, activePlateDigits, plateType, provinceCode, plateLetter, showPlateSuggestions]);
 
   // Handle selecting an existing vehicle from live search suggestions
   const handleSelectExistingVehicle = (v: Vehicle, isSilent = false) => {
@@ -1249,14 +1247,33 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   const todayWashes = vehicles.flatMap((v) =>
     (v.washHistory || []).filter((w) => isDateToday(w.date))
   );
-  const todayWashRevenue = todayWashes.reduce((sum, w) => sum + (Number(w.price) || 0), 0);
-  const todayGarageRevenue = (parkingRecords || [])
-    .filter((p) => p.paymentStatus === 'paid' && isDateToday(p.entryTime))
-    .reduce((sum, p) => sum + (Number(p.fee) || 0), 0);
-  const todayGarageCarsCount = (parkingRecords || [])
-    .filter((p) => isDateToday(p.entryTime)).length;
-  const todaySalesTotal = todayWashRevenue + todayGarageRevenue;
-  const todayWashesCount = todayWashes.length;
+    const todaySalesTotals = useMemo(() => {
+    let washRevenue = 0;
+    let washCount = 0;
+    for (const vehicle of vehicles) {
+      for (const wash of vehicle.washHistory || []) {
+        if (isDateToday(wash.date)) {
+          washRevenue += Number(wash.price) || 0;
+          washCount += 1;
+        }
+      }
+    }
+
+    let garageRevenue = 0;
+    let garageCount = 0;
+    for (const parking of parkingRecords || []) {
+      if (isDateToday(parking.entryTime)) {
+        garageCount += 1;
+        if (parking.paymentStatus === 'paid') garageRevenue += Number(parking.fee) || 0;
+      }
+    }
+
+    return { washRevenue, washCount, garageRevenue, garageCount };
+  }, [vehicles, parkingRecords]);
+
+  const todaySalesTotal = todaySalesTotals.washRevenue + todaySalesTotals.garageRevenue;
+  const todayWashesCount = todaySalesTotals.washCount;
+  const todayGarageCarsCount = todaySalesTotals.garageCount;
 
   // Flat list of all sales from vehicles washHistory for today
   const todaySalesList = useMemo(() => {
