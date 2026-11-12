@@ -1905,7 +1905,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                     </div>
 
                     <div
-                      className="h-14 rounded-2xl border-2 border-black bg-white shadow-sm flex items-center overflow-hidden transition-all focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-600 select-none"
+                      className="responsive-plate-entry h-14 min-w-0 w-full rounded-2xl border-2 border-black bg-white shadow-sm flex items-center overflow-hidden transition-all focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-600 select-none"
                       dir="ltr"
                       style={{ fontFamily: "'FE-Font', 'JetBrains Mono', monospace" }}
                     >
@@ -1923,14 +1923,14 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       </div>
 
                       {/* Province Selector: 21, 22... */}
-                      <div className="relative px-2 shrink-0">
+                      <div className="plate-control-group relative px-1.5 sm:px-2 shrink-0">
                         <select
                           value={provinceCode}
                           onChange={(e) => {
                             setProvinceCode(e.target.value);
                             setShowPlateSuggestions(true);
                           }}
-                          className="bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
+                          className="plate-control-select bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
                           title="UF Cidade"
                         >
                           {OFFICIAL_PROVINCES.map((p) => (
@@ -1953,14 +1953,14 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       </div>
 
                       {/* Letter Selector: A, B, C... MI, MF... */}
-                      <div className="relative px-2 shrink-0">
+                      <div className="plate-control-group relative px-1.5 sm:px-2 shrink-0">
                         <select
                           value={plateLetter}
                           onChange={(e) => {
                             setPlateLetter(e.target.value);
                             setShowPlateSuggestions(true);
                           }}
-                          className="bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
+                          className="plate-control-select bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
                           title="Letra Placa"
                         >
                           {UNIFIED_PLATE_LETTERS.map((l) => (
@@ -1983,8 +1983,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                           setShowPlateSuggestions(true);
                         }}
                         onFocus={() => setShowPlateSuggestions(true)}
-                        className="flex-1 h-full px-3 text-xl font-black text-black bg-transparent tracking-widest focus:outline-none placeholder:text-slate-300 font-mono"
-                        maxLength={5}
+                        className="plate-number-entry h-full px-2 sm:px-3 text-xl font-black text-black bg-transparent tracking-widest focus:outline-none placeholder:text-slate-300 font-mono"
+                        inputMode="numeric"
+                        maxLength={4}
                       />
                     </div>
                   </div>
@@ -2000,18 +2001,18 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                     </div>
 
                     <div
-                      className="h-14 rounded-2xl border-2 border-black bg-white shadow-sm flex items-center overflow-hidden transition-all focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-600 select-none"
+                      className="responsive-plate-entry h-14 min-w-0 w-full rounded-2xl border-2 border-black bg-white shadow-sm flex items-center overflow-hidden transition-all focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-600 select-none"
                       dir="ltr"
                     >
                       {/* Category Tag with Official Color */}
-                      <div className="h-full shrink-0 relative flex items-center border-l border-black">
+                      <div className="plate-control-group h-full shrink-0 relative flex items-center border-l border-black">
                         <select
                           value={oldCategory}
                           onChange={(e) => {
                             setOldCategory(e.target.value);
                             setShowPlateSuggestions(true);
                           }}
-                          className={`h-full px-3 text-xs font-black cursor-pointer appearance-none focus:outline-none transition ${
+                          className={`plate-category-select h-full px-2 sm:px-3 text-xs font-black cursor-pointer appearance-none focus:outline-none transition ${
                             oldCategory === 'Aluguel / Comercial'
                               ? 'bg-amber-400 text-slate-950 font-black'
                               : oldCategory === 'Oficial'
@@ -2034,14 +2035,14 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       </div>
 
                       {/* City Dropdown */}
-                      <div className="h-full shrink-0 border-l border-slate-300 flex items-center px-2.5 bg-slate-50 relative">
+                      <div className="plate-control-group h-full shrink-0 border-l border-slate-300 flex items-center px-1.5 sm:px-2.5 bg-slate-50 relative">
                         <select
                           value={oldCity}
                           onChange={(e) => {
                             setOldCity(e.target.value);
                             setShowPlateSuggestions(true);
                           }}
-                          className="bg-transparent text-xs font-black text-slate-900 focus:outline-none cursor-pointer pr-1"
+                          className="plate-city-select bg-transparent text-xs font-black text-slate-900 focus:outline-none cursor-pointer pr-1"
                         >
                           {OLD_PLATE_CITIES.map((c) => (
                             <option key={c} value={c} className="font-sans font-bold">
@@ -2062,12 +2063,14 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                           setShowPlateSuggestions(true);
                         }}
                         onFocus={() => setShowPlateSuggestions(true)}
-                        className="flex-1 h-full px-3 text-lg font-black text-slate-900 bg-transparent tracking-widest focus:outline-none placeholder:text-slate-300 font-mono text-left"
+                        className="plate-number-entry h-full px-2 sm:px-3 text-lg font-black text-slate-900 bg-transparent tracking-widest focus:outline-none placeholder:text-slate-300 font-mono text-left"
+                        inputMode="numeric"
+                        maxLength={6}
                         dir="ltr"
                       />
 
                       {/* KR Stamp */}
-                      <div className="h-full px-3 bg-slate-100 border-r border-slate-300 flex items-center justify-center text-xs font-black font-mono text-slate-700 shrink-0">
+                      <div className="plate-control-group h-full px-1.5 sm:px-3 bg-slate-100 border-r border-slate-300 flex items-center justify-center text-xs font-black font-mono text-slate-700 shrink-0">
                         KR
                       </div>
                     </div>

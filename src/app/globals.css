@@ -616,6 +616,62 @@ html.dark body {
   }
 }
 
+/* Responsive quick-entry license plate */
+.responsive-plate-entry,
+.responsive-plate-entry > *,
+.responsive-plate-entry input,
+.responsive-plate-entry select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.responsive-plate-entry {
+  width: 100%;
+}
+
+.responsive-plate-entry .plate-number-entry {
+  flex: 1 1 0%;
+  width: 0;
+  min-width: 0;
+  padding-inline: clamp(0.375rem, 2vw, 0.75rem);
+  font-size: clamp(1rem, 5vw, 1.25rem);
+}
+
+.responsive-plate-entry .plate-control-select {
+  max-width: clamp(3.25rem, 22vw, 5.5rem);
+  font-size: clamp(0.875rem, 4vw, 1.25rem);
+  text-overflow: ellipsis;
+}
+
+.responsive-plate-entry .plate-control-group {
+  flex-shrink: 1;
+}
+
+.responsive-plate-entry .plate-category-select,
+.responsive-plate-entry .plate-city-select {
+  max-width: clamp(4rem, 26vw, 9rem);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  .responsive-plate-entry {
+    height: 3.25rem;
+  }
+
+  .responsive-plate-entry .plate-category-select,
+  .responsive-plate-entry .plate-city-select {
+    font-size: 0.625rem;
+    padding-inline: 0.25rem;
+  }
+
+  .responsive-plate-entry .plate-number-entry {
+    letter-spacing: 0.08em;
+  }
+}
+
 /* Thermal POS receipt 80mm / 58mm printing optimization */
 @media print {
   @page {
