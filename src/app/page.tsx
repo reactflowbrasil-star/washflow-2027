@@ -316,7 +316,7 @@ export default function MainPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F6FA] dark:bg-[#0B1120] text-slate-900 flex overflow-x-hidden max-w-full w-full font-sans" dir="ltr">
+    <div className="min-h-[100dvh] bg-[#F4F6FA] dark:bg-[#0B1120] text-slate-900 flex overflow-x-hidden max-w-full w-full font-sans" dir="ltr">
       {/* Modern Responsive Right-Side Navigation Sidebar */}
       <Sidebar
         activeTab={activeTab}
@@ -345,7 +345,7 @@ export default function MainPage() {
       />
 
       {/* Main Content View */}
-      <div className="flex-1 flex flex-col h-screen overflow-y-auto overflow-x-hidden min-w-0 max-w-full w-full bg-[#F4F6FA] dark:bg-[#0B1120] transition-colors">
+      <div className="flex-1 flex flex-col h-[100dvh] overflow-y-auto overflow-x-hidden min-w-0 max-w-full w-full bg-[#F4F6FA] dark:bg-[#0B1120] transition-colors">
         <TopHeader
           totalRevenue={totalRevenue}
           activeCarsInBay={activeCarsInBay}

@@ -6,8 +6,7 @@ export const viewport: Viewport = {
   themeColor: '#0f172a',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  userScalable: true,
   viewportFit: 'cover',
 };
 
@@ -48,26 +47,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Block iOS Safari gesture zooming (pinch to zoom)
-              document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
-              document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
-              document.addEventListener('gestureend', function(e) { e.preventDefault(); });
-              // Prevent double-tap to zoom on PWA & mobile
-              let lastTouchEnd = 0;
-              document.addEventListener('touchend', function(e) {
-                const now = Date.now();
-                if (now - lastTouchEnd <= 300) {
-                  e.preventDefault();
-                }
-                lastTouchEnd = now;
-              }, { passive: false });
-            `,
-          }}
-        />
-      </head>
+              </head>
       <body className="min-h-screen bg-[#F4F6FA] text-slate-900 antialiased selection:bg-blue-600 selection:text-white font-sans overflow-x-hidden max-w-full w-full">
         <InstallPwaPrompt />
         {children}

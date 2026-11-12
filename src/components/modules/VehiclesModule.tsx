@@ -1738,8 +1738,8 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
       {/* EDIT VEHICLE MODAL (LIGHT STUDIO)                              */}
       {/* ============================================================== */}
       {editingVehicle && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-900 dark:text-white">
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-2 sm:p-4 overscroll-contain">
+          <div className="mobile-form-modal bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-lg w-full min-w-0 p-4 sm:p-6 space-y-4 shadow-2xl max-h-[calc(100dvh-0.5rem)] sm:max-h-[90vh] overflow-y-auto overscroll-contain text-slate-900 dark:text-white">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <h3 className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
                 <Edit className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -1757,7 +1757,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
               {/* Plate Switcher */}
               <div>
                 <label className="text-slate-700 dark:text-slate-300 block mb-1 font-bold">Tipo Placa:</label>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setPlateType('unified')}
@@ -1767,7 +1767,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                         : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                     }`}
                   >
-                    Placa Novo (Mercosul / )
+                    Atual (Mercosul)
                   </button>
                   <button
                     type="button"
@@ -1785,7 +1785,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
               {/* Unified Plate Fields */}
               {plateType === 'unified' ? (
-                <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <div className="plate-fields-grid grid grid-cols-[minmax(0,1.2fr)_minmax(3rem,.65fr)_minmax(4rem,.85fr)] sm:grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
                   <div>
                     <label className="text-slate-500 block mb-1 font-medium">UF Cidade:</label>
                     <select
@@ -1814,6 +1814,8 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     <label className="text-slate-500 block mb-1 font-medium">Número Placa:</label>
                     <input
                       type="text"
+                      inputMode="numeric"
+                      maxLength={4}
                       required
                       placeholder="8966"
                       value={plateNumber}
@@ -1823,7 +1825,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <div className="plate-fields-grid grid grid-cols-[minmax(0,1.2fr)_minmax(3rem,.65fr)_minmax(4rem,.85fr)] sm:grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
                   <div>
                     <label className="text-slate-500 block mb-1 font-medium">Cidade:</label>
                     <select
@@ -1856,6 +1858,8 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     <label className="text-slate-500 block mb-1 font-medium">Número:</label>
                     <input
                       type="text"
+                      inputMode="numeric"
+                      maxLength={6}
                       required
                       placeholder="258569"
                       value={oldNumber}
@@ -1986,17 +1990,17 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
+              <div className="flex flex-col-reverse sm:flex-row gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-xs"
+                  className="w-full sm:flex-1 min-h-11 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-xs"
                 >
                   Salvar um
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditingVehicle(null)}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition"
+                  className="w-full sm:w-auto min-h-11 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition"
                 >
                   Fechar
                 </button>
@@ -2010,10 +2014,10 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
       {/* ADD VEHICLE MODAL (LIGHT STUDIO)                               */}
       {/* ============================================================== */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-900 dark:text-white">
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-2 sm:p-4 overscroll-contain">
+          <div className="mobile-form-modal bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-lg w-full min-w-0 p-4 sm:p-6 space-y-4 shadow-2xl max-h-[calc(100dvh-0.5rem)] sm:max-h-[90vh] overflow-y-auto overscroll-contain text-slate-900 dark:text-white">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-black text-base text-slate-900 flex items-center gap-2">
+              <h3 className="min-w-0 break-words font-black text-sm sm:text-base text-slate-900 flex items-center gap-2">
                 <Plus className="w-4 h-4 text-blue-600" />
                 Salvar / Registrar Veículo Novo  Fidelidade
               </h3>
@@ -2029,7 +2033,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
               {/* Plate Switcher */}
               <div>
                 <label className="text-slate-700 block mb-1 font-bold">Tipo Placa:</label>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setPlateType('unified')}
@@ -2039,7 +2043,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                         : 'bg-slate-50 text-slate-600 border-slate-200'
                     }`}
                   >
-                    Placa Novo (Mercosul / )
+                    Atual (Mercosul)
                   </button>
                   <button
                     type="button"
@@ -2057,7 +2061,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
               {/* Unified Plate Fields */}
               {plateType === 'unified' ? (
-                <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <div className="plate-fields-grid grid grid-cols-[minmax(0,1.2fr)_minmax(3rem,.65fr)_minmax(4rem,.85fr)] sm:grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
                   <div>
                     <label className="text-slate-500 block mb-1 font-medium">UF Cidade:</label>
                     <select
@@ -2086,6 +2090,8 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     <label className="text-slate-500 block mb-1 font-medium">Número Placa:</label>
                     <input
                       type="text"
+                      inputMode="numeric"
+                      maxLength={4}
                       required
                       placeholder="8966"
                       value={plateNumber}
@@ -2095,7 +2101,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <div className="plate-fields-grid grid grid-cols-[minmax(0,1.2fr)_minmax(3rem,.65fr)_minmax(4rem,.85fr)] sm:grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
                   <div>
                     <label className="text-slate-500 block mb-1 font-medium">Cidade:</label>
                     <select
@@ -2128,6 +2134,8 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     <label className="text-slate-500 block mb-1 font-medium">Número:</label>
                     <input
                       type="text"
+                      inputMode="numeric"
+                      maxLength={6}
                       required
                       placeholder="258569"
                       value={oldNumber}
@@ -2235,17 +2243,17 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
+              <div className="flex flex-col-reverse sm:flex-row gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-xs"
+                  className="w-full sm:flex-1 min-h-11 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-xs"
                 >
                   Salvar / Registrar  Criar Fidelidade
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition"
+                  className="w-full sm:w-auto min-h-11 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition"
                 >
                   Fechar
                 </button>
