@@ -1,0 +1,661 @@
+{
+  "vehicles": [
+    {
+      "id": "carpet-1794516615835",
+      "itemType": "carpet",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "21",
+        "letter": "C",
+        "number": "680"
+      },
+      "ownerName": "teste",
+      "phone": "62995250544",
+      "carModel": "Tapete (12 ²)",
+      "color": "Lavagem Tapete por ",
+      "size": "sedan",
+      "nfcTagId": "NFC-C-5835",
+      "hasNfcSticker": false,
+      "totalWashes": 1,
+      "currentCycleWashes": 1,
+      "freeWashesClaimed": 0,
+      "lastVisitDate": "2026-11-12T20:50:15.835Z",
+      "registeredDate": "2026-11-12T20:50:15.835Z",
+      "status": "active",
+      "washStage": "Aguardando",
+      "carpetSpecs": {
+        "areaSquareMeters": 12,
+        "piecesCount": 1,
+        "ratePerSquareMeter": 2500,
+        "length": 4,
+        "width": 3,
+        "carpetType": "Lavagem Tapete por ",
+        "readyDate": "2026-11-13"
+      },
+      "washHistory": [
+        {
+          "id": "wash-1794516615835",
+          "date": "2026-11-12T20:50:15.835Z",
+          "serviceId": "srv-carpet-1",
+          "serviceName": "Lavagem Tapete por  (12 ²)",
+          "price": 30000,
+          "isFree": false,
+          "paymentMethod": "cash",
+          "paymentStatus": "paid",
+          "paidAt": "2026-11-12T20:50:15.835Z",
+          "staffId": "staff-1",
+          "staffName": "Mestre / Líder  ",
+          "itemType": "carpet",
+          "carpetSpecs": {
+            "areaSquareMeters": 12,
+            "piecesCount": 1,
+            "ratePerSquareMeter": 2500,
+            "length": 4,
+            "width": 3,
+            "carpetType": "Lavagem Tapete por ",
+            "readyDate": "2026-11-13"
+          }
+        }
+      ],
+      "updatedAt": "2026-11-12T20:50:15.836Z"
+    },
+    {
+      "id": "v-101",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "SP",
+        "provinceName": "São Paulo",
+        "letter": "A",
+        "number": "54865"
+      },
+      "ownerName": "Carlos da Silva",
+      "phone": "(11) 98765-4321",
+      "carModel": "Toyota Corolla",
+      "color": "Prata",
+      "size": "sedan",
+      "nfcTagId": "NFC-10101",
+      "hasNfcSticker": true,
+      "totalWashes": 3,
+      "currentCycleWashes": 3,
+      "freeWashesClaimed": 0,
+      "lastVisitDate": "2026-11-12T14:30:00.000Z",
+      "registeredDate": "2026-10-01T10:00:00.000Z",
+      "status": "active",
+      "washHistory": [
+        {
+          "id": "w-101-1",
+          "date": "2026-11-12T14:30:00.000Z",
+          "serviceId": "srv-1",
+          "serviceName": "Lavagem Completa VIP (Externa + Interna)",
+          "price": 60,
+          "isFree": false,
+          "vehicleSize": "sedan",
+          "staffId": "staff-1",
+          "staffName": "Marcos Vinicius",
+          "bayNumber": 1,
+          "paymentMethod": "cash",
+          "paymentStatus": "paid",
+          "workerCommission": 15,
+          "isSubscriptionWash": false
+        }
+      ],
+      "updatedAt": "2026-11-12T19:30:00.000Z"
+    },
+    {
+      "id": "v-102",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "SP",
+        "provinceName": "Campinas",
+        "letter": "B",
+        "number": "87412"
+      },
+      "ownerName": "Juliana Ferreira",
+      "phone": "(19) 99123-5566",
+      "carModel": "Jeep Compass",
+      "color": "Preto",
+      "size": "suv",
+      "nfcTagId": "NFC-10202",
+      "hasNfcSticker": true,
+      "totalWashes": 4,
+      "currentCycleWashes": 4,
+      "freeWashesClaimed": 0,
+      "lastVisitDate": "2026-11-12T15:10:00.000Z",
+      "registeredDate": "2026-09-15T11:00:00.000Z",
+      "status": "active",
+      "washHistory": [],
+      "updatedAt": "2026-11-12T19:30:00.000Z"
+    }
+  ],
+  "expenses": [
+    {
+      "id": "exp-1794500025738",
+      "title": " :   (3M Fast Cut Plus Extreme) (2.1 )",
+      "category": "  Shampoo",
+      "amount": 73500,
+      "date": "2026-11-12",
+      "notes": " :  3M",
+      "paidTo": " 3M"
+    }
+  ],
+  "setupItems": [],
+  "staff": [
+    {
+      "id": "staff-1",
+      "name": "Mestre / Líder  ",
+      "role": "Mestre / Líder   Polimento",
+      "phone": "07701112233",
+      "salaryType": "monthly",
+      "baseSalary": 650000,
+      "commissionType": "fixed",
+      "commissionValue": 2000,
+      "workHours": "08:00 AM - 06:00 PM",
+      "startDate": "2026-05-10",
+      "status": "active",
+      "absentRecords": [],
+      "deductions": []
+    },
+    {
+      "id": "staff-2",
+      "name": "Mestre / Líder  ",
+      "role": "Mestre / Líder   ",
+      "phone": "07502223344",
+      "salaryType": "monthly",
+      "baseSalary": 500000,
+      "commissionType": "fixed",
+      "commissionValue": 2000,
+      "workHours": "08:00 AM - 06:00 PM",
+      "startDate": "2026-07-01",
+      "status": "active",
+      "absentRecords": [
+        {
+          "id": "abs-1794175630142",
+          "date": "2026-11-08",
+          "reason": " "
+        },
+        {
+          "id": "abs-1794175626141",
+          "date": "2026-11-08",
+          "reason": " "
+        },
+        {
+          "id": "abs-1794175621860",
+          "date": "2026-11-08",
+          "reason": " "
+        },
+        {
+          "id": "abs-1",
+          "date": "2026-10-18",
+          "reason": "  "
+        }
+      ],
+      "deductions": [
+        {
+          "id": "ded-1794175648045",
+          "date": "2026-11-08",
+          "amount": 5300,
+          "reason": ""
+        },
+        {
+          "id": "ded-1",
+          "date": "2026-10-14",
+          "amount": 10000,
+          "reason": "  Shampoo  "
+        }
+      ]
+    },
+    {
+      "id": "staff-3",
+      "name": "Mestre / Líder  Silva",
+      "role": "Mestre / Líder   ",
+      "phone": "07713334455",
+      "salaryType": "daily",
+      "baseSalary": 18000,
+      "commissionType": "fixed",
+      "commissionValue": 2000,
+      "workHours": "09:00 AM - 07:00 PM",
+      "startDate": "2026-09-15",
+      "status": "active",
+      "absentRecords": [],
+      "deductions": []
+    },
+    {
+      "id": "staff-4",
+      "name": " ",
+      "role": "Mestre / Líder  ()",
+      "phone": "07709998877",
+      "salaryType": "monthly",
+      "baseSalary": 450000,
+      "commissionType": "fixed",
+      "commissionValue": 2000,
+      "workHours": "08:00 AM - 06:00 PM",
+      "startDate": "2026-02-01",
+      "endDate": "2026-08-30",
+      "status": "archived",
+      "absentRecords": [
+        {
+          "id": "abs-old-1",
+          "date": "2026-06-12",
+          "reason": " "
+        }
+      ],
+      "deductions": [
+        {
+          "id": "ded-old-1",
+          "date": "2026-07-05",
+          "amount": 15000,
+          "reason": "  "
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "id": "srv-1",
+      "name": "Lavagem Simples ( + )",
+      "category": "Carro",
+      "unit": "Carro",
+      "price": 10000,
+      "description": "  Lavagem   Cidade     Abrir ",
+      "durationMinutes": 25
+    },
+    {
+      "id": "srv-2",
+      "name": "Lavagem Completa VIP",
+      "category": "Carro",
+      "unit": "Carro",
+      "price": 25000,
+      "description": "           Cera   Rápido",
+      "durationMinutes": 45
+    },
+    {
+      "id": "srv-3",
+      "name": "Lavagem    (Steam & Degreaser)",
+      "category": "Carro",
+      "unit": "Carro",
+      "price": 15000,
+      "description": "Abrir      Particular   ",
+      "durationMinutes": 30
+    },
+    {
+      "id": "srv-polish-1",
+      "name": "      (Paint Correction)",
+      "category": "   ",
+      "unit": "Carro",
+      "price": 45000,
+      "description": "Remover     Configurações  Carro  Cera ",
+      "durationMinutes": 90
+    },
+    {
+      "id": "srv-polish-2",
+      "name": "   Ano  (9H Ceramic Coating)",
+      "category": "   ",
+      "unit": "Carro",
+      "price": 150000,
+      "description": "  Completo +          ",
+      "durationMinutes": 180
+    },
+    {
+      "id": "srv-carpet-1",
+      "name": "Lavagem Tapete    (  metro quadrado)",
+      "category": "Lavagem Tapete",
+      "unit": "metro quadrado (²)",
+      "price": 2500,
+      "description": "Abrir  Abrir Rápido      ",
+      "durationMinutes": 120
+    },
+    {
+      "id": "srv-sofa-1",
+      "name": "Lavagem Sofá   (  )",
+      "category": "Lavagem Sofá",
+      "unit": "",
+      "price": 40000,
+      "description": "Remover           ",
+      "durationMinutes": 60
+    },
+    {
+      "id": "srv-sofa-2",
+      "name": "Lavagem Sofá    (Single Sofa / Chair)",
+      "category": "Lavagem Sofá",
+      "unit": "unidade",
+      "price": 6000,
+      "description": "Abrir Sofá         ",
+      "durationMinutes": 20
+    }
+  ],
+  "settings": {
+    "themeMode": "light",
+    "carWashName": "Lava-Rápido Água Cristalina",
+    "carWashSlogan": "   seu Veículo  ",
+    "carWashPhone": "0770 123 4567",
+    "carWashAddress": "Brasil",
+    "businessHours": "08:00 AM - 10:00 PM",
+    "systemUrl": "",
+    "receiptPrinterSize": "80mm",
+    "receiptFooterNote": "Obrigado pela preferência no Lava-Rápido Água Cristalina! Garantia de chuva de 24 horas.",
+    "autoPrintReceipt": true,
+    "showStaffOnReceipt": true,
+    "numberOfBays": 3,
+    "dailyTargetCars": 35,
+    "staffPin": "1234",
+    "adminPin": "9999",
+    "expiryDaysLimit": 15,
+    "washesNeededForFree": 4,
+    "milestoneWashTarget": 100,
+    "vipDiscountPercent": 10,
+    "enableWhatsAppNotification": true,
+    "monthlyRent": 600000,
+    "dailyUtilities": 12000,
+    "averageMaterialCostPerWash": 1500,
+    "googleMapsReviewUrl": "https://maps.app.goo.gl/",
+    "ownerPhone": "0770 123 4567",
+    "enableReviewBooster": true,
+    "vipMonthlyPlanPrice": 50000,
+    "vipQuarterlyPlanPrice": 130000,
+    "telegramBotEnabled": false,
+    "telegramBotToken": "",
+    "telegramChatId": "",
+    "garageCapacity": 30,
+    "garageDailyRate": 1000,
+    "garageOvernightRate": 3000,
+    "garageMonthlyRate": 25000,
+    "branches": [
+      {
+        "id": "branch-1",
+        "name": "Unidade 1 (Matriz)",
+        "code": "B1",
+        "address": "São Paulo -    ",
+        "phone": "0770 123 4567",
+        "numberOfBays": 3,
+        "managerName": "Mestre / Líder  ",
+        "isMain": true
+      },
+      {
+        "id": "branch-2",
+        "name": "Unidade 2 (Filial)",
+        "code": "B2",
+        "address": "São Paulo - Goiás  Total",
+        "phone": "0750 987 6543",
+        "numberOfBays": 2,
+        "managerName": "Mestre / Líder  ",
+        "isMain": false
+      }
+    ],
+    "activeBranchId": "branch-2",
+    "autoSyncIntervalMs": 1500
+  },
+  "inventory": [
+    {
+      "id": "inv-koch-pw",
+      "name": "Koch-Chemie Protector Wax (Pw) 1L",
+      "category": "Cera  ",
+      "quantity": 6,
+      "unit": "",
+      "minAlertLevel": 2,
+      "costPerUnit": 28000,
+      "lastRestocked": "2026-11-12",
+      "notes": "Cera       VIP"
+    },
+    {
+      "id": "inv-koch-gs",
+      "name": "Koch-Chemie Green Star (Gs) 1L",
+      "category": "Shampoo  ",
+      "quantity": 10,
+      "unit": "",
+      "minAlertLevel": 3,
+      "costPerUnit": 20000,
+      "lastRestocked": "2026-11-10",
+      "notes": "       "
+    },
+    {
+      "id": "inv-3m-fastcut",
+      "name": "  (3M Fast Cut Plus Extreme)",
+      "category": "Cera  ",
+      "quantity": 8.1,
+      "unit": "",
+      "minAlertLevel": 2,
+      "costPerUnit": 35000,
+      "lastRestocked": "2026-11-12",
+      "notes": " Abrir     "
+    },
+    {
+      "id": "inv-active-foam",
+      "name": "Shampoo   (Active Snow Foam)",
+      "category": "Shampoo  ",
+      "quantity": 40,
+      "unit": "",
+      "minAlertLevel": 10,
+      "costPerUnit": 40000,
+      "lastRestocked": "2026-11-05",
+      "notes": "Shampoo   "
+    },
+    {
+      "id": "inv-microfiber",
+      "name": "  Abrir",
+      "category": " ",
+      "quantity": 20,
+      "unit": "unidade",
+      "minAlertLevel": 5,
+      "costPerUnit": 5000,
+      "lastRestocked": "2026-11-01",
+      "notes": "  Abrir   "
+    }
+  ],
+  "roadmap": [
+    {
+      "id": "road-1",
+      "title": " Placa     (AI ANPR)",
+      "description": "    Modelo Total    Placa Todos Cidade  Segundo   Editar.",
+      "targetVersion": "v2.0.0",
+      "completed": false,
+      "notes": "      .",
+      "createdAt": "2026-10-21"
+    },
+    {
+      "id": "road-2",
+      "title": "    Telefone / Celular  (Live Streaming)",
+      "description": "   Lavagem    NFC       Lavagem Carro .",
+      "targetVersion": "v2.1.0",
+      "completed": false,
+      "notes": "    Rápido WebRTC .",
+      "createdAt": "2026-10-21"
+    },
+    {
+      "id": "road-3",
+      "title": "   WhatsApp  SMS",
+      "description": " Abrir Conclusão de Carro    Lavagem      Conclusão de  Dia.",
+      "targetVersion": "v2.0.0",
+      "completed": false,
+      "notes": "   Twilio  WhatsApp Business API.",
+      "createdAt": "2026-10-21"
+    },
+    {
+      "id": "road-4",
+      "title": "  Código  QR (Wireless Scanner)",
+      "description": "    Dinheiro     Segundo       .",
+      "targetVersion": "v1.5.0",
+      "completed": false,
+      "notes": "       Dinheiro.",
+      "createdAt": "2026-10-21"
+    },
+    {
+      "id": "road-5",
+      "title": " Lavagem Tapete  metro quadrado    (Carpet Laundry)",
+      "description": "Registrar Tapete   metro quadrado (²)  Código    Tapete           .",
+      "targetVersion": "v2.2.0",
+      "completed": false,
+      "notes": "    Moto Lavagem   .",
+      "createdAt": "2026-10-21"
+    },
+    {
+      "id": "road-6",
+      "title": " Lavagem Sofá  Estofados  (Sofa & Upholstery Cleaning)",
+      "description": "Enviar          Lavagem Sofá  Colchão   .",
+      "targetVersion": "v2.2.0",
+      "completed": false,
+      "notes": "        .",
+      "createdAt": "2026-10-21"
+    },
+    {
+      "id": "road-7",
+      "title": " Particular     (VIP Detailing Studio)",
+      "description": "        (Hexagon Lights)       Ano   .",
+      "targetVersion": "v2.0.0",
+      "completed": false,
+      "notes": "        (Paint Thickness Gauge).",
+      "createdAt": "2026-10-21"
+    }
+  ],
+  "cafeItems": [
+    {
+      "id": "c-1",
+      "name": "  ",
+      "price": 1000,
+      "category": " "
+    },
+    {
+      "id": "c-2",
+      "name": " ",
+      "price": 2000,
+      "category": " "
+    },
+    {
+      "id": "c-3",
+      "name": "  ",
+      "price": 500,
+      "category": " "
+    },
+    {
+      "id": "c-4",
+      "name": " / ",
+      "price": 2500,
+      "category": " "
+    },
+    {
+      "id": "c-5",
+      "name": "    ",
+      "price": 1000,
+      "category": "  "
+    }
+  ],
+  "zreports": [],
+  "parkingRecords": [
+    {
+      "id": "park-1794332013656",
+      "ticketNumber": "G-106",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "21",
+        "provinceName": "São Paulo",
+        "letter": "A",
+        "number": "7498"
+      },
+      "slotNumber": 6,
+      "entryTime": "2026-11-10T17:33:33.656Z",
+      "status": "parked",
+      "rateType": "daily",
+      "fee": 1000,
+      "paymentStatus": "paid",
+      "paymentMethod": "cash",
+      "carModel": "Carro "
+    },
+    {
+      "id": "park-1",
+      "ticketNumber": "G-101",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "21",
+        "provinceName": "São Paulo",
+        "letter": "A",
+        "number": "3421"
+      },
+      "slotNumber": 1,
+      "entryTime": "2026-11-10T11:42:06.023Z",
+      "status": "parked",
+      "rateType": "daily",
+      "fee": 1000,
+      "paymentStatus": "paid",
+      "paymentMethod": "cash",
+      "carModel": "Toyota Land Cruiser 2023",
+      "ownerName": " "
+    },
+    {
+      "id": "park-2",
+      "ticketNumber": "G-102",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "22",
+        "provinceName": "Campinas",
+        "letter": "B",
+        "number": "5612"
+      },
+      "slotNumber": 2,
+      "entryTime": "2026-11-10T12:27:06.023Z",
+      "status": "parked",
+      "rateType": "daily",
+      "fee": 1000,
+      "paymentStatus": "paid",
+      "paymentMethod": "fib",
+      "carModel": "Kia Sportage 2022",
+      "ownerName": " "
+    },
+    {
+      "id": "park-3",
+      "ticketNumber": "G-103",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "24",
+        "provinceName": "Santos",
+        "letter": "M",
+        "number": "9081"
+      },
+      "slotNumber": 3,
+      "entryTime": "2026-11-10T13:02:06.023Z",
+      "status": "exited",
+      "rateType": "daily",
+      "fee": 1000,
+      "paymentStatus": "paid",
+      "paymentMethod": "cash",
+      "carModel": "Hyundai Tucson 2021",
+      "exitTime": "2026-11-10T17:33:52.788Z"
+    },
+    {
+      "id": "park-4",
+      "ticketNumber": "G-104",
+      "plate": {
+        "type": "unified",
+        "provinceCode": "21",
+        "provinceName": "São Paulo",
+        "letter": "H",
+        "number": "1120"
+      },
+      "slotNumber": 4,
+      "entryTime": "2026-11-10T13:27:06.023Z",
+      "status": "parked",
+      "rateType": "daily",
+      "fee": 1000,
+      "paymentStatus": "paid",
+      "paymentMethod": "cash",
+      "carModel": "Nissan Patrol 2020"
+    },
+    {
+      "id": "park-5",
+      "ticketNumber": "G-105",
+      "plate": {
+        "type": "old",
+        "oldCityName": "São Paulo",
+        "oldCategory": "Particular",
+        "number": "45981"
+      },
+      "slotNumber": 5,
+      "entryTime": "2026-11-10T13:32:06.023Z",
+      "status": "parked",
+      "rateType": "daily",
+      "fee": 1000,
+      "paymentStatus": "unpaid",
+      "carModel": "Chevrolet Malibu 2018"
+    }
+  ],
+  "lastUpdated": "2026-11-12T20:50:16.139Z",
+  "version": "2026-production-v1"
+}
