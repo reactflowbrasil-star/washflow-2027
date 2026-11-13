@@ -126,7 +126,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   // -------------------------------------------------------------
   const [plateType, setPlateType] = useState<PlateType>('unified');
   const [provinceCode, setProvinceCode] = useState('21');
-  const [plateLetter, setPlateLetter] = useState('A');
+  const [plateLetter, setPlateLetter] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
   const [oldCategory, setOldCategory] = useState('Particular');
@@ -1080,6 +1080,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     // Reset Form for next fast entry
     setPlateNumber('');
     setOldNumber('');
+    setPlateLetter('');
     setOwnerName('');
     setPhone('');
     setCarModel('');
@@ -1997,6 +1998,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       {/* Letter Selector: A, B, C... MI, MF... */}
                       <div className="plate-control-group relative px-1.5 sm:px-2 shrink-0">
                         <select
+                          required
                           value={plateLetter}
                           onChange={(e) => {
                             setPlateLetter(e.target.value);
@@ -2005,6 +2007,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                           className="plate-control-select bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
                           title="Letra Placa"
                         >
+                          <option value="" disabled>Letra</option>
                           {UNIFIED_PLATE_LETTERS.map((l) => (
                             <option key={l} value={l} className="text-xs font-mono font-bold">
                               {l}
@@ -2018,7 +2021,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       <input
                         type="text"
                         required
-                        placeholder="2112"
+                        inputMode="numeric"
+                        autoComplete="off"
+                        placeholder=""
                         value={plateNumber}
                         onChange={(e) => {
                           setPlateNumber(normalizeDigits(e.target.value));
@@ -2098,7 +2103,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       <input
                         type="text"
                         required
-                        placeholder="258569"
+                        inputMode="numeric"
+                        autoComplete="off"
+                        placeholder=""
                         value={oldNumber}
                         onChange={(e) => {
                           setOldNumber(normalizeDigits(e.target.value));

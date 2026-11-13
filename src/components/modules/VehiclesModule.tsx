@@ -132,7 +132,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
   // Form State (Add / Edit)
   const [plateType, setPlateType] = useState<PlateType>('unified');
   const [provinceCode, setProvinceCode] = useState('21');
-  const [plateLetter, setPlateLetter] = useState('A');
+  const [plateLetter, setPlateLetter] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
   const [oldCategory, setOldCategory] = useState('Particular');
@@ -362,6 +362,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
     setPlateNumber('');
     setOldNumber('');
+    setPlateLetter('');
     setOwnerName('');
     setPhone('');
     setCarModel('');
@@ -1820,6 +1821,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     <label className="text-slate-500 block mb-1 font-medium">Letra (Letter):</label>
                     <input
                       type="text"
+                      required
                       maxLength={2}
                       value={plateLetter}
                       onChange={(e) => setPlateLetter(e.target.value.toUpperCase())}
@@ -1833,7 +1835,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                       inputMode="numeric"
                       maxLength={4}
                       required
-                      placeholder="8966"
+                      placeholder=""
                       value={plateNumber}
                       onChange={(e) => setPlateNumber(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"
@@ -1877,7 +1879,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                       inputMode="numeric"
                       maxLength={6}
                       required
-                      placeholder="258569"
+                      placeholder=""
                       value={oldNumber}
                       onChange={(e) => setOldNumber(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"
@@ -2099,6 +2101,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     <label className="text-slate-500 block mb-1 font-medium">Letra (Letter):</label>
                     <input
                       type="text"
+                      required
                       maxLength={2}
                       value={plateLetter}
                       onChange={(e) => setPlateLetter(e.target.value.toUpperCase())}
@@ -2112,7 +2115,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                       inputMode="numeric"
                       maxLength={4}
                       required
-                      placeholder="8966"
+                      placeholder=""
                       value={plateNumber}
                       onChange={(e) => setPlateNumber(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"
@@ -2156,7 +2159,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                       inputMode="numeric"
                       maxLength={6}
                       required
-                      placeholder="258569"
+                      placeholder=""
                       value={oldNumber}
                       onChange={(e) => setOldNumber(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"

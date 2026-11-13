@@ -85,7 +85,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
   // -------------------------------------------------------------
   const [plateType, setPlateType] = useState<PlateType>('unified');
   const [provinceCode, setProvinceCode] = useState('21');
-  const [plateLetter, setPlateLetter] = useState('A');
+  const [plateLetter, setPlateLetter] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
   const [oldCategory, setOldCategory] = useState('Particular');
@@ -161,6 +161,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
     setAssignedSlot(targetSlot);
     setPlateNumber('');
     setOldNumber('');
+    setPlateLetter('');
     setCarModel('');
     setOwnerName('');
     setPhone('');
@@ -986,10 +987,12 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                   <div>
                     <label className="text-[11px] font-bold text-slate-500 block mb-1">Letra</label>
                     <select
+                      required
                       value={plateLetter}
                       onChange={(e) => setPlateLetter(e.target.value)}
                       className="w-full px-2.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white font-mono"
                     >
+                      <option value="" disabled>Letra</option>
                       {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((l) => (
                         <option key={l} value={l}>
                           {l}
@@ -1006,7 +1009,9 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                       autoFocus
                       value={plateNumber}
                       onChange={(e) => setPlateNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                      placeholder="exemplo: 3421"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder=""
                       className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-900 dark:text-white font-mono"
                     />
                   </div>
@@ -1049,7 +1054,9 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                       autoFocus
                       value={oldNumber}
                       onChange={(e) => setOldNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                      placeholder="exemplo: 87654"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder=""
                       className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-900 dark:text-white font-mono"
                     />
                   </div>
