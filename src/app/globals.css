@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap');
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
@@ -14,7 +13,7 @@
 }
 
 @theme {
-  --font-sans: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-plate: 'FE-Font', 'JetBrains Mono', monospace;
 }
@@ -59,7 +58,7 @@ html {
   overflow-x: hidden !important;
   max-width: 100vw !important;
   width: 100% !important;
-  touch-action: pan-y pinch-zoom !important;
+  touch-action: pan-y !important;
   overscroll-behavior-x: none !important;
   -webkit-text-size-adjust: 100%;
 }
@@ -69,7 +68,7 @@ body {
   max-width: 100vw !important;
   width: 100% !important;
   position: relative;
-  touch-action: pan-y pinch-zoom !important;
+  touch-action: pan-y !important;
   overscroll-behavior-x: none !important;
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
@@ -95,8 +94,15 @@ body {
 
 @layer base {
   :root {
-    --font-sans: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --app-bg: #f3f5f8;
+    --app-surface: #ffffff;
+    --app-text: #172033;
+    --app-muted: #667085;
+    --app-border: #e5e9f0;
+    --app-accent: #2563eb;
+    --app-radius: 16px;
   }
   
   * {
@@ -104,8 +110,8 @@ body {
   }
 
   body {
-    background-color: #F4F6FA;
-    color: #0F172A;
+    background-color: var(--app-bg);
+    color: var(--app-text);
     font-family: var(--font-sans);
     direction: rtl;
     -webkit-font-smoothing: antialiased;
@@ -117,6 +123,139 @@ body {
   body.dark {
     background-color: #0B1120;
     color: #F8FAFC;
+  }
+}
+
+/* WashFlow app shell: shared visual language across modules */
+.app-shell {
+  background: var(--app-bg);
+  color: var(--app-text);
+  letter-spacing: -0.01em;
+}
+
+.dark .app-shell {
+  --app-bg: #0b1120;
+  --app-surface: #111a2e;
+  --app-text: #f1f5f9;
+  --app-muted: #94a3b8;
+  --app-border: #243149;
+}
+
+.app-main {
+  min-height: 100dvh;
+  scrollbar-gutter: stable;
+}
+
+.app-sidebar {
+  height: 100dvh;
+  border-color: var(--app-border);
+}
+
+.app-header {
+  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  padding-inline: clamp(12px, 2vw, 28px);
+  border-color: var(--app-border);
+  box-shadow: 0 1px 2px rgb(16 24 40 / 4%);
+}
+
+.app-content {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding: clamp(12px, 2.3vw, 32px);
+  padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+}
+
+.app-content :where(h1) {
+  letter-spacing: -0.035em;
+}
+
+.app-content :where(button, a, input, select, textarea) {
+  transition-property: color, background-color, border-color, box-shadow, transform;
+  transition-duration: 160ms;
+  transition-timing-function: ease-out;
+}
+
+.app-content :where(button, a, input, select, textarea):focus-visible,
+.app-dock button:focus-visible,
+.app-sidebar button:focus-visible {
+  outline: 3px solid rgb(37 99 235 / 40%);
+  outline-offset: 2px;
+}
+
+.app-content :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  min-height: 44px;
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.app-content :where(button) {
+  min-height: 40px;
+}
+
+.app-content :where(table) {
+  width: 100%;
+}
+
+.app-dock {
+  padding-top: 8px !important;
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 8px)) !important;
+  border-color: var(--app-border);
+}
+
+.dock-item {
+  flex: 1 1 0;
+  min-width: 44px;
+  min-height: 52px;
+  max-width: 92px;
+  padding-inline: clamp(3px, 1vw, 12px) !important;
+}
+
+.app-toast {
+  width: max-content;
+  max-width: min(92vw, 480px);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.dark .app-header,
+.dark .app-dock {
+  border-color: var(--app-border);
+}
+
+@media (max-width: 640px) {
+  .app-content {
+    padding: 12px 12px calc(96px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .app-content :where(button) {
+    min-height: 44px;
+  }
+
+  .app-content :where([class~="grid"]) {
+    min-width: 0;
+  }
+
+  .app-content :where(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-content {
+    padding-bottom: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -574,316 +713,6 @@ html.dark body {
 @media (min-width: 640px) {
   .header-safe-top {
     padding-top: 0px;
-  }
-}
-
-/* Mobile-first form and plate sizing */
-.mobile-form-modal {
-  width: min(100%, 32rem);
-  max-height: calc(100dvh - 0.5rem);
-}
-
-.mobile-form-modal > *,
-.mobile-form-modal input,
-.mobile-form-modal select,
-.mobile-form-modal textarea,
-.plate-fields-grid > * {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.plate-fields-grid select,
-.plate-fields-grid input {
-  width: 100%;
-  min-width: 0;
-}
-
-.plate-fields-grid select {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-@media (max-width: 380px) {
-  .plate-fields-grid {
-    grid-template-columns: minmax(0, 1.15fr) minmax(2.65rem, 0.6fr) minmax(3.4rem, 0.8fr);
-    gap: 0.375rem;
-    padding: 0.625rem;
-  }
-
-  .plate-fields-grid label {
-    font-size: 0.65rem;
-    line-height: 1rem;
-  }
-}
-
-/* Responsive quick-entry license plate */
-.responsive-plate-entry,
-.responsive-plate-entry > *,
-.responsive-plate-entry input,
-.responsive-plate-entry select {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.responsive-plate-entry {
-  width: 100%;
-}
-
-.responsive-plate-entry .plate-number-entry {
-  flex: 1 1 0%;
-  width: 0;
-  min-width: 0;
-  padding-inline: clamp(0.375rem, 2vw, 0.75rem);
-  font-size: clamp(1rem, 5vw, 1.25rem);
-}
-
-.responsive-plate-entry .plate-control-select {
-  max-width: clamp(3.25rem, 22vw, 5.5rem);
-  font-size: clamp(0.875rem, 4vw, 1.25rem);
-  text-overflow: ellipsis;
-}
-
-.responsive-plate-entry .plate-control-group {
-  flex-shrink: 1;
-}
-
-.responsive-plate-entry .plate-category-select,
-.responsive-plate-entry .plate-city-select {
-  max-width: clamp(4rem, 26vw, 9rem);
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 380px) {
-  .responsive-plate-entry {
-    height: 3.25rem;
-  }
-
-  .responsive-plate-entry .plate-category-select,
-  .responsive-plate-entry .plate-city-select {
-    font-size: 0.625rem;
-    padding-inline: 0.25rem;
-  }
-
-  .responsive-plate-entry .plate-number-entry {
-    letter-spacing: 0.08em;
-  }
-}
-
-/* WashFlow cohesive product design system */
-:root {
-  color-scheme: light;
-  --wf-canvas: #f5f7fb;
-  --wf-surface: #ffffff;
-  --wf-surface-muted: #f8fafc;
-  --wf-border: #e5eaf2;
-  --wf-ink: #172033;
-  --wf-muted: #667085;
-  --wf-primary: #2563eb;
-  --wf-primary-strong: #1d4ed8;
-  --wf-focus: rgba(37, 99, 235, 0.42);
-  --wf-card-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.035);
-  --wf-radius-card: 1.25rem;
-}
-
-.dark {
-  color-scheme: dark;
-  --wf-canvas: #0b1120;
-  --wf-surface: #111a2e;
-  --wf-surface-muted: #162238;
-  --wf-border: #26334b;
-  --wf-ink: #f8fafc;
-  --wf-muted: #a4b0c2;
-  --wf-primary: #60a5fa;
-  --wf-primary-strong: #3b82f6;
-  --wf-focus: rgba(96, 165, 250, 0.55);
-  --wf-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 12px 28px rgba(0, 0, 0, 0.12);
-}
-
-body {
-  background-color: var(--wf-canvas);
-  color: var(--wf-ink);
-}
-
-button,
-a,
-input,
-select,
-textarea {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button,
-input,
-select,
-textarea {
-  transition-duration: 180ms;
-}
-
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid var(--wf-focus);
-  outline-offset: 2px;
-}
-
-svg.lucide {
-  flex-shrink: 0;
-  vertical-align: middle;
-}
-
-/* Keep the common cards consistent throughout every module. */
-div.bg-white.rounded-3xl,
-div.bg-white.rounded-2xl {
-  border-color: var(--wf-border);
-  box-shadow: var(--wf-card-shadow);
-}
-
-.dark div.bg-white.rounded-3xl,
-.dark div.bg-white.rounded-2xl {
-  background-color: var(--wf-surface);
-  border-color: var(--wf-border);
-}
-
-/* One radius scale keeps cards, controls and navigation visually related. */
-.rounded-3xl { border-radius: 1.25rem; }
-.rounded-2xl { border-radius: 1rem; }
-.rounded-xl { border-radius: 0.75rem; }
-
-.washflow-app-shell {
-  background-color: var(--wf-canvas);
-  color: var(--wf-ink);
-}
-
-.washflow-main-content {
-  width: 100%;
-  min-width: 0;
-  max-width: 1800px;
-  margin-inline: auto;
-  padding: clamp(0.75rem, 1.8vw, 1.5rem);
-  padding-bottom: clamp(1.5rem, 2vw, 2rem);
-}
-
-.washflow-header {
-  min-height: calc(3.5rem + env(safe-area-inset-top, 0px));
-  padding-inline: clamp(0.75rem, 1.6vw, 1.5rem);
-  gap: 0.5rem;
-}
-
-.washflow-header > div {
-  min-width: 0;
-}
-
-.washflow-sidebar {
-  max-width: min(20rem, 86vw);
-  box-shadow: 0 8px 28px rgba(16, 24, 40, 0.08);
-}
-
-.washflow-mobile-dock {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-.washflow-mobile-dock > div > button,
-.washflow-mobile-dock > div > a {
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-}
-
-.mobile-form-modal {
-  overscroll-behavior: contain;
-  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
-}
-
-.washflow-more-sheet {
-  max-height: min(85dvh, 48rem);
-}
-
-@media (max-width: 640px) {
-  .washflow-main-content {
-    padding: 0.75rem;
-    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  .washflow-header {
-    min-height: 3.5rem;
-  }
-
-  .washflow-header button {
-    min-width: 2.75rem;
-    min-height: 2.75rem;
-  }
-
-  .washflow-mobile-dock > div {
-    gap: 0.375rem;
-    padding-inline: 0.625rem;
-  }
-
-  .washflow-mobile-dock > div > button,
-  .washflow-mobile-dock > div > a {
-    min-height: 3rem;
-    min-width: 0;
-    gap: 0.25rem;
-  }
-
-  .washflow-mobile-dock svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  .mobile-form-modal {
-    width: calc(100vw - 1rem);
-    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 1rem);
-    overflow-y: auto;
-  }
-
-  .mobile-form-modal input,
-  .mobile-form-modal select,
-  .mobile-form-modal textarea {
-    min-height: 2.75rem;
-  }
-
-  main,
-  main > * {
-    min-width: 0;
-  }
-
-  :where(button, a, input, select, textarea) {
-    scroll-margin-bottom: 6.5rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .washflow-main-content button {
-    min-height: 2.75rem;
-  }
-
-  .washflow-main-content input,
-  .washflow-main-content select,
-  .washflow-main-content textarea {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  [class~="fixed"][class~="inset-0"] > [class*="bg-white"][class*="rounded"] {
-    width: min(calc(100vw - 1rem), 32rem);
-    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 1rem);
-    overflow-y: auto;
-    overscroll-behavior: contain;
   }
 }
 

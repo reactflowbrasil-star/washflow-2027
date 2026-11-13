@@ -316,7 +316,7 @@ export default function MainPage() {
   }
 
   return (
-    <div className="washflow-app-shell min-h-[100dvh] bg-[#F4F6FA] dark:bg-[#0B1120] text-slate-900 flex overflow-x-hidden max-w-full w-full font-sans" dir="ltr">
+    <div className="app-shell min-h-screen bg-[#F4F6FA] dark:bg-[#0B1120] text-slate-900 flex overflow-x-hidden max-w-full w-full font-sans" dir="ltr">
       {/* Modern Responsive Right-Side Navigation Sidebar */}
       <Sidebar
         activeTab={activeTab}
@@ -345,7 +345,7 @@ export default function MainPage() {
       />
 
       {/* Main Content View */}
-      <div className="washflow-app-shell flex-1 flex flex-col h-[100dvh] overflow-y-auto overflow-x-hidden min-w-0 max-w-full w-full bg-[#F4F6FA] dark:bg-[#0B1120] transition-colors">
+      <div className="app-main flex-1 flex flex-col h-screen overflow-y-auto overflow-x-hidden min-w-0 max-w-full w-full bg-[#F4F6FA] dark:bg-[#0B1120] transition-colors">
         <TopHeader
           totalRevenue={totalRevenue}
           activeCarsInBay={activeCarsInBay}
@@ -377,8 +377,8 @@ export default function MainPage() {
 
         {/* Global Toast Notification */}
         {notification && (
-          <div className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-lg bg-emerald-600 text-white px-4 sm:px-5 py-3 rounded-2xl shadow-xl font-semibold text-xs flex items-start sm:items-center gap-2 animate-fade-in border border-emerald-400">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <div role="status" aria-live="polite" className="app-toast fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-5 py-2.5 rounded-2xl shadow-2xl font-bold text-xs flex items-center gap-2 animate-fade-in border border-emerald-400">
+            <CheckCircle2 className="w-4 h-4" />
             {notification}
           </div>
         )}
@@ -398,7 +398,7 @@ export default function MainPage() {
           onLogout={handleLogout}
         />
 
-        <main className="washflow-main-content flex-1 w-full max-w-full min-w-0 overflow-x-hidden pb-28 lg:pb-6">
+        <main className="app-content flex-1 p-2 sm:p-4 w-full max-w-full min-w-0 overflow-x-hidden pb-28 lg:pb-6">
           {activeTab === 'analytics' && (
             <AnalyticsDashboard
               setupItems={setupItems}

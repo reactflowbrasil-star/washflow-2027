@@ -107,13 +107,13 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
       <nav
         dir="ltr"
         aria-label="Menu Inferior Mobile"
-        className="washflow-mobile-dock lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200/90 dark:border-slate-800 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.08)] select-none"
+        className="app-dock lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200/90 dark:border-slate-800 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.08)] select-none"
         style={{
           paddingBottom: 'max(8px, env(safe-area-inset-bottom, 8px))',
           paddingTop: '6px',
         }}
       >
-        <div className={`grid w-full max-w-xl mx-auto items-stretch gap-1 px-2 ${visibleTabs.length === 3 ? "grid-cols-4" : "grid-cols-5"}`}>
+        <div className="flex items-center justify-around px-2 max-w-lg mx-auto">
           {visibleTabs.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -123,8 +123,8 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
                 key={item.id}
                 type="button"
                 onClick={() => handleSelectTab(item.id)}
-                aria-current={isActive ? "page" : undefined}
-                className={`relative min-w-0 w-full flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl transition-all duration-200 active:scale-95 cursor-pointer ${
+                aria-current={isActive ? 'page' : undefined}
+                className={`dock-item relative flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 active:scale-90 cursor-pointer ${
                   isActive
                     ? 'text-blue-600 dark:text-blue-400 font-black'
                     : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 font-medium'
@@ -132,13 +132,13 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
               >
                 {/* Active indicator pill behind/above icon */}
                 <div
-                  className={`relative p-1.5 rounded-xl transition-all duration-200 ${
+                  className={`relative p-1 rounded-xl transition-all duration-200 ${
                     isActive
                       ? 'bg-blue-50 dark:bg-blue-950/60 shadow-xs ring-1 ring-blue-500/20'
                       : 'bg-transparent'
                   }`}
                 >
-                  <Icon className={`w-6 h-6 transition-transform ${isActive ? 'scale-110' : ''}`} />
+                  <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
 
                   {/* Badge */}
                   {item.badge !== undefined && (
@@ -152,7 +152,7 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
                   )}
                 </div>
 
-                <span className="w-full text-center text-[9px] leading-3 tracking-tight truncate">
+                <span className="text-[10px] mt-0.5 tracking-tight truncate max-w-[62px]">
                   {item.label}
                 </span>
               </button>
@@ -163,22 +163,24 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
           <button
             type="button"
             onClick={() => setIsMoreSheetOpen(true)}
-            className={`relative min-w-0 w-full flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl transition-all duration-200 active:scale-95 cursor-pointer ${
+            aria-label="Mais opções"
+            aria-expanded={isMoreSheetOpen}
+            className={`dock-item relative flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 active:scale-90 cursor-pointer ${
               isMoreActive || isMoreSheetOpen
                 ? 'text-blue-600 dark:text-blue-400 font-black'
                 : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 font-medium'
             }`}
           >
             <div
-              className={`p-1.5 rounded-xl transition-all duration-200 ${
+              className={`p-1 rounded-xl transition-all duration-200 ${
                 isMoreActive || isMoreSheetOpen
                   ? 'bg-blue-50 dark:bg-blue-950/60 shadow-xs ring-1 ring-blue-500/20'
                   : 'bg-transparent'
               }`}
             >
-              <MoreHorizontal className="w-6 h-6" />
+              <MoreHorizontal className="w-5 h-5" />
             </div>
-            <span className="w-full text-center text-[9px] leading-3 tracking-tight">Mais</span>
+            <span className="text-[10px] mt-0.5 tracking-tight">Mais</span>
           </button>
         </div>
       </nav>
@@ -193,10 +195,7 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
           onClick={() => setIsMoreSheetOpen(false)}
         >
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Mais opções do sistema"
-            className="washflow-more-sheet bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 rounded-t-[32px] shadow-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up"
+            className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 rounded-t-[32px] shadow-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up"
             style={{
               paddingBottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
             }}
