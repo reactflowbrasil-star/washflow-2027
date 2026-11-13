@@ -131,7 +131,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
   // Form State (Add / Edit)
   const [plateType, setPlateType] = useState<PlateType>('unified');
-  const [provinceCode, setProvinceCode] = useState('21');
+  const [provinceCode, setProvinceCode] = useState('');
   const [plateLetter, setPlateLetter] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
@@ -189,7 +189,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     setEditingVehicle(vehicle);
     setPlateType(vehicle.plate.type);
     if (vehicle.plate.type === 'unified') {
-      setProvinceCode(vehicle.plate.provinceCode || '21');
+      setProvinceCode(vehicle.plate.provinceCode || '');
       setPlateLetter(vehicle.plate.letter || 'A');
       setPlateNumber(vehicle.plate.number || '');
     } else {
@@ -216,7 +216,10 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     const cleanPhone = normalizeDigits(phone.trim());
 
     if (plateType === 'unified') {
-      if (!cleanPlateNumber) return;
+      if (!provinceCode || !plateLetter || !cleanPlateNumber) {
+        alert('Preencha UF/cidade, letra e número da placa.');
+        return;
+      }
       const prov = OFFICIAL_PROVINCES.find((p) => p.code === provinceCode);
       updatedPlate = {
         type: 'unified',
@@ -291,7 +294,10 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     const cleanPhone = normalizeDigits(phone.trim());
 
     if (plateType === 'unified') {
-      if (!cleanPlateNumber) return;
+      if (!provinceCode || !plateLetter || !cleanPlateNumber) {
+        alert('Preencha UF/cidade, letra e número da placa.');
+        return;
+      }
       const prov = OFFICIAL_PROVINCES.find((p) => p.code === provinceCode);
       newPlate = {
         type: 'unified',
@@ -362,6 +368,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
     setPlateNumber('');
     setOldNumber('');
+    setProvinceCode('');
     setPlateLetter('');
     setOwnerName('');
     setPhone('');
@@ -1806,10 +1813,12 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                   <div>
                     <label className="text-slate-500 block mb-1 font-medium">UF Cidade:</label>
                     <select
+                      required
                       value={provinceCode}
                       onChange={(e) => setProvinceCode(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white"
                     >
+                      <option value="" disabled>UF / cidade</option>
                       {OFFICIAL_PROVINCES.map((p) => (
                         <option key={p.code} value={p.code}>
                           {p.code} - {p.nameKu}
@@ -2086,10 +2095,12 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                   <div>
                     <label className="text-slate-500 block mb-1 font-medium">UF Cidade:</label>
                     <select
+                      required
                       value={provinceCode}
                       onChange={(e) => setProvinceCode(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white"
                     >
+                      <option value="" disabled>UF / cidade</option>
                       {OFFICIAL_PROVINCES.map((p) => (
                         <option key={p.code} value={p.code}>
                           {p.code} - {p.nameKu}

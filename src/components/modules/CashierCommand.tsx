@@ -125,7 +125,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   // 1. FAST REGISTRATION FORM STATE (Caixa Rápido)
   // -------------------------------------------------------------
   const [plateType, setPlateType] = useState<PlateType>('unified');
-  const [provinceCode, setProvinceCode] = useState('21');
+  const [provinceCode, setProvinceCode] = useState('');
   const [plateLetter, setPlateLetter] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
@@ -905,8 +905,8 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     const cleanOldNumber = normalizeDigits(oldNumber.trim());
 
     if (plateType === 'unified') {
-      if (!cleanPlateNumber) {
-        alert('Por favor Número Placa digite!');
+      if (!provinceCode || !plateLetter || !cleanPlateNumber) {
+        alert('Selecione UF/cidade e preencha a letra e o número da placa.');
         return;
       }
       const prov = OFFICIAL_PROVINCES.find((p) => p.code === provinceCode);
@@ -1080,6 +1080,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     // Reset Form for next fast entry
     setPlateNumber('');
     setOldNumber('');
+    setProvinceCode('');
     setPlateLetter('');
     setOwnerName('');
     setPhone('');
@@ -1943,7 +1944,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                         Placa Padrão Mercosul (Brasil):
                       </label>
                       <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400">
-                        UF {provinceCode} ({OFFICIAL_PROVINCES.find((p) => p.code === provinceCode)?.name || 'São Paulo'})
+                        {provinceCode ? `UF ${provinceCode} (${OFFICIAL_PROVINCES.find((p) => p.code === provinceCode)?.name || ''})` : 'Selecione UF / cidade'}
                       </span>
                     </div>
 
@@ -1968,6 +1969,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       {/* Province Selector: 21, 22... */}
                       <div className="plate-control-group relative px-1.5 sm:px-2 shrink-0">
                         <select
+                          required
                           value={provinceCode}
                           onChange={(e) => {
                             setProvinceCode(e.target.value);
@@ -1976,6 +1978,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                           className="plate-control-select bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
                           title="UF Cidade"
                         >
+                          <option value="" disabled>UF / cidade</option>
                           {OFFICIAL_PROVINCES.map((p) => (
                             <option key={p.code} value={p.code} className="text-xs font-sans font-bold">
                               {p.code} - {p.name}

@@ -84,7 +84,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
   // Entry Form State
   // -------------------------------------------------------------
   const [plateType, setPlateType] = useState<PlateType>('unified');
-  const [provinceCode, setProvinceCode] = useState('21');
+  const [provinceCode, setProvinceCode] = useState('');
   const [plateLetter, setPlateLetter] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
@@ -161,6 +161,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
     setAssignedSlot(targetSlot);
     setPlateNumber('');
     setOldNumber('');
+    setProvinceCode('');
     setPlateLetter('');
     setCarModel('');
     setOwnerName('');
@@ -177,8 +178,8 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
     e.preventDefault();
 
     const currentPlateNum = plateType === 'unified' ? plateNumber.trim() : oldNumber.trim();
-    if (!currentPlateNum) {
-      alert('Por favor Número Placa digite!');
+    if (!currentPlateNum || (plateType === 'unified' && (!provinceCode || !plateLetter))) {
+      alert('Preencha UF/cidade, letra e número da placa.');
       return;
     }
 
@@ -972,10 +973,12 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                   <div>
                     <label className="text-[11px] font-bold text-slate-500 block mb-1">Estado / Cidade</label>
                     <select
+                      required
                       value={provinceCode}
                       onChange={(e) => setProvinceCode(e.target.value)}
                       className="w-full px-2.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                     >
+                      <option value="" disabled>UF / cidade</option>
                       {OFFICIAL_PROVINCES.map((p) => (
                         <option key={p.code} value={p.code}>
                           {p.code} - {p.nameKu}
