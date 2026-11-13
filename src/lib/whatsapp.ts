@@ -4,7 +4,7 @@ import { formatR$, normalizeDigits } from './storage';
 // Clean Iraqi phone numbers to international standard 964...
 export function cleanIraqiPhoneNumber(phone: string): string {
   if (!phone) return '';
-  // Normalize Kurdish/Arabic digits first
+  // Normaliza os dígitos antes de montar a mensagem
   const normalized = normalizeDigits(phone);
   // Remove spaces, dashes, parentheses, plus
   let cleaned = normalized.replace(/[\s\-\(\)\+]/g, '');
@@ -40,9 +40,9 @@ export function generateWashCompletionMessage(
   paymentMethod?: string
 ): string {
   const plateText =
-    vehicle.plate.type === 'unified'
-      ? `${vehicle.plate.provinceCode} | ${vehicle.plate.letter} ${vehicle.plate.number} (${vehicle.plate.provinceName})`
-      : `${vehicle.plate.oldCityName} / ${vehicle.plate.oldNumber}`;
+    vehicle.plate.type === 'mercosul'
+      ? `${vehicle.plate.letters || ''}${vehicle.plate.number || ''} (${vehicle.plate.stateCode || 'SP'})`
+      : `${vehicle.plate.cityName} / ${vehicle.plate.oldNumber}`;
 
   const targetWashes = settings.washesNeededForFree || 4;
   const current = vehicle.currentCycleWashes || 0;
@@ -99,9 +99,9 @@ export function generateInactivityReminderMessage(
   daysPassed: number
 ): string {
   const plateText =
-    vehicle.plate.type === 'unified'
-      ? `${vehicle.plate.provinceCode} | ${vehicle.plate.letter} ${vehicle.plate.number}`
-      : `${vehicle.plate.oldCityName} / ${vehicle.plate.oldNumber}`;
+    vehicle.plate.type === 'mercosul'
+      ? `${vehicle.plate.letters || ''}${vehicle.plate.number || ''} (${vehicle.plate.stateCode || 'SP'})`
+      : `${vehicle.plate.cityName} / ${vehicle.plate.oldNumber}`;
 
   const portalUrl = `${getPortalBaseUrl(settings)}/nfc/${vehicle.id}`;
 
@@ -129,9 +129,9 @@ export function generateCarReadyMessage(
   bayNumber?: number
 ): string {
   const plateText =
-    vehicle.plate.type === 'unified'
-      ? `${vehicle.plate.provinceCode} | ${vehicle.plate.letter} ${vehicle.plate.number}`
-      : `${vehicle.plate.oldCityName} / ${vehicle.plate.oldNumber}`;
+    vehicle.plate.type === 'mercosul'
+      ? `${vehicle.plate.letters || ''}${vehicle.plate.number || ''} (${vehicle.plate.stateCode || 'SP'})`
+      : `${vehicle.plate.cityName} / ${vehicle.plate.oldNumber}`;
 
   return `Olá prezado(a) ${vehicle.ownerName || 'Cliente prezado(a)'} 🌸
 
@@ -147,7 +147,7 @@ obrigado para confiança por  por até.
 export function openWhatsAppChat(phone: string, message: string): void {
   const cleaned = cleanIraqiPhoneNumber(phone);
   if (!cleaned) {
-    alert('Telefone / Celular por  Registrar não realizado!');
+    alert('Telefone do cliente não cadastrado!');
     return;
   }
   const encoded = encodeURIComponent(message);

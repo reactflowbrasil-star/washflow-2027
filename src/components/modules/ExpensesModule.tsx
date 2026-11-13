@@ -42,7 +42,7 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
 
   // Form states
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<Expense['category']>('Insumos / Produtos  shampoo');
+  const [category, setCategory] = useState<Expense['category']>('Produtos e Shampoos');
   const [amount, setAmount] = useState('');
   const [expenseDate, setExpenseDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
@@ -66,23 +66,23 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
     return Array.from(set).sort().reverse();
   }, [expenses, currentYearMonth]);
 
-  const getKurdishMonthName = (yearMonth: string) => {
+  const getMonthLabel = (yearMonth: string) => {
     const [year, month] = yearMonth.split('-');
     const monthNames: Record<string, string> = {
-      '01': ' dois (1)',
-      '02': ' (2)',
-      '03': ' (3)',
-      '04': ' (4)',
-      '05': 'deseja (5)',
-      '06': ' (6)',
-      '07': ' (7)',
-      '08': ' (8)',
-      '09': ' (9)',
-      '10': ' que (10)',
-      '11': ' dois (11)',
-      '12': ' que (12)',
+      '01': 'Janeiro',
+      '02': 'Fevereiro',
+      '03': 'Março',
+      '04': 'Abril',
+      '05': 'Maio',
+      '06': 'Junho',
+      '07': 'Julho',
+      '08': 'Agosto',
+      '09': 'Setembro',
+      '10': 'Outubro',
+      '11': 'Novembro',
+      '12': 'Dezembro',
     };
-    return `${monthNames[month] || `Mês ${month}`} ${year}`;
+    return `${monthNames[month] || `Mês ${month}`} de ${year}`;
   };
 
   // Filtered expenses based on Month, Search & Category
@@ -119,19 +119,19 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
 
   // Breakdown by key overheads in the selected period
   const rentTotal = viewExpenses
-    .filter((e) => e.category === 'Valor de local / vaga')
+    .filter((e) => e.category === 'Aluguel')
     .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
   const utilitiesTotal = viewExpenses
-    .filter((e) => e.category === 'água  eletricidade  geradordez')
+    .filter((e) => e.category === 'Água, Luz e Gerador')
     .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
   const materialsTotal = viewExpenses
-    .filter((e) => e.category === 'Insumos / Produtos  shampoo')
+    .filter((e) => e.category === 'Produtos e Shampoos')
     .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
   const othersTotal = viewExpenses
-    .filter((e) => !['Valor de local / vaga', 'água  eletricidade  geradordez', 'Insumos / Produtos  shampoo'].includes(e.category))
+    .filter((e) => !['Aluguel', 'Água, Luz e Gerador', 'Produtos e Shampoos'].includes(e.category))
     .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
   // Quick Preset Opener
@@ -174,7 +174,7 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
     }
 
     if (parsedAmount <= 0) {
-      alert('Por favor Quantidade Despesa por  digite (dezsem em 0  sem)!');
+      alert('Informe um valor de despesa maior que zero.');
       return;
     }
 
@@ -195,7 +195,7 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
         return exp;
       });
       onUpdateExpenses(updated);
-      onNotify('Despesaque por sucesso Editar .');
+      onNotify('Despesa editada com sucesso.');
     } else {
       // Add new
       const newExp: Expense = {
@@ -208,7 +208,7 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
         paidTo: paidTo.trim() || undefined,
       };
       onUpdateExpenses([newExp, ...expenses]);
-      onNotify('Despesa Novo por sucesso Salvo com sucesso.');
+      onNotify('Nova despesa salva com sucesso.');
     }
 
     setShowModal(false);
@@ -239,15 +239,15 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
 
   const getCategoryBadgeColor = (cat: Expense['category']) => {
     switch (cat) {
-      case 'Valor de local / vaga':
+      case 'Aluguel':
         return 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800';
-      case 'água  eletricidade  geradordez':
+      case 'Água, Luz e Gerador':
         return 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800';
-      case 'Insumos / Produtos  shampoo':
+      case 'Produtos e Shampoos':
         return 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
-      case 'Salário Funcionário':
+      case 'Salários':
         return 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800';
-      case 'Abrir':
+      case 'Manutenção':
         return 'bg-orange-100 dark:bg-orange-950/60 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800';
       default:
         return 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
@@ -276,7 +276,7 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
           onClick={() => {
             setEditingExpenseId(null);
             setTitle('');
-            setCategory('Insumos / Produtos  shampoo');
+            setCategory('Produtos e Shampoos');
             setAmount('');
             setNotes('');
             setPaidTo('');
@@ -325,11 +325,11 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
             type="button"
             onClick={() =>
               openQuickPreset(
-                `Valor de local / vaga (${getKurdishMonthName(currentYearMonth)})`,
-                'Valor de local / vaga',
+                `Valor de local / vaga (${getMonthLabel(currentYearMonth)})`,
+                'Aluguel',
                 settings?.monthlyRent || 600000,
-                'Valor de Mensal local / vaga lava-rápido Estacionamento / Pátio  Lava-Rápido Tapete (1,070 ²)',
-                'Proprietário '
+                'Aluguel mensal do imóvel - lava-rápido e pátio (1.070 m²)',
+                'Proprietário'
               )
             }
             className="p-3 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/30 dark:hover:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-2xl flex flex-col items-center gap-1.5 transition text-center group cursor-pointer"
@@ -346,10 +346,10 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
             type="button"
             onClick={() =>
               openQuickPreset(
-                `Recibo eletricidade  (${getKurdishMonthName(currentYearMonth)})`,
-                'água  eletricidade  geradordez',
+                `Recibo eletricidade  (${getMonthLabel(currentYearMonth)})`,
+                'Água, Luz e Gerador',
                 undefined,
-                'Recibo eletricidade dez para bomba de alta pressão  ',
+                'Conta de energia elétrica da bomba de alta pressão',
                 'Mês eletricidade'
               )
             }
@@ -365,11 +365,11 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
             type="button"
             onClick={() =>
               openQuickPreset(
-                `Valor geradordez  (${getKurdishMonthName(currentYearMonth)})`,
-                'água  eletricidade  geradordez',
+                `Valor geradordez  (${getMonthLabel(currentYearMonth)})`,
+                'Água, Luz e Gerador',
                 undefined,
-                ' este geradordez  para lava-rápido',
-                'geradordez '
+                'Combustível do gerador do lava-rápido',
+                'Gerador'
               )
             }
             className="p-3 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/30 dark:hover:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800/80 rounded-2xl flex flex-col items-center gap-1.5 transition text-center group cursor-pointer"
@@ -384,8 +384,8 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
             type="button"
             onClick={() =>
               openQuickPreset(
-                `Valor água  compra atéque (${getKurdishMonthName(currentYearMonth)})`,
-                'água  eletricidade  geradordez',
+                `Valor água  compra atéque (${getMonthLabel(currentYearMonth)})`,
+                'Água, Luz e Gerador',
                 undefined,
                 'Custo de compra atéque água ou Recibo água',
                 'atéque água'
@@ -403,10 +403,10 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
             type="button"
             onClick={() =>
               openQuickPreset(
-                'compra Insumos / Produtos  shampoo Lavagem',
-                'Insumos / Produtos  shampoo',
+                'Compra de insumos e shampoo para lavagem',
+                'Produtos e Shampoos',
                 undefined,
-                'compra Espuma Cera paraque  Produtos que'
+                'Compra de espuma, cera e aromatizantes'
               )
             }
             className="p-3 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/80 rounded-2xl flex flex-col items-center gap-1.5 transition text-center group cursor-pointer"
@@ -421,10 +421,10 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
             type="button"
             onClick={() =>
               openQuickPreset(
-                'Abrir   ',
-                'Abrir',
+                'Manutenção de equipamentos',
+                'Manutenção',
                 undefined,
-                'Abrir bomba de alta pressão dez ou eletricidade'
+                'Reparo da bomba de alta pressão ou da parte elétrica'
               )
             }
             className="p-3 bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/30 dark:hover:bg-orange-950/50 border border-orange-200 dark:border-orange-800/80 rounded-2xl flex flex-col items-center gap-1.5 transition text-center group cursor-pointer"
@@ -441,7 +441,7 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
         {/* Total for selected month */}
         <div className="col-span-2 sm:col-span-1 bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 rounded-3xl p-4 shadow-xs">
           <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block">
-            Total Geral ({selectedMonthFilter === 'all' ? 'Todos Horário' : getKurdishMonthName(selectedMonthFilter)})
+            Total Geral ({selectedMonthFilter === 'all' ? 'Todos Horário' : getMonthLabel(selectedMonthFilter)})
           </span>
           <span className="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400 font-mono tracking-tight block mt-1">
             {formatR$(viewTotal)}
@@ -461,7 +461,7 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
             {formatR$(rentTotal)}
           </span>
           <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-1 block">
-            {rentTotal > 0 ? 'pago em Mês' : 'até pago'}
+            {rentTotal > 0 ? 'pago no mês' : 'não pago'}
           </span>
         </div>
 
@@ -519,12 +519,12 @@ export const ExpensesModule: React.FC<ExpensesModuleProps> = ({
               onChange={(e) => setSelectedMonthFilter(e.target.value)}
               className="w-full bg-transparent text-slate-900 dark:text-white outline-none text-xs font-bold cursor-pointer [&>option]:bg-white [&>option]:dark:bg-slate-900 [&>option]:text-slate-900 [&>option]:dark:text-white"
             >
-              <option value={currentYearMonth}>Este Mês: {getKurdishMonthName(currentYearMonth)}</option>
+              <option value={currentYearMonth}>Este Mês: {getMonthLabel(currentYearMonth)}</option>
               {availableMonths
                 .filter((m) => m !== currentYearMonth)
                 .map((m) => (
                   <option key={m} value={m}>
-                    {getKurdishMonthName(m)}
+                    {getMonthLabel(m)}
                   </option>
                 ))}
               <option value="all">Todos Mês (Histórico de Concluído)</option>

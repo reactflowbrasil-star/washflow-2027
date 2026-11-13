@@ -32,7 +32,7 @@ export const CafeAddonModal: React.FC<CafeAddonModalProps> = ({
   const [selectedItems, setSelectedItems] = useState<SelectedCafeItem[]>(initialSelectedItems);
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
 
-  const categories = ['Todos', ' ', ' ', 'paraque  Materiais'];
+  const categories = ['Todos', ' ', ' ', 'Aromatizantes e Acessórios'];
 
   const handleAddItem = (item: CafeItem) => {
     try {
@@ -218,7 +218,7 @@ export const CafeAddonModal: React.FC<CafeAddonModalProps> = ({
                       <button
                         type="button"
                         onClick={() =>
-                          handleAddItem({ id: item.id, name: item.name, price: item.price, category: ' ' })
+                          handleAddItem({ id: item.id, name: item.name, price: item.price, category: 'Bebidas Quentes' })
                         }
                         className="w-5 h-5 rounded bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
                       >

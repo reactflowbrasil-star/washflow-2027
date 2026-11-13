@@ -1,4 +1,4 @@
-export type PlateType = 'unified' | 'old';
+export type PlateType = 'mercosul' | 'old';
 
 // Gestão de Filiais & Unidades (Multi-Branch)
 export interface Branch {
@@ -28,17 +28,18 @@ export interface AuthSession {
   loginTime: string;
 }
 
+// Padrão brasileiro: Mercosul (ABC1D23) e placa cinza antiga (ABC-1234)
 export interface LicensePlate {
   type: PlateType;
-  // Para modelo Mercosul / unificado:
-  provinceCode?: string; // ex: código de estado/região "SP", "RJ", "21"
-  provinceName?: string; // ex: "São Paulo", "Rio de Janeiro"
-  letter?: string; // ex: "A", "B", "M"
-  number?: string; // ex: "4589"
-  // Para placas antigas / outros formatos:
-  oldCityName?: string; // ex: cidade
-  oldCategory?: string; // ex: "Particular", "Aluguel / Comercial", "Oficial"
-  oldNumber?: string; // ex: "258569"
+  // Placa Mercosul (padrão brasileiro):
+  stateCode?: string; // UF: "SP", "RJ", "MG"
+  stateName?: string; // ex: "São Paulo", "Rio de Janeiro"
+  letters?: string; // 3 primeiras letras: "ABC"
+  number?: string; // 4 caracteres finais: "1D23" (Mercosul) ou "1234" (cinza)
+  // Placa cinza antiga:
+  cityName?: string; // município de registro
+  category?: string; // ex: "Particular", "Comercial", "Oficial"
+  oldNumber?: string; // 4 dígitos: "1234"
 }
 
 // Todos os itens na Configuração Inicial já constam como adquiridos

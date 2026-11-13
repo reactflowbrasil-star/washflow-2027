@@ -35,7 +35,7 @@ export const SetupModule: React.FC<SetupModuleProps> = ({
   // Setup Items (CapEx) Add Modal
   const [showAddModal, setShowAddModal] = useState(false);
   const [name, setName] = useState('');
-  const [category, setCategory] = useState<SetupItem['category']>('');
+  const [category, setCategory] = useState<SetupItem['category']>('Equipamentos');
   const [cost, setCost] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [purchaseDate, setPurchaseDate] = useState(new Date().toISOString().split('T')[0]);
@@ -45,9 +45,9 @@ export const SetupModule: React.FC<SetupModuleProps> = ({
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [showAddInventoryModal, setShowAddInventoryModal] = useState(false);
   const [invName, setInvName] = useState('');
-  const [invCategory, setInvCategory] = useState<InventoryItem['category']>('shampoo  Espuma');
+  const [invCategory, setInvCategory] = useState<InventoryItem['category']>('Shampoos e Espumas');
   const [invQuantity, setInvQuantity] = useState('10');
-  const [invUnit, setInvUnit] = useState<InventoryItem['unit']>('litros');
+  const [invUnit, setInvUnit] = useState<InventoryItem['unit']>('Litros');
   const [invMinAlert, setInvMinAlert] = useState('5');
   const [invCost, setInvCost] = useState('5000');
   const [invNotes, setInvNotes] = useState('');
@@ -129,7 +129,7 @@ export const SetupModule: React.FC<SetupModuleProps> = ({
     }
 
     if (parsedCost <= 0) {
-      alert('Por favor Custo de queque por  digite (dezsem em 0  sem)!');
+      alert('Informe um custo maior que zero.');
       return;
     }
 
@@ -139,7 +139,7 @@ export const SetupModule: React.FC<SetupModuleProps> = ({
       category,
       cost: parsedCost,
       quantity: parsedQty > 0 ? parsedQty : 1,
-      unit: 'unid.',
+      unit: 'Unidades',
       purchaseDate: purchaseDate || new Date().toISOString().split('T')[0],
       notes: notes.trim(),
     };
@@ -147,7 +147,7 @@ export const SetupModule: React.FC<SetupModuleProps> = ({
     const updated = [newItem, ...setupItems];
     onUpdateSetupItems(updated);
     setShowAddModal(false);
-    onNotify('que Novo para  acima / topo lava-rápido .');
+    onNotify('Novo equipamento adicionado ao CapEx do lava-rápido.');
 
     setName('');
     setCost('');
@@ -164,10 +164,10 @@ export const SetupModule: React.FC<SetupModuleProps> = ({
       return;
     }
 
-    if (confirm('tem certeza em Excluir este que em  acima / topo (CaPEx)')) {
+    if (confirm('Tem certeza de que deseja excluir este equipamento do CapEx?')) {
       const updated = setupItems.filter((i) => i.id !== id);
       onUpdateSetupItems(updated);
-      onNotify('queque em  acima / topo .');
+      onNotify('Equipamento excluído do CapEx.');
     }
   };
 

@@ -80,7 +80,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
     openWhatsAppChat(vehicle.phone, message);
   };
 
-  const receiptDate = new Date().toLocaleDateString('ku', {
+  const receiptDate = new Date().toLocaleDateString('pt-BR', {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
@@ -167,7 +167,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
               <div className="space-y-1.5 text-[11px] border-b-2 border-dashed border-slate-300 pb-3 font-sans">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-600">Tipo Serviço:</span>
-                  <span className="font-bold text-slate-950">{vehicle.color || 'Lavagem Tapete'}</span>
+                  <span className="font-bold text-slate-950">{vehicle.color || 'Lavagem de Tapetes'}</span>
                 </div>
                 {vehicle.carpetSpecs?.areaSquareMeters ? (
                   <div className="flex justify-between items-center">
@@ -269,7 +269,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
               {isFree && !isSubscriptionWash && (
                 <div className="text-center text-[10px] text-emerald-800 font-bold bg-emerald-100 py-1.5 rounded-lg border border-emerald-300">
                   {freeReason === 'rain_warranty'
-                    ? '🌧️ Buscar por prazo de garantia dia de chuva (24 Horário - 0 R$)'
+                    ? '🌧️ Garantia de chuva: retorno em 24h sem custo'
                     : '🎉 Parabéns: Lavagem 5 Cliente 100 Grátis!'}
                 </div>
               )}

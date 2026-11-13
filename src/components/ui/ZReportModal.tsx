@@ -41,7 +41,7 @@ export const ZReportModal: React.FC<ZReportModalProps> = ({
   const [notes, setNotes] = useState('');
 
   const todayISO = new Date().toISOString().split('T')[0];
-  const nowFormatted = new Date().toLocaleDateString('ku', {
+  const nowFormatted = new Date().toLocaleDateString('pt-BR', {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
@@ -200,7 +200,7 @@ ${newDebtTotal > 0 ? `• ⚠️ Fiado / Débito pendente Nova Hoje: *${formatR$
 💼 *Status Totalaté Dinheiro Caixa / Cofre:*
 • Dinheiro Pendente em dez: *${formatR$(netExpectedCash)}*
 ${actualCashInput ? `• Dinheiro  : *${formatR$(countedCash)}*
-• ${discrepancy === 0 ? '✅ Status Caixa / Cofre: 100   sem Diferença (0 R$)' : `⚠️ Diferença no Caixa: ${discrepancy > 0 ? '+' : ''}${formatR$(discrepancy)}`}` : ''}
+• ${discrepancy === 0 ? '✅ Caixa conferido: sem diferença (R$ 0,00)' : `⚠️ Diferença no Caixa: ${discrepancy > 0 ? '+' : ''}${formatR$(discrepancy)}`}` : ''}
 
   sistema lava-rápido ✨`;
 
@@ -212,7 +212,7 @@ ${actualCashInput ? `• Dinheiro  : *${formatR$(countedCash)}*
       id: `z-${Date.now()}`,
       date: todayISO,
       closedAt: new Date().toISOString(),
-      closedBy: 'Caixa / ',
+      closedBy: 'Caixa',
       totalCars,
       cashTotal: grossDrawerCash,
       fastpayTotal,

@@ -17,7 +17,7 @@ export async function GET(
       (v) =>
         v.id.toLowerCase() === searchId ||
         (v.nfcTagId && v.nfcTagId.toLowerCase() === searchId) ||
-        (v.plate.type === 'unified' && v.plate.number && v.plate.number.toLowerCase() === searchId) ||
+        (v.plate.type === 'mercosul' && v.plate.number && v.plate.number.toLowerCase() === searchId) ||
         (v.plate.type === 'old' && v.plate.oldNumber && v.plate.oldNumber.toLowerCase() === searchId)
     );
 

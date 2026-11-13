@@ -59,7 +59,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
 
   // Form states for Add/Edit
   const [name, setName] = useState('');
-  const [role, setRole] = useState('Profissional Principal  Polimento');
+  const [role, setRole] = useState('Profissional principal de polimento');
   const [phone, setPhone] = useState('');
   const [salaryType, setSalaryType] = useState<'monthly' | 'daily'>('monthly');
   const [baseSalary, setBaseSalary] = useState('');
@@ -114,7 +114,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
 
     onUpdateStaff(updated);
     setEditingStaff(null);
-    onNotify('informaçõesum Profissional por sucesso Novo.');
+    onNotify('Informações do profissional salvas com sucesso.');
   };
 
   const handleAddStaff = (e: React.FormEvent) => {
@@ -172,7 +172,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
 
     onUpdateStaff(updated);
     setAbsenceModalStaff(null);
-    onNotify('dias  emacima / topo Histórico de Profissionalque Salvo com sucesso.');
+    onNotify('Histórico de faltas do profissional atualizado.');
   };
 
   // Delete Absent Day record
@@ -200,7 +200,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
       id: `ded-${Date.now()}`,
       date: new Date().toISOString().split('T')[0],
       amount: Number(normalizeDigits(deductionAmount)) || 0,
-      reason: deductionReason || ' acima / topo ou Erro',
+      reason: deductionReason || 'Desconto não informado',
     };
 
     const updated = staff.map((w) => {
@@ -218,7 +218,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
     setDeductionModalStaff(null);
     setDeductionAmount('');
     setDeductionReason('');
-    onNotify('  Quantidade emacima / topo Profissionalque Salvo com sucesso.');
+    onNotify('Descontos do profissional atualizados.');
   };
 
   // Archive staff member (moves to archive instead of deleting)
@@ -441,13 +441,13 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
               <div>
                 <span className="text-[10px] font-bold text-amber-400 flex items-center gap-1">
                   <Sparkles className="w-3.5 h-3.5" />
-                  Profissional em que (Top Star)
+                  Profissional destaque
                 </span>
                 <h4 className="text-sm font-black text-white mt-0.5">
-                  {topPerformer && topPerformer.count > 0 ? topPerformer.worker.name : 'até Grátis (Fidelidade) não realizado'}
+                  {topPerformer && topPerformer.count > 0 ? topPerformer.worker.name : 'Nenhuma lavagem no período'}
                 </h4>
                 <p className="text-[10px] text-slate-300 font-mono mt-0.5">
-                  {topPerformer && topPerformer.count > 0 ? `${topPerformer.count} Veículo • ${formatR$(topPerformer.commission)} em` : 'Veículo Novo  até  dezque'}
+                  {topPerformer && topPerformer.count > 0 ? `${topPerformer.count} Veículo • ${formatR$(topPerformer.commission)} em` : 'Registre uma lavagem para ver o destaque'}
                 </p>
               </div>
               <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl shrink-0">
@@ -458,12 +458,12 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
             {/* Total Washed Cars */}
             <div className="p-3.5 bg-slate-800/40 border border-slate-700/50 rounded-2xl flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-bold text-slate-400">Total Veículo como</span>
+                <span className="text-[10px] font-bold text-slate-400">Total de veículos lavados</span>
                 <h4 className="text-base font-black text-white font-mono mt-0.5">
                   {totalPeriodCars} <span className="text-xs font-normal text-slate-400">Veículo</span>
                 </h4>
                 <p className="text-[10px] text-slate-400 mt-0.5">
-                  em {timeframe === 'today' ? 'Hoje' : timeframe === 'this_month' ? 'Este Mês' : 'acima / topoaté Abrir'}
+                  em {timeframe === 'today' ? 'Hoje' : timeframe === 'this_month' ? 'Este Mês' : 'Todo o período'}
                 </p>
               </div>
               <div className="w-10 h-10 rounded-2xl bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center shrink-0">
@@ -474,12 +474,12 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
             {/* Total Commissions Paid */}
             <div className="p-3.5 bg-slate-800/40 border border-slate-700/50 rounded-2xl flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-bold text-emerald-400">Total em </span>
+                <span className="text-[10px] font-bold text-emerald-400">Total em comissões</span>
                 <h4 className="text-base font-black text-emerald-400 font-mono mt-0.5">
                   {formatR$(totalPeriodCommissions)}
                 </h4>
                 <p className="text-[10px] text-slate-400 mt-0.5">
-                   por Todos Lavadores / Equipe
+                  Somado de todos os lavadores da equipe
                 </p>
               </div>
               <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
@@ -494,8 +494,8 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
       {filteredStaff.length === 0 ? (
         <div className="p-12 text-center text-slate-500 dark:text-slate-400 text-xs bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-xs">
           {activeTab === 'active'
-            ? 'Nenhum Profissionalum Ativo não há. em  acima / topo Profissional Novo  que.'
-            : ' poraté Nenhum Funcionário antes de em  não há.'}
+            ? 'Nenhum profissional ativo. Cadastre um profissional para começar.'
+            : 'Nenhum funcionário arquivado no momento.'}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -606,7 +606,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
                       </span>
                       <span className="font-mono text-slate-700">
                         {isArchived ? (
-                          <span>em {worker.startDate} para {worker.endDate || 'até'}</span>
+                          <span>em {worker.startDate} até {worker.endDate || 'hoje'}</span>
                         ) : (
                           <span>Início: {worker.startDate}</span>
                         )}
@@ -868,7 +868,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
 
                 <div>
                   <label className="text-blue-950 block mb-1 font-bold text-xs">
-                    {commissionType === 'percentage' ? ' em (%):' : 'Quantidade em (R$):'}
+                    {commissionType === 'percentage' ? 'Comissão (%):' : 'Comissão (R$):'}
                   </label>
                   <input
                     type="number"
@@ -1005,7 +1005,7 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
 
                 <div>
                   <label className="text-blue-950 block mb-1 font-bold text-xs">
-                    {commissionType === 'percentage' ? ' em (%):' : 'Quantidade em (R$):'}
+                    {commissionType === 'percentage' ? 'Comissão (%):' : 'Comissão (R$):'}
                   </label>
                   <input
                     type="number"
@@ -1203,8 +1203,8 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
                       <div>
                         <div className="font-bold text-slate-900">{item.vehicle.carModel} • {item.vehicle.ownerName}</div>
                         <div className="text-[10px] text-slate-500 font-mono flex items-center gap-2 mt-0.5">
-                          <span>{new Date(item.date).toLocaleDateString('ku')}</span>
-                          <span>{new Date(item.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+                          <span>{new Date(item.date).toLocaleDateString('pt-BR')}</span>
+                          <span>{new Date(item.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
                           <span className="text-blue-600 font-bold">• {item.wash.serviceName}</span>
                           <span className="text-slate-600 font-bold">• {formatR$(item.wash.price)}</span>
                         </div>
@@ -1259,11 +1259,11 @@ export const StaffModule: React.FC<StaffModuleProps> = ({
               {/* Header */}
               <div className="text-center border-b-2 border-dashed border-slate-300 pb-3">
                 <h3 className="font-black text-base text-slate-900">
-                  {settings?.carWashName || 'lava-rápido  Veículo (Royal Car Wash)'}
+                  {settings?.carWashName || 'Lava-Rápido Água Cristalina'}
                 </h3>
                 <p className="text-[11px] text-slate-500 font-bold mt-0.5">Recibo Recebimento Salário  em Funcionário</p>
                 <div className="text-[10px] text-slate-400 font-mono mt-1">
-                  Data Quantidade: {new Date().toLocaleDateString('ku')} • {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                  Data Quantidade: {new Date().toLocaleDateString('pt-BR')} • {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                 </div>
               </div>
 

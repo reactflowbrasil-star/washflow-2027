@@ -378,7 +378,7 @@ export default function MainPage() {
           }}
           onSelectVehicle={(v) => {
             setActiveTab('vehicles');
-            showNotification(`Veículo de ${v.ownerName} (${v.plate.type === 'unified' ? v.plate.number : v.plate.oldNumber}) selecionado.`);
+            showNotification(`Veículo de ${v.ownerName} (${v.plate.type === 'mercosul' ? v.plate.number : v.plate.oldNumber}) selecionado.`);
           }}
         />
 

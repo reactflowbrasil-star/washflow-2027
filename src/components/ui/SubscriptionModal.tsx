@@ -37,18 +37,18 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   const plans = [
     {
       id: 'monthly' as const,
-      name: ' VIP Mensal (1 Mês sem)',
+      name: 'Plano VIP Mensal (1 mês)',
       durationDays: 30,
       price: monthlyPrice,
       desc: 'Lavagem sem Concluído Veículo para Restante / Pendente 30 dias',
-      badge: ' Selecionar',
+      badge: 'Selecionar',
     },
     {
       id: 'quarterly' as const,
-      name: ' VIP  (3 Mês sem)',
+      name: 'Plano VIP Trimestral (3 meses)',
       durationDays: 90,
       price: quarterlyPrice,
-      desc: 'Lavagem sem para Restante / Pendente 90 dias por Desconto Particular',
+      desc: 'Lavagens ilimitadas por 90 dias com desconto exclusivo',
       badge: 'Desconto %15',
     },
   ];

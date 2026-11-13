@@ -10,7 +10,7 @@ export async function sendTelegramMessage(
   htmlText: string
 ): Promise<{ success: boolean; message?: string }> {
   if (!token || !chatId) {
-    return { success: false, message: ' ou   Grátis (Fidelidade) não realizado.' };
+    return { success: false, message: 'Bot não configurado.' };
   }
 
   try {
@@ -29,7 +29,7 @@ export async function sendTelegramMessage(
     if (!res.ok || !data.ok) {
       return {
         success: false,
-        message: data.description || 'Erro em Enviar  para ',
+        message: data.description || 'Erro ao enviar mensagem',
       };
     }
 
@@ -37,20 +37,20 @@ export async function sendTelegramMessage(
   } catch (err: any) {
     return {
       success: false,
-      message: err?.message || 'Problema  por  ',
+      message: err?.message || 'Falha na conexão com o Telegram',
     };
   }
 }
 
 /**
- * Format a daily Z-report into a clean, luxury Kurdish Telegram notification
+ * Formata o relatório diário (Z-Report) para envio no Telegram
  */
 export function formatDailyZReportTelegram(
   report: DailyZReport,
   settings: AppSettings
 ): string {
   const timestamp = new Date(report.closedAt || Date.now());
-  const formattedTime = timestamp.toLocaleTimeString('ku', {
+  const formattedTime = timestamp.toLocaleTimeString('pt-BR', {
     hour: '2-digit',
     minute: '2-digit',
   });

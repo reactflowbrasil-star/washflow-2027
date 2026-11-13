@@ -184,14 +184,14 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
 
   const handleTestTelegram = async () => {
     if (!settings.telegramBotToken || !settings.telegramChatId) {
-      alert('Por favor acima / topoaté  (Bot Token)    (Chat ID) digite!');
+      alert('Informe o Token do bot e o Chat ID do Telegram.');
       return;
     }
-    const testMsg = `🤖 <b>atéAbrir para  - ${settings.carWashName}</b>\n\neste     entre sistema emque   100 por sucesso  dezHorário! ✨\n📅 Horário: ${new Date().toLocaleString('ku')}`;
+    const testMsg = `🤖 <b>atéAbrir para  - ${settings.carWashName}</b>\n\neste     entre sistema emque   100 por sucesso  dezHorário! ✨\n📅 Horário: ${new Date().toLocaleString('pt-BR')}`;
     const res = await sendTelegramMessage(settings.telegramBotToken, settings.telegramChatId, testMsg);
     if (res.success) {
-      alert('✅  até por sucesso para que !');
-      onNotify('🤖  até para  .');
+      alert('✅ Mensagem de teste enviada com sucesso!');
+      onNotify('🤖 Falha ao enviar a mensagem de teste.');
     } else {
       alert(`❌  : ${res.message}`);
     }
@@ -212,14 +212,14 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
       name: newServiceName.trim(),
       category: newServiceCategory,
       unit:
-        newServiceCategory === 'Lavagem Tapete'
+        newServiceCategory === 'Lavagem de Tapetes'
           ? 'm² (²)'
-          : newServiceCategory === 'Lavagem Estofado / Sofá'
+          : newServiceCategory === 'Higienização de Estofados'
           ? 'conjunto'
           : 'Veículo',
       price: baseP,
       pricesBySize:
-        newServiceCategory === 'Veículo' || newServiceCategory === 'Polimento  Vitrificação / Nano cerâmica'
+        newServiceCategory === 'Veículo' || newServiceCategory === 'Polimento e Vitrificação'
           ? {
               sedan: sedanP,
               suv: suvP,
@@ -266,7 +266,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
     downloadAnchor.click();
     downloadAnchor.remove();
 
-    onNotify('📁  aplicativo Concluído  (JSON) por sucesso .');
+    onNotify('📁 Backup completo (JSON) exportado com sucesso.');
   };
 
   // 2. Import Backup JSON
@@ -282,7 +282,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
         const parsed = JSON.parse(content);
 
         if (!parsed.data) {
-          alert('este em  aplicativo  este sistema não há!');
+          alert('Este arquivo não pertence a este sistema.');
           return;
         }
 
@@ -306,7 +306,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
           if (Array.isArray(parsed.data.roadmap)) saveRoadmap(parsed.data.roadmap);
           if (Array.isArray(parsed.data.inventory)) saveInventory(parsed.data.inventory);
 
-          onNotify('✅ aplicativo por sucesso   Todos até Novo.');
+          onNotify('✅ Backup restaurado com sucesso. Todos os dados foram atualizados.');
 
           if (onDataImported) {
             onDataImported();
@@ -315,7 +315,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
           }
         }
       } catch {
-        alert('Erroum em   aplicativo !');
+        alert('Erro ao restaurar o backup.');
       } finally {
         if (fileInputRef.current) fileInputRef.current.value = '';
       }
@@ -333,14 +333,14 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
 
     vehicles.forEach((v) => {
       const plate =
-        v.plate.type === 'unified'
-          ? `${v.plate.provinceCode || ''} | ${v.plate.letter || ''} ${v.plate.number || ''}`
-          : `${v.plate.oldCityName || ''} / ${v.plate.oldNumber || ''}`;
+        v.plate.type === 'mercosul'
+          ? `${v.plate.letters || ''}${v.plate.number || ''}${v.plate.stateCode ? ` (${v.plate.stateCode})` : ''}`
+          : `${v.plate.cityName || ''} / ${v.plate.oldNumber || ''}`;
 
       (v.washHistory || []).forEach((w) => {
         totalRevenue += w.price;
         totalWashes++;
-        const dateStr = w.date ? new Date(w.date).toLocaleDateString('ku') : '';
+        const dateStr = w.date ? new Date(w.date).toLocaleDateString('pt-BR') : '';
         washRows.push(
           [
             `"${dateStr}"`,
@@ -359,7 +359,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
 
     const totalExpenseAmount = expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
     const expenseRows = expenses.map((e) => {
-      const dateStr = e.date ? new Date(e.date).toLocaleDateString('ku') : '';
+      const dateStr = e.date ? new Date(e.date).toLocaleDateString('pt-BR') : '';
       return [
         `"${dateStr}"`,
         `"Despesa"`,
@@ -377,7 +377,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
     const BOM = '\uFEFF';
     const csvLines = [
       `"Relatório Geral   Histórico de Lavagem: ${settings.carWashName}"`,
-      `"Data dez: ${new Date().toLocaleDateString('ku')}"`,
+      `"Data dez: ${new Date().toLocaleDateString('pt-BR')}"`,
       `"Total Faturamento Lavagem: ${totalRevenue.toLocaleString()} R$ | Número Lavagens: ${totalWashes}"`,
       `"Total Geral Despesas: ${totalExpenseAmount.toLocaleString()} R$"`,
       `"Lucro  (Receita / Faturamento - Despesa): ${netProfit.toLocaleString()} R$"`,
@@ -398,13 +398,13 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
     link.remove();
     URL.revokeObjectURL(url);
 
-    onNotify('📊 Relatório  por  Excel / CSV por.');
+    onNotify('📊 Relatório exportado em Excel/CSV.');
   };
 
   // 4. Reset Settings to Default
   const handleResetSettings = () => {
     const masterPin = settings.adminPin || '9999';
-    const enteredPin = prompt('⚠️ para Buscar Configurações para Status acima / topoaté Por favor UF segredo / PIN Administrador (Admin Master PIN) digite:');
+    const enteredPin = prompt('⚠️ Para restaurar as configurações padrão, digite o PIN do administrador:');
     if (enteredPin === null) return;
 
     if (normalizeDigits(enteredPin.trim()) !== normalizeDigits(masterPin.trim())) {
@@ -412,17 +412,17 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
       return;
     }
 
-    if (window.confirm('deseja por Concluído tem certeza em Buscar Configurações para  acima / topoaté ')) {
+    if (window.confirm('Tem certeza de que deseja restaurar as configurações padrão? ')) {
       onUpdateSettings(defaultSettings);
       saveSettings(defaultSettings);
-      onNotify('Configurações  para  .');
+      onNotify('Configurações restauradas.');
     }
   };
 
   // 5. Seed Realistic Demo Financial Data
   const handleSeedDemoData = () => {
     const masterPin = settings.adminPin || '9999';
-    const enteredPin = prompt('⚠️ para Dar Entrada até exemplo Por favor UF segredo / PIN Administrador (Admin Master PIN) digite:');
+    const enteredPin = prompt('⚠️ Para carregar os dados de exemplo, digite o PIN do administrador:');
     if (enteredPin === null) return;
 
     if (normalizeDigits(enteredPin.trim()) !== normalizeDigits(masterPin.trim())) {
@@ -430,17 +430,17 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
       return;
     }
 
-    if (window.confirm('deseja tem certeza em Dar Entrada até exemplo  Todos Veículo Histórico de Lavagem  Despesas Novo dezAluguel / Comercial para atéAbrir Lucro  Prejuízo.')) {
+    if (window.confirm('Tem certeza de que deseja carregar os dados de exemplo? Isso substituirá veículos, histórico, despesas e resultados.')) {
       seedRealisticDemoData();
       if (onDataImported) onDataImported();
-      onNotify('📊 até exemplo  por sucesso .');
+      onNotify('📊 Dados de exemplo carregados com sucesso.');
     }
   };
 
   // 6. Clean Production Reset (Abrir Concluído até  para Iniciar  lava-rápido )
   const handleCleanProductionReset = () => {
     const masterPin = settings.adminPin || '9999';
-    const enteredPin = prompt('⚠️ para Abrir Concluído sistema para Iniciar  lava-rápido  Por favor UF segredo / PIN Administrador (Admin Master PIN) digite:');
+    const enteredPin = prompt('⚠️ Para concluir a configuração inicial do lava-rápido, digite o PIN do administrador:');
     if (enteredPin === null) return;
 
     if (normalizeDigits(enteredPin.trim()) !== normalizeDigits(masterPin.trim())) {
@@ -451,7 +451,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
     if (window.confirm('deseja por Concluído tem certeza em Abrir Concluído Veículos Placa  Histórico de Lavagem  Vendas  Despesas este Concluído até atéAbrir dez  sistemaque por  para Iniciar dias que lava-rápido dez dezHorário.')) {
       resetToCleanProduction();
       if (onDataImported) onDataImported();
-      onNotify('✨ sistemaque por sucesso    Pronto para por  em lava-rápido.');
+      onNotify('✨ Sistema configurado com sucesso, pronto para operar.');
     }
   };
 
@@ -485,7 +485,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
 
         <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
           <button
-            onClick={() => onNotify('✅ Todos Configurações por sucesso depois deque .')}
+            onClick={() => onNotify('✅ Todas as configurações foram salvas.')}
             className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl transition text-xs shadow-md shadow-blue-500/20 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
             <Save className="w-4 h-4" />
@@ -497,15 +497,15 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
       {/* ---------------- NAVIGATION TABS BAR ---------------- */}
       <div className="flex items-center gap-2 overflow-x-auto p-2 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
         {[
-          { id: 'identity', label: '1. informações   lava-rápido', icon: Sparkles, color: 'text-indigo-600' },
-          { id: 'receipt', label: '2. Recibo Impressão  ', icon: Printer, color: 'text-sky-600' },
-          { id: 'bays', label: '3. Boxes de Lavagem Lavagem  ', icon: Layers, color: 'text-cyan-600' },
-          { id: 'rent_costs', label: '4. Aluguel / Comercial  Despesa ', icon: Building2, color: 'text-amber-600' },
+          { id: 'identity', label: '1. Informações do lava-rápido', icon: Sparkles, color: 'text-indigo-600' },
+          { id: 'receipt', label: '2. Recibo e impressão', icon: Printer, color: 'text-sky-600' },
+          { id: 'bays', label: '3. Boxes de lavagem e capacidade', icon: Layers, color: 'text-cyan-600' },
+          { id: 'rent_costs', label: '4. Custos fixos e despesas', icon: Building2, color: 'text-amber-600' },
           { id: 'pricing', label: `5. Editar Preço / Valor (${services.length})`, icon: Car, color: 'text-emerald-600' },
-          { id: 'loyalty', label: '6. Fidelidade PIN  ', icon: Shield, color: 'text-purple-600' },
-          { id: 'backup', label: '7. aplicativo  dez Excel', icon: Database, color: 'text-rose-600' },
+          { id: 'loyalty', label: '6. Fidelidade e PINs', icon: Shield, color: 'text-purple-600' },
+          { id: 'backup', label: '7. Backup e exportação para Excel', icon: Database, color: 'text-rose-600' },
           { id: 'appearance', label: '8. Método dezque (Theme)', icon: Palette, color: 'text-amber-500' },
-          { id: 'branches', label: '9. por Filial (Unidade 1  2)', icon: Building2, color: 'text-indigo-600' },
+          { id: 'branches', label: '9. Filiais (Unidade 1 e 2)', icon: Building2, color: 'text-indigo-600' },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -649,7 +649,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
                 <label className="text-slate-700 dark:text-slate-300 font-bold block mb-1 text-xs">Porte    (Thermal Paper):</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { id: '80mm', label: '80mm (até Caixa)' },
+                    { id: '80mm', label: '80mm (padrão de caixa)' },
                     { id: '58mm', label: '58mm ()' },
                   ].map((size) => (
                     <button
@@ -742,7 +742,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
 
                 <div className="pt-1 text-[9px] text-slate-500 font-sans leading-tight">
                   <p className="font-bold text-slate-700">obrigado para acima / topounid.que!</p>
-                  <p>{settings.receiptFooterNote || ' Limpo e Inspecionado por até dezque.'}</p>
+                  <p>{settings.receiptFooterNote || 'Limpo e inspecionado com sucesso.'}</p>
                 </div>
               </div>
             </div>
@@ -1020,7 +1020,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
               className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition flex items-center gap-1.5 text-xs shadow-xs"
             >
               <Plus className="w-4 h-4" />
-              {isAddingService ? 'Fechar ' : 'Adicionar Serviço Novo'}
+              {isAddingService ? 'Fechar' : 'Adicionar Serviço Novo'}
             </button>
           </div>
 
@@ -1077,7 +1077,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
               </div>
 
               {/* Sized Pricing inputs */}
-              {newServiceCategory === 'Veículo' || newServiceCategory === 'Polimento  Vitrificação / Nano cerâmica' ? (
+              {newServiceCategory === 'Veículo' || newServiceCategory === 'Polimento e Vitrificação' ? (
                 <div className="p-3.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
                   <span className="text-[11px] text-slate-700 dark:text-slate-300 font-bold block">Preço / Valor porconforme Porte Veículo (R$):</span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1826,7 +1826,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
                 }`}
               >
                 <Sun className="w-4 h-4" />
-                {currentTheme === 'light' ? 'Status Selecionado' : 'Alterar para Status '}
+                {currentTheme === 'light' ? 'Status Selecionado' : 'Alterar status'}
               </button>
             </div>
 
@@ -1876,7 +1876,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
                 }`}
               >
                 <Moon className="w-4 h-4" />
-                {currentTheme === 'dark' ? 'Status Selecionado' : 'Alterar para Status até'}
+                {currentTheme === 'dark' ? 'Status Selecionado' : 'Alterar status'}
               </button>
             </div>
           </div>
@@ -1917,7 +1917,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({
               className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer self-start sm:self-auto"
             >
               <Plus className="w-4 h-4" />
-              <span>{isAddingBranch ? 'Fechar ' : 'Adicionar Filial Novo'}</span>
+              <span>{isAddingBranch ? 'Fechar' : 'Adicionar Filial Novo'}</span>
             </button>
           </div>
 

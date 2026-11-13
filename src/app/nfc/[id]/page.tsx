@@ -192,7 +192,7 @@ export default function NfcVehiclePage() {
   const [staffLockoutUntil, setStaffLockoutUntil] = useState(0);
   const [isStaffAuthenticated, setIsStaffAuthenticated] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<string>('');
-  const [staffName, setStaffName] = useState('Profissional acima / topo');
+  const [staffName, setStaffName] = useState('Profissional responsável');
 
   // Notification Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -207,7 +207,7 @@ export default function NfcVehiclePage() {
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText(window.location.href);
       setCopiedLink(true);
-      showToast('🔗   o Veículo Total !');
+      showToast('🔗 Link do veículo copiado!');
       setTimeout(() => setCopiedLink(false), 2500);
     }
   };
@@ -220,7 +220,7 @@ export default function NfcVehiclePage() {
   const handleRateStar = (stars: number) => {
     setUserRating(stars);
     if (stars === 5) {
-      showToast('⭐️  obrigado para confiançaque! Por favor em Google Maps  dez.');
+      showToast('⭐️ Obrigado pela confiança! Avalie-nos no Google Maps.');
     }
   };
 
@@ -247,7 +247,7 @@ export default function NfcVehiclePage() {
     }).catch(console.error);
     setVehicle(updatedVehicle);
     setFeedbackSubmitted(true);
-    showToast('✅ Observaçõesque por sucesso para Administrador !');
+    showToast('✅ Observações enviadas ao administrador!');
   };
 
   // Clock
@@ -294,7 +294,7 @@ export default function NfcVehiclePage() {
   useEffect(() => {
     const timer = setInterval(() => {
       setLiveTime(
-        new Date().toLocaleTimeString('en-US', {
+        new Date().toLocaleTimeString('pt-BR', {
           hour12: false,
           hour: '2-digit',
           minute: '2-digit',
@@ -344,16 +344,16 @@ export default function NfcVehiclePage() {
       setFailedCustomerAttempts(0);
       if (loginReason === 'edit') {
         openProfileEditor();
-        showToast('seja bem-vindo(a)! você pode Editar   que que.');
+        showToast('Bem-vindo(a)! Você já pode avaliar o atendimento.');
       } else {
-        showToast('🔓 seja bem-vindo(a)! cartão Fidelidade  Histórico de Lavagens .');
+        showToast('🔓 Bem-vindo(a)! Acesse seu cartão fidelidade e o histórico de lavagens.');
       }
     } else {
       const nextFail = failedCustomerAttempts + 1;
       setFailedCustomerAttempts(nextFail);
       if (nextFail >= 5) {
         setCustomerLockoutUntil(Date.now() + 60000); // 60s cooldown
-        setPinError('⚠️ 5  UF Erro ! Entrar / Login para Restante / Pendente 60 Segundos .');
+        setPinError('⚠️ 5 tentativas incorretas! Acesso bloqueado por 60 segundos.');
       } else {
         setPinError(`UF segredo / PIN (PIN) Erro! (${5 - nextFail}  Restante / Pendente)`);
       }
@@ -408,7 +408,7 @@ export default function NfcVehiclePage() {
     }).catch(console.error);
     setVehicle(updatedVehicle);
     setShowEditProfileModal(false);
-    showToast('✨ informações   atéque atualizado com sucesso!');
+    showToast('✨ Informações atualizadas com sucesso!');
   };
 
   // Staff Login
@@ -445,13 +445,13 @@ export default function NfcVehiclePage() {
       setStaffPinInput('');
       setStaffPinError('');
       setFailedStaffAttempts(0);
-      showToast('Entrar / Login até acima / topoque .');
+      showToast('Acesso liberado com sucesso.');
     } else {
       const nextFail = failedStaffAttempts + 1;
       setFailedStaffAttempts(nextFail);
       if (nextFail >= 5) {
         setStaffLockoutUntil(Date.now() + 60000); // 60s cooldown
-        setStaffPinError('⚠️ 5  UF até Erro ! Entrar / Login para Restante / Pendente 60 Segundos .');
+        setStaffPinError('⚠️ 5 tentativas incorretas! Acesso bloqueado por 60 segundos.');
       } else {
         setStaffPinError(`UF até Erro! (${5 - nextFail}  Restante / Pendente)`);
       }
@@ -494,7 +494,7 @@ export default function NfcVehiclePage() {
       body: JSON.stringify(updatedVehicle),
     }).catch(console.error);
     setVehicle(updatedVehicle);
-    showToast('Lavagem Novo por sucesso Salvo com sucesso!');
+    showToast('Nova lavagem registrada com sucesso!');
   };
 
   if (loading) {
@@ -582,7 +582,7 @@ export default function NfcVehiclePage() {
               <button
                 onClick={() => {
                   setIsCustomerLoggedIn(false);
-                  showToast('saída acima / topoque .');
+                  showToast('Saída registrada com sucesso.');
                 }}
                 className="p-1.5 text-slate-400 hover:text-rose-400 transition"
                 title="saída"
@@ -1011,10 +1011,10 @@ export default function NfcVehiclePage() {
               {/* 4 Steps Visual Timeline */}
               <div className="grid grid-cols-4 gap-1.5 pt-1">
                 {[
-                  { id: 1, label: 'dez', sub: 'acima / topoaté' },
-                  { id: 2, label: 'Espuma  água', sub: 'Externa' },
-                  { id: 3, label: 'Interna  aspirador', sub: '' },
-                  { id: 4, label: 'Abrir', sub: 'Concluído' },
+                  { id: 1, label: 'Recepção', sub: 'Veículo recebido' },
+                  { id: 2, label: 'Pré-lavagem', sub: 'Espuma e água' },
+                  { id: 3, label: 'Limpeza interna', sub: 'Aspiração' },
+                  { id: 4, label: 'Finalização', sub: 'Concluído' },
                 ].map((st, idx) => {
                   const currentStageLower = (vehicle.washStage || '').toLowerCase();
                   const isCurrent =
@@ -1127,7 +1127,7 @@ export default function NfcVehiclePage() {
                 <button
                   onClick={() => {
                     setIsCustomerLoggedIn(false);
-                    showToast('informaçõesum  .');
+                    showToast('Informações não encontradas.');
                   }}
                   className="text-[11px] text-slate-300 hover:text-white px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/80 font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95"
                 >
@@ -1161,7 +1161,7 @@ export default function NfcVehiclePage() {
                   <div className="flex items-center justify-between text-xs pt-1.5 border-t border-purple-500/20 text-slate-300 font-sans">
                     <span>poracima / topodez em Data:</span>
                     <span className="font-mono font-bold text-purple-200">
-                      {new Date(vehicle.subscription.endDate).toLocaleDateString('ku')}
+                      {new Date(vehicle.subscription.endDate).toLocaleDateString('pt-BR')}
                     </span>
                   </div>
                 </div>
@@ -1373,7 +1373,7 @@ export default function NfcVehiclePage() {
               ) : (
                 <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
                   {vehicle.washHistory.map((wash) => {
-                    const dateStr = wash.date ? new Date(wash.date).toLocaleDateString('ku') : '';
+                    const dateStr = wash.date ? new Date(wash.date).toLocaleDateString('pt-BR') : '';
                     const isVip = (wash.serviceName || '').toLowerCase().includes('vip');
 
                     return (
@@ -1410,7 +1410,7 @@ export default function NfcVehiclePage() {
                               <span>•</span>
                               <span className="flex items-center gap-1">
                                 <User className="w-3 h-3 text-slate-500" />
-                                Profissional: {wash.staffName || 'Grátis (Fidelidade) '}
+                                Profissional: {wash.staffName || 'Não informado'}
                               </span>
                               {wash.bayNumber && (
                                 <>

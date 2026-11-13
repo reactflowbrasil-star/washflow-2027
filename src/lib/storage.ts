@@ -204,10 +204,11 @@ export function isDateToday(dateStr?: string): boolean {
 }
 
 export function formatPlateDisplay(plate: LicensePlate): string {
-  if (plate.type === 'unified') {
-    return `${plate.provinceCode || ''} | ${plate.letter || ''} ${plate.number || ''} (${plate.provinceName || ''})`;
+  if (plate.type === 'mercosul') {
+    return `${plate.letters || ''}${plate.number || ''}${plate.stateCode ? ` (${plate.stateCode})` : ''}`;
   }
-  return `${plate.oldCityName || ''} / ${plate.oldNumber || ''} ${plate.oldCategory ? `[${plate.oldCategory}]` : ''}`;
+  const legacy = `${plate.letters || ''}${plate.oldNumber || plate.number || ''}`;
+  return `${legacy}${plate.stateCode ? ` (${plate.stateCode})` : ''}${plate.cityName ? ` - ${plate.cityName}` : ''}`;
 }
 
 // LocalStorage loaders and savers
@@ -458,15 +459,15 @@ export function saveMaterialPurchases(items: MaterialPurchase[]): void {
 }
 
 export const defaultCafeItems: CafeItem[] = [
-  { id: 'c-1', name: '  ', price: 1000, category: ' ' },
-  { id: 'c-2', name: ' ', price: 2000, category: ' ' },
-  { id: 'c-3', name: ' ', price: 1500, category: ' ' },
-  { id: 'c-4', name: 'água  ', price: 500, category: ' ' },
-  { id: 'c-5', name: ' / por', price: 2500, category: ' ' },
-  { id: 'c-6', name: 'por  ', price: 2000, category: ' ' },
-  { id: 'c-7', name: ' para Veículo (Little Trees)', price: 1500, category: 'paraque  Materiais' },
-  { id: 'c-8', name: 'para  ', price: 4000, category: 'paraque  Materiais' },
-  { id: 'c-9', name: '   Particular por Dashboard', price: 2500, category: 'paraque  Materiais' },
+  { id: 'c-1', name: 'Água mineral 500ml', price: 500, category: 'Bebidas Geladas' },
+  { id: 'c-2', name: 'Refrigerante lata 350ml', price: 700, category: 'Bebidas Geladas' },
+  { id: 'c-3', name: 'Café expresso 50ml', price: 600, category: 'Bebidas Quentes' },
+  { id: 'c-4', name: 'Suco natural 300ml', price: 900, category: 'Bebidas Geladas' },
+  { id: 'c-5', name: 'Energético 250ml', price: 1200, category: 'Bebidas Geladas' },
+  { id: 'c-6', name: 'Chocolate quente 200ml', price: 800, category: 'Bebidas Quentes' },
+  { id: 'c-7', name: 'Aromatizante Little Trees', price: 1500, category: 'Aromatizantes e Acessórios' },
+  { id: 'c-8', name: 'Perfume automotivo', price: 2500, category: 'Aromatizantes e Acessórios' },
+  { id: 'c-9', name: 'Capa de volante', price: 4000, category: 'Aromatizantes e Acessórios' },
 ];
 
 export function getSavedCafeItems(): CafeItem[] {
@@ -705,7 +706,7 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         isFree: false,
         vehicleSize: 'suv',
         staffId: 'staff-1',
-        staffName: 'Profissional  ',
+        staffName: 'Lavador responsável',
         bayNumber: 1,
         paymentMethod: 'cash',
         paymentStatus: 'paid',
@@ -717,12 +718,12 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         id: 'w-today-2',
         date: todayISO(9, 15),
         serviceId: 'srv-1',
-        serviceName: 'Lavagem  (Externa + Interna)',
+        serviceName: 'Lavagem Completa (Externa + Interna)',
         price: 10000,
         isFree: false,
         vehicleSize: 'sedan',
         staffId: 'staff-2',
-        staffName: 'Profissional  até',
+        staffName: 'Lavador sênior',
         bayNumber: 2,
         paymentMethod: 'cash',
         paymentStatus: 'paid',
@@ -734,7 +735,7 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         id: 'w-today-3',
         date: todayISO(10, 30),
         serviceId: 'srv-1',
-        serviceName: 'Lavagem  (Externa + Interna)',
+        serviceName: 'Lavagem Completa (Externa + Interna)',
         price: 13000,
         isFree: false,
         vehicleSize: 'suv',
@@ -756,7 +757,7 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         isFree: false,
         vehicleSize: 'suv',
         staffId: 'staff-1',
-        staffName: 'Profissional  ',
+        staffName: 'Lavador responsável',
         bayNumber: 1,
         paymentMethod: 'cash',
         paymentStatus: 'paid',
@@ -768,13 +769,13 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         id: 'w-today-5',
         date: todayISO(9, 45),
         serviceId: 'srv-1',
-        serviceName: 'Lavagem  (Externa + Interna)',
+        serviceName: 'Lavagem Completa (Externa + Interna)',
         price: 0,
         isFree: true,
         freeReason: 'loyalty',
         vehicleSize: 'sedan',
         staffId: 'staff-2',
-        staffName: 'Profissional  até',
+        staffName: 'Lavador sênior',
         bayNumber: 2,
         paymentMethod: 'cash',
         paymentStatus: 'paid',
@@ -786,7 +787,7 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         id: 'w-today-6',
         date: todayISO(8, 45),
         serviceId: 'srv-1',
-        serviceName: 'Lavagem  (Externa + Interna)',
+        serviceName: 'Lavagem Completa (Externa + Interna)',
         price: 15000,
         isFree: false,
         vehicleSize: 'truck',
@@ -803,12 +804,12 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         id: 'w-today-7',
         date: todayISO(11, 10),
         serviceId: 'srv-3',
-        serviceName: 'Polimento Concluído  Vitrificação / Nano ',
+        serviceName: 'Polimento e Vitrificação Cerâmica',
         price: 45000,
         isFree: false,
         vehicleSize: 'suv',
         staffId: 'staff-1',
-        staffName: 'Profissional  ',
+        staffName: 'Lavador responsável',
         bayNumber: 1,
         paymentMethod: 'fib',
         paymentStatus: 'paid',
@@ -825,7 +826,7 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         isFree: false,
         vehicleSize: 'suv',
         staffId: 'staff-2',
-        staffName: 'Profissional  até',
+        staffName: 'Lavador sênior',
         bayNumber: 2,
         paymentMethod: 'cash',
         paymentStatus: 'paid',
@@ -837,7 +838,7 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
         id: 'w-today-9',
         date: todayISO(12, 33),
         serviceId: 'srv-3',
-        serviceName: 'Polimento Concluído  Vitrificação / Nano ',
+        serviceName: 'Polimento e Vitrificação Cerâmica',
         price: 45000,
         isFree: false,
         vehicleSize: 'sedan',
@@ -860,9 +861,9 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
       return {
         ...v,
         currentBay: 1,
-        washStage: 'Espuma' as any,
+        washStage: 'Espumação' as any,
         assignedWorkerId: 'staff-1',
-        assignedWorkerName: 'Profissional  ',
+        assignedWorkerName: 'Lavador responsável',
         bayEntryTime: todayISO(12, 10),
         washHistory: mergedHistory,
       };
@@ -871,9 +872,9 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
       return {
         ...v,
         currentBay: 2,
-        washStage: 'Abrir  Polimento' as any,
+        washStage: 'Polimento' as any,
         assignedWorkerId: 'staff-2',
-        assignedWorkerName: 'Profissional  até',
+        assignedWorkerName: 'Lavador sênior',
         bayEntryTime: todayISO(12, 20),
         washHistory: mergedHistory,
       };
@@ -903,21 +904,21 @@ export function seedTodaySalesData(currentVehicles?: Vehicle[]): Vehicle[] {
     const todayExpenses: Expense[] = [
       {
         id: `exp-today-1`,
-        title: '   até ()',
+        title: 'Compra de shampoo e cera',
         amount: 15000,
-        category: 'Despesa ',
+        category: 'Outras Despesas',
         date: todayDateStr,
         isPettyCash: true,
-        notes: ' para até Lavagem',
+        notes: 'Reposição de insumos para lavagem',
       },
       {
         id: `exp-today-2`,
-        title: ' para dez ( )',
+        title: 'Conta de água e luz do dia',
         amount: 12000,
-        category: 'água  eletricidade  geradordez',
+        category: 'Água, Luz e Gerador',
         date: todayDateStr,
         isPettyCash: true,
-        notes: ' para lava-rápido em Horário Quantidade eletricidade',
+        notes: 'Consumo de água e energia do lava-rápido',
       },
     ];
     saveExpenses([...todayExpenses, ...currentExpenses]);

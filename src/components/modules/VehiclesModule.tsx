@@ -130,12 +130,12 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
   const [receiptRecord, setReceiptRecord] = useState<WashRecord | null>(null);
 
   // Form State (Add / Edit)
-  const [plateType, setPlateType] = useState<PlateType>('unified');
-  const [provinceCode, setProvinceCode] = useState('');
-  const [plateLetter, setPlateLetter] = useState('');
+  const [plateType, setPlateType] = useState<PlateType>('mercosul');
+  const [stateCode, setStateCode] = useState('');
+  const [plateLetters, setPlateLetters] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
-  const [oldCategory, setOldCategory] = useState('Particular');
+  const [category, setCategory] = useState('Particular');
   const [oldNumber, setOldNumber] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [phone, setPhone] = useState('');
@@ -146,10 +146,9 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
   const [customerPin, setCustomerPin] = useState('');
 
   const applyScannedPlate = (result: PlateScanResult) => {
-    if (result.type === 'unified') {
-      setPlateType('unified');
-      if (result.provinceCode) setProvinceCode(result.provinceCode);
-      if (result.letter) setPlateLetter(result.letter);
+    if (result.type === 'mercosul') {
+      setPlateType('mercosul');
+      if (result.letters) setPlateLetters(result.letters);
       if (result.number) setPlateNumber(result.number);
     } else {
       setPlateType('old');
@@ -162,13 +161,13 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     const cleanPlateNum = normalizeDigits(plateNumber.trim());
     const cleanOldNum = normalizeDigits(oldNumber.trim());
 
-    if (plateType === 'unified' && cleanPlateNum) {
+    if (plateType === 'mercosul' && cleanPlateNum) {
       return vehicles.find(
         (v) =>
           (!editingVehicle || v.id !== editingVehicle.id) &&
-          v.plate.type === 'unified' &&
-          v.plate.provinceCode === provinceCode &&
-          v.plate.letter?.toUpperCase() === plateLetter.toUpperCase() &&
+          v.plate.type === 'mercosul' &&
+          v.plate.stateCode === stateCode &&
+          v.plate.letters?.toUpperCase() === plateLetters.toUpperCase() &&
           normalizeDigits(v.plate.number || '') === cleanPlateNum
       );
     }
@@ -177,24 +176,24 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
         (v) =>
           (!editingVehicle || v.id !== editingVehicle.id) &&
           v.plate.type === 'old' &&
-          v.plate.oldCityName === oldCity &&
+          v.plate.cityName === oldCity &&
           normalizeDigits(v.plate.oldNumber || '') === cleanOldNum
       );
     }
     return null;
-  }, [vehicles, plateType, provinceCode, plateLetter, plateNumber, oldCity, oldNumber, editingVehicle]);
+  }, [vehicles, plateType, stateCode, plateLetters, plateNumber, oldCity, oldNumber, editingVehicle]);
 
   // Open Edit Modal
   const handleOpenEdit = (vehicle: Vehicle) => {
     setEditingVehicle(vehicle);
     setPlateType(vehicle.plate.type);
-    if (vehicle.plate.type === 'unified') {
-      setProvinceCode(vehicle.plate.provinceCode || '');
-      setPlateLetter(vehicle.plate.letter || 'A');
+    if (vehicle.plate.type === 'mercosul') {
+      setStateCode(vehicle.plate.stateCode || '');
+      setPlateLetters(vehicle.plate.letters || 'A');
       setPlateNumber(vehicle.plate.number || '');
     } else {
-      setOldCity(vehicle.plate.oldCityName || 'Campinas');
-      setOldCategory(vehicle.plate.oldCategory || 'Particular');
+      setOldCity(vehicle.plate.cityName || 'Campinas');
+      setCategory(vehicle.plate.category || 'Particular');
       setOldNumber(vehicle.plate.oldNumber || '');
     }
     setOwnerName(vehicle.ownerName);
@@ -215,25 +214,25 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     const cleanOldNumber = normalizeDigits(oldNumber.trim());
     const cleanPhone = normalizeDigits(phone.trim());
 
-    if (plateType === 'unified') {
-      if (!provinceCode || !plateLetter || !cleanPlateNumber) {
+    if (plateType === 'mercosul') {
+      if (!stateCode || !plateLetters || !cleanPlateNumber) {
         alert('Preencha UF/cidade, letra e número da placa.');
         return;
       }
-      const prov = OFFICIAL_PROVINCES.find((p) => p.code === provinceCode);
+      const prov = OFFICIAL_PROVINCES.find((p) => p.code === stateCode);
       updatedPlate = {
-        type: 'unified',
-        provinceCode,
-        provinceName: prov?.nameKu || '',
-        letter: plateLetter.toUpperCase(),
+        type: 'mercosul',
+        stateCode,
+        stateName: prov?.name || '',
+        letters: plateLetters.toUpperCase(),
         number: cleanPlateNumber,
       };
     } else {
       if (!cleanOldNumber) return;
       updatedPlate = {
         type: 'old',
-        oldCityName: oldCity,
-        oldCategory,
+        cityName: oldCity,
+        category,
         oldNumber: cleanOldNumber,
       };
     }
@@ -241,16 +240,16 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     // Check if plate matches another existing vehicle (prevent duplicate plates on edit)
     const duplicateVehicle = vehicles.find((v) => {
       if (v.id === editingVehicle.id) return false;
-      if (updatedPlate.type === 'unified' && v.plate.type === 'unified') {
+      if (updatedPlate.type === 'mercosul' && v.plate.type === 'mercosul') {
         return (
-          v.plate.provinceCode === updatedPlate.provinceCode &&
-          v.plate.letter?.toUpperCase() === updatedPlate.letter?.toUpperCase() &&
+          v.plate.stateCode === updatedPlate.stateCode &&
+          v.plate.letters?.toUpperCase() === updatedPlate.letters?.toUpperCase() &&
           normalizeDigits(v.plate.number || '') === normalizeDigits(updatedPlate.number || '')
         );
       }
       if (updatedPlate.type === 'old' && v.plate.type === 'old') {
         return (
-          v.plate.oldCityName === updatedPlate.oldCityName &&
+          v.plate.cityName === updatedPlate.cityName &&
           normalizeDigits(v.plate.oldNumber || '') === normalizeDigits(updatedPlate.oldNumber || '')
         );
       }
@@ -281,7 +280,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
     onUpdateVehicles(updated);
     setEditingVehicle(null);
-    onNotify('informaçõesum o Veículo por sucesso Novo.');
+    onNotify('Informações do veículo salvas com sucesso.');
   };
 
   const handleAddVehicle = (e: React.FormEvent) => {
@@ -293,26 +292,26 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     const cleanOldNumber = normalizeDigits(oldNumber.trim());
     const cleanPhone = normalizeDigits(phone.trim());
 
-    if (plateType === 'unified') {
-      if (!provinceCode || !plateLetter || !cleanPlateNumber) {
+    if (plateType === 'mercosul') {
+      if (!stateCode || !plateLetters || !cleanPlateNumber) {
         alert('Preencha UF/cidade, letra e número da placa.');
         return;
       }
-      const prov = OFFICIAL_PROVINCES.find((p) => p.code === provinceCode);
+      const prov = OFFICIAL_PROVINCES.find((p) => p.code === stateCode);
       newPlate = {
-        type: 'unified',
-        provinceCode,
-        provinceName: prov?.nameKu || '',
-        letter: plateLetter.toUpperCase(),
+        type: 'mercosul',
+        stateCode,
+        stateName: prov?.name || '',
+        letters: plateLetters.toUpperCase(),
         number: cleanPlateNumber,
       };
-      nfcTag = `NFC-${provinceCode}${plateLetter.toUpperCase()}-${cleanPlateNumber}`;
+      nfcTag = `NFC-${stateCode}${plateLetters.toUpperCase()}-${cleanPlateNumber}`;
     } else {
       if (!cleanOldNumber) return;
       newPlate = {
         type: 'old',
-        oldCityName: oldCity,
-        oldCategory,
+        cityName: oldCity,
+        category,
         oldNumber: cleanOldNumber,
       };
       nfcTag = `NFC-${oldCity}-${cleanOldNumber}`;
@@ -320,16 +319,16 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
     // Check if plate already exists in the system (Duplicate Plate Guard)
     const existingVehicle = vehicles.find((v) => {
-      if (newPlate.type === 'unified' && v.plate.type === 'unified') {
+      if (newPlate.type === 'mercosul' && v.plate.type === 'mercosul') {
         return (
-          v.plate.provinceCode === newPlate.provinceCode &&
-          v.plate.letter?.toUpperCase() === newPlate.letter?.toUpperCase() &&
+          v.plate.stateCode === newPlate.stateCode &&
+          v.plate.letters?.toUpperCase() === newPlate.letters?.toUpperCase() &&
           normalizeDigits(v.plate.number || '') === normalizeDigits(newPlate.number || '')
         );
       }
       if (newPlate.type === 'old' && v.plate.type === 'old') {
         return (
-          v.plate.oldCityName === newPlate.oldCityName &&
+          v.plate.cityName === newPlate.cityName &&
           normalizeDigits(v.plate.oldNumber || '') === normalizeDigits(newPlate.oldNumber || '')
         );
       }
@@ -368,8 +367,8 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
 
     setPlateNumber('');
     setOldNumber('');
-    setProvinceCode('');
-    setPlateLetter('');
+    setStateCode('');
+    setPlateLetters('');
     setOwnerName('');
     setPhone('');
     setCarModel('');
@@ -390,7 +389,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     if (confirm('tem certeza em Excluir um este Veículo em sistema Esta ação não pode ser desfeita.')) {
       const updated = vehicles.filter((v) => v.id !== id);
       onUpdateVehicles(updated);
-      onNotify('o Veículo por sucesso em sistema .');
+      onNotify('Veículo atualizado no sistema com sucesso.');
     }
   };
 
@@ -415,12 +414,12 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
         normalizeDigits(v.phone || '').includes(cleanQ) ||
         v.carModel.toLowerCase().includes(rawQ) ||
         normalizeDigits(v.nfcTagId.toLowerCase()).includes(cleanQ) ||
-        (v.plate.type === 'unified'
+        (v.plate.type === 'mercosul'
           ? normalizeDigits(v.plate.number || '').includes(cleanQ) ||
-            (v.plate.letter || '').toLowerCase().includes(rawQ) ||
-            (v.plate.provinceName || '').includes(rawQ)
+            (v.plate.letters || '').toLowerCase().includes(rawQ) ||
+            (v.plate.stateName || '').includes(rawQ)
           : normalizeDigits(v.plate.oldNumber || '').includes(cleanQ) ||
-            (v.plate.oldCityName || '').includes(rawQ));
+            (v.plate.cityName || '').includes(rawQ));
 
       const matchesSize = sizeFilter === 'all' || v.size === sizeFilter;
 
@@ -477,7 +476,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
   const handleSettleSingleDebt = (vehicleId: string, washId: string) => {
     const updated = settleVehicleDebt(vehicleId, washId, 'cash');
     onUpdateVehicles(updated);
-    onNotify('Fiado / Débito pendenteque por sucesso até   para  (Paid).');
+    onNotify('Débito pendente quitado e marcado como pago.');
   };
 
   // Loyalty Funnel Groups
@@ -509,7 +508,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
       !rawQ ||
       item.vehicle.ownerName.toLowerCase().includes(rawQ) ||
       item.serviceName.toLowerCase().includes(rawQ) ||
-      (item.vehicle.plate.type === 'unified'
+      (item.vehicle.plate.type === 'mercosul'
         ? normalizeDigits(item.vehicle.plate.number || '').includes(cleanQ)
         : normalizeDigits(item.vehicle.plate.oldNumber || '').includes(cleanQ));
 
@@ -534,24 +533,24 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
   }[] = [
     {
       id: 'registry',
-      label: 'Todos Veículos',
-      sublabel: 'Registro de Geral  Status Fidelidade',
+      label: 'Todos os Veículos',
+      sublabel: 'Cadastro completo, status e fidelidade',
       icon: Car,
       badge: totalVehiclesCount,
       badgeColor: 'bg-slate-100 text-slate-700',
     },
     {
       id: 'loyalty',
-      label: 'Lavagem Grátis (Fidelidade) (Free)',
-      sublabel: ' 4 Lavagens Concluído dois',
+      label: 'Lavagens Grátis (Fidelidade)',
+      sublabel: 'Clientes com 4 lavagens concluídas',
       icon: Gift,
       badge: freeReadyCount > 0 ? freeReadyCount : undefined,
       badgeColor: 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold',
     },
     {
       id: 'retention',
-      label: 'Cliente Ativo (+15)',
-      sublabel: 'Abrir por ',
+      label: 'Clientes Inativos (+15 dias)',
+      sublabel: 'Retenção e lembrete por WhatsApp',
       icon: Clock,
       badge: expiredCount > 0 ? expiredCount : undefined,
       badgeColor: 'bg-rose-50 text-rose-700 border border-rose-200 font-bold',
@@ -559,7 +558,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
     {
       id: 'history',
       label: 'Histórico de Lavagens',
-      sublabel: ' Recibo / Comprovante  ',
+      sublabel: 'Recibos e comprovantes de lavagem',
       icon: History,
       badge: allWashLogs.length,
       badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200',
@@ -655,8 +654,8 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block shrink-0" />
             {currentSection === 'registry' && 'Registro de Geral Veículos com Status Fidelidade (4 + 1) para cada Veículoum'}
             {currentSection === 'loyalty' && 'Veículo dez para Recebimento Lavagem 5 Grátis (Free Wash)'}
-            {currentSection === 'retention' && ' Cliente  em 15 dias acima / topoou dois para Enviar  '}
-            {currentSection === 'history' && ' Concluído os recibos Lavagem por Horário  Data'}
+            {currentSection === 'retention' && 'Cliente sem retorno há 15 dias ou mais. Deseja enviar mensagem?'}
+            {currentSection === 'history' && 'Recibos de lavagem concluídos por data e horário'}
           </span>
         </div>
       </div>
@@ -1691,7 +1690,7 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {filteredHistory.map((item) => {
-                      const formattedDate = new Date(item.date).toLocaleString('ku', {
+                      const formattedDate = new Date(item.date).toLocaleString('pt-BR', {
                         year: 'numeric',
                         month: 'numeric',
                         day: 'numeric',
@@ -1784,9 +1783,9 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                 <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
                   <button
                     type="button"
-                    onClick={() => setPlateType('unified')}
+                    onClick={() => setPlateType('mercosul')}
                     className={`flex-1 py-2 rounded-xl font-bold transition border ${
-                      plateType === 'unified'
+                      plateType === 'mercosul'
                         ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
                         : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                     }`}
@@ -1807,46 +1806,47 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                 </div>
               </div>
 
-              {/* Unified Plate Fields */}
-              {plateType === 'unified' ? (
+              {/* Campos da placa Mercosul */}
+              {plateType === 'mercosul' ? (
                 <div className="plate-fields-grid grid grid-cols-[minmax(0,1.2fr)_minmax(3rem,.65fr)_minmax(4rem,.85fr)] sm:grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">UF Cidade:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">UF (estado):</label>
                     <select
                       required
-                      value={provinceCode}
-                      onChange={(e) => setProvinceCode(e.target.value)}
+                      value={stateCode}
+                      onChange={(e) => setStateCode(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white"
                     >
-                      <option value="" disabled>UF / cidade</option>
+                      <option value="" disabled>UF</option>
                       {OFFICIAL_PROVINCES.map((p) => (
                         <option key={p.code} value={p.code}>
-                          {p.code} - {p.nameKu}
+                          {p.code} - {p.name}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">Letra (Letter):</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Letras (ABC):</label>
                     <input
                       type="text"
                       required
-                      maxLength={2}
-                      value={plateLetter}
-                      onChange={(e) => setPlateLetter(e.target.value.toUpperCase())}
+                      maxLength={3}
+                      placeholder="ABC"
+                      value={plateLetters}
+                      onChange={(e) => setPlateLetters(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 3))}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase text-center font-bold text-slate-900 dark:text-white"
                     />
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">Número Placa:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Final (1D23):</label>
                     <input
                       type="text"
                       inputMode="numeric"
                       maxLength={4}
                       required
-                      placeholder=""
+                      placeholder="1D23"
                       value={plateNumber}
-                      onChange={(e) => setPlateNumber(e.target.value)}
+                      onChange={(e) => setPlateNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 4))}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"
                     />
                   </div>
@@ -1868,10 +1868,10 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Categoria:</label>
                     <select
-                      value={oldCategory}
-                      onChange={(e) => setOldCategory(e.target.value)}
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white"
                     >
                       {OLD_PLATE_CATEGORIES.map((c) => (
@@ -1882,15 +1882,15 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">Número:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Registro (ABC1234):</label>
                     <input
                       type="text"
                       inputMode="numeric"
-                      maxLength={6}
+                      maxLength={7}
                       required
-                      placeholder=""
+                      placeholder="ABC1234"
                       value={oldNumber}
-                      onChange={(e) => setOldNumber(e.target.value)}
+                      onChange={(e) => setOldNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 7))}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"
                     />
                   </div>
@@ -2066,9 +2066,9 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                 <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
                   <button
                     type="button"
-                    onClick={() => setPlateType('unified')}
+                    onClick={() => setPlateType('mercosul')}
                     className={`flex-1 py-2 rounded-xl font-bold transition border ${
-                      plateType === 'unified'
+                      plateType === 'mercosul'
                         ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
                         : 'bg-slate-50 text-slate-600 border-slate-200'
                     }`}
@@ -2089,46 +2089,47 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                 </div>
               </div>
 
-              {/* Unified Plate Fields */}
-              {plateType === 'unified' ? (
+              {/* Campos da placa Mercosul */}
+              {plateType === 'mercosul' ? (
                 <div className="plate-fields-grid grid grid-cols-[minmax(0,1.2fr)_minmax(3rem,.65fr)_minmax(4rem,.85fr)] sm:grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">UF Cidade:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">UF (estado):</label>
                     <select
                       required
-                      value={provinceCode}
-                      onChange={(e) => setProvinceCode(e.target.value)}
+                      value={stateCode}
+                      onChange={(e) => setStateCode(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white"
                     >
-                      <option value="" disabled>UF / cidade</option>
+                      <option value="" disabled>UF</option>
                       {OFFICIAL_PROVINCES.map((p) => (
                         <option key={p.code} value={p.code}>
-                          {p.code} - {p.nameKu}
+                          {p.code} - {p.name}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">Letra (Letter):</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Letras (ABC):</label>
                     <input
                       type="text"
                       required
-                      maxLength={2}
-                      value={plateLetter}
-                      onChange={(e) => setPlateLetter(e.target.value.toUpperCase())}
+                      maxLength={3}
+                      placeholder="ABC"
+                      value={plateLetters}
+                      onChange={(e) => setPlateLetters(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 3))}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase text-center font-bold text-slate-900 dark:text-white"
                     />
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">Número Placa:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Final (1D23):</label>
                     <input
                       type="text"
                       inputMode="numeric"
                       maxLength={4}
                       required
-                      placeholder=""
+                      placeholder="1D23"
                       value={plateNumber}
-                      onChange={(e) => setPlateNumber(e.target.value)}
+                      onChange={(e) => setPlateNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 4))}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"
                     />
                   </div>
@@ -2150,10 +2151,10 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Categoria:</label>
                     <select
-                      value={oldCategory}
-                      onChange={(e) => setOldCategory(e.target.value)}
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white"
                     >
                       {OLD_PLATE_CATEGORIES.map((c) => (
@@ -2164,15 +2165,15 @@ export const VehiclesModule: React.FC<VehiclesModuleProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-500 block mb-1 font-medium">Número:</label>
+                    <label className="text-slate-500 block mb-1 font-medium">Registro (ABC1234):</label>
                     <input
                       type="text"
                       inputMode="numeric"
-                      maxLength={6}
+                      maxLength={7}
                       required
-                      placeholder=""
+                      placeholder="ABC1234"
                       value={oldNumber}
-                      onChange={(e) => setOldNumber(e.target.value)}
+                      onChange={(e) => setOldNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 7))}
                       className="w-full px-2 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-bold text-slate-900 dark:text-white text-center"
                     />
                   </div>

@@ -21,18 +21,18 @@ interface PettyCashModalProps {
 }
 
 const QUICK_REASONS = [
-  { title: '   para Funcionário', category: 'Despesa ' as const },
-  { title: ' água que', category: 'água  eletricidade  geradordez' as const },
-  { title: 'shampoo ou Espuma porem', category: 'Insumos / Produtos  shampoo' as const },
-  { title: 'Abrir  ou bomba de alta pressão', category: 'Abrir' as const },
-  { title: 'compra toalha  dez', category: 'Insumos / Produtos  shampoo' as const },
-  { title: 'por ou  geradordez', category: 'água  eletricidade  geradordez' as const },
+  { title: 'Vale transporte de funcionário', category: 'Outras Despesas' as const },
+  { title: 'Conta de água', category: 'Água, Luz e Gerador' as const },
+  { title: 'Reposição de shampoo e espuma', category: 'Produtos e Shampoos' as const },
+  { title: 'Manutenção da bomba de alta pressão', category: 'Manutenção' as const },
+  { title: 'Compra de toalhas de microfibra', category: 'Produtos e Shampoos' as const },
+  { title: 'Combustível do gerador', category: 'Água, Luz e Gerador' as const },
 ];
 
 export const PettyCashModal: React.FC<PettyCashModalProps> = ({ onSave, onClose }) => {
   const [amountInput, setAmountInput] = useState('');
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<Expense['category']>('Despesa ');
+  const [category, setCategory] = useState<Expense['category']>('Outras Despesas');
   const [paidTo, setPaidTo] = useState('');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');
@@ -48,11 +48,11 @@ export const PettyCashModal: React.FC<PettyCashModalProps> = ({ onSave, onClose 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (numericAmount <= 0) {
-      setError('Por favor Quantidade Valor  digite!');
+      setError('Informe um valor válido.');
       return;
     }
     if (!title.trim()) {
-      setError('Por favor Motivo  Valor Grátis (Fidelidade) que!');
+      setError('Informe o motivo e o valor.');
       return;
     }
 

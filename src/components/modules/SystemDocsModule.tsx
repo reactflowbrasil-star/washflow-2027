@@ -69,7 +69,7 @@ export const SystemDocsModule: React.FC = () => {
   };
 
   const handleDeleteItem = (id: string) => {
-    if (confirm('tem certeza em Excluir este Quantidade em  Faturado')) {
+    if (confirm('Tem certeza de que deseja excluir este item?')) {
       const updated = roadmap.filter((i) => i.id !== id);
       setRoadmap(updated);
       saveRoadmap(updated);

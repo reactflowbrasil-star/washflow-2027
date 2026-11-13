@@ -104,11 +104,11 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   const handleSeedDemoData = () => {
     const masterPin = settings?.adminPin || '9999';
-    const enteredPin = prompt('⚠️ para Carregar / Upload até exemplo  Por favor UF segredo / PIN Administrador (Admin Master PIN) digite:');
+    const enteredPin = prompt('⚠️ Para carregar os dados de exemplo, digite o PIN do administrador:');
     if (enteredPin === null) return;
 
     if (normalizeDigits(enteredPin.trim()) !== normalizeDigits(masterPin.trim())) {
-      alert('❌ UF segredo / PIN Administrador Erro! Carregar / Upload até exemplo .');
+      alert('❌ PIN do administrador incorreto. Não foi possível carregar os dados de exemplo.');
       return;
     }
 
@@ -119,7 +119,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     ) {
       seedRealisticDemoData();
       if (onReloadData) onReloadData();
-      if (onNotify) onNotify('📊 até exemplo  por sucesso .');
+      if (onNotify) onNotify('📊 Dados de exemplo carregados com sucesso.');
     }
   };
 
@@ -220,7 +220,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     try {
       const d = new Date(dateStr);
       if (isNaN(d.getTime())) return dateStr;
-      return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false });
     } catch {
       return '--:--';
     }
@@ -554,7 +554,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       let proratedRent = 0;
       expenses.forEach((e) => {
         const amt = Number(e.amount) || 0;
-        if (e.category === 'Valor de local / vaga' || amt >= 1000000) {
+        if (e.category === 'Aluguel' || amt >= 1000000) {
           proratedRent += Math.round(amt / 30);
         } else if (isDateToday(e.date)) {
           directToday += amt;
@@ -570,7 +570,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
       expenses.forEach((e) => {
         const amt = Number(e.amount) || 0;
-        if (e.category === 'Valor de local / vaga' || amt >= 1000000) {
+        if (e.category === 'Aluguel' || amt >= 1000000) {
           proratedRent += Math.round((amt / 30) * 7);
         } else if (e.date && new Date(e.date).getTime() >= sevenDaysAgo) {
           weeklyDirect += amt;
@@ -687,44 +687,44 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     { title: string; subtitle: string; icon: any; color: string }
   > = {
     periods: {
-      title: 'Lucro Horário: Métricas / Análise 3 como  Abrir cada 7 diasque',
-      subtitle: ' por Lucro por 3  (Aluguel / Comercial  Funcionário Insumos / Produtos ) com Abrir  até  por Data.',
+      title: 'Fluxo Financeiro e Custos',
+      subtitle: 'Receitas, custos fixos e variáveis com comparativo por período.',
       icon: CalendarDays,
       color: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
     },
     breakeven: {
-      title: ' Prejuízo  (Break-Even)  até ',
-      subtitle: ' Diário que dezsem   Aluguel / Comercial para  Concluído Despesas atécomo emque ou Horário.',
+      title: 'Ponto de Equilíbrio (Break-Even)',
+      subtitle: 'Receita mínima diária para cobrir aluguel, salários e insumos.',
       icon: Target,
       color: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
     },
     offers: {
-      title: 'Análise Financeira oferta / promoção  fidelidade do cliente Cliente (Loyalty ROI)',
-      subtitle: 'por  Lavagem Grátis por R$   Cliente que em Grátis (Fidelidade) com Enviar  WhatsApp.',
+      title: 'Fidelidade e Ofertas (ROI)',
+      subtitle: 'Retorno das lavagens grátis e campanhas de retorno por WhatsApp.',
       icon: Gift,
       color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
     },
     services: {
-      title: 'Faturamento por: Veículo Tapete Estofado / Sofá Polimento  Vitrificação / Nano',
-      subtitle: ' Faturamento cadaum em Serviçoum por  por    Número .',
+      title: 'Faturamento por Serviço',
+      subtitle: 'Receita de cada serviço com quantidade e ticket médio.',
       icon: Layers,
       color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/30',
     },
     expenses: {
-      title: ' Despesa  Receita / Faturamento:  Valor    acima / topo ',
-      subtitle: 'dez Concluído Dinheiro  os recibos Despesa porconforme 3 como  por Data  Horário .',
+      title: 'Despesas x Receita',
+      subtitle: 'Lançamentos de despesas conferidos com os recibos e o caixa.',
       icon: PieChart,
       color: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
     },
     staff: {
-      title: 'por Lavadores / Equipe Horário dez  Salário  ',
-      subtitle: 'por cada Profissionalum porconforme Número Lavagem Receita / Faturamento Salário  dias   Quantidade.',
+      title: 'Desempenho da Equipe',
+      subtitle: 'Lavagens por profissional, comissões e produtividade no período.',
       icon: Users,
       color: 'text-sky-400 bg-sky-500/10 border-sky-500/30',
     },
     overview: {
-      title: 'Dashboard acima / topo lava-rápido (Executive Command Dashboard)',
-      subtitle: ' ao vivo / tempo real   um   Cliente porconforme atédez que  (Washify / DRB System)',
+      title: 'Dashboard Executivo do Lava-Rápido',
+      subtitle: 'Visão em tempo real da operação, do caixa e dos clientes.',
       icon: Sparkles,
       color: 'text-lime-400 bg-lime-500/10 border-lime-500/30',
     },
@@ -799,7 +799,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 { id: 'today', label: 'Hoje (Today)' },
                 { id: 'week', label: '7 dias (Week)' },
                 { id: 'month', label: 'Este Mês (Month)' },
-                { id: 'all', label: 'acima / topo (All-Time)' },
+                { id: 'all', label: 'Todo o período' },
               ].map((p) => {
                 const isSelected = selectedPeriod === p.id;
                 return (
@@ -836,8 +836,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-2 border-t border-slate-100 dark:border-slate-800 scrollbar-none text-xs">
           {[
             { id: 'overview', label: 'Dashboard Principal (Overview)', icon: Sparkles },
-            { id: 'breakeven', label: ' Prejuízo  (Break-Even)', icon: Target },
-            { id: 'periods', label: 'Análise Financeira  Aluguel / Comercial (Profit Funnel)', icon: CalendarDays },
+            { id: 'breakeven', label: 'Ponto de Equilíbrio (Break-Even)', icon: Target },
+            { id: 'periods', label: 'Funil de Lucro', icon: CalendarDays },
           ].map((tab) => {
             const isActive = activeSection === tab.id;
             const Icon = tab.icon;
@@ -881,7 +881,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                         : 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800/60'
                     }`}
                   >
-                    {isSelectedDateToday ? 'Hoje (até ao vivo / tempo real)' : `: ${selectedDayNameKu} (${selectedArchiveDate})`}
+                    {isSelectedDateToday ? 'Hoje' : `: ${selectedDayNameKu} (${selectedArchiveDate})`}
                   </span>
                   <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-mono">
                     Valor de Mensal em Configuração: {formatR$(monthlyRent)}
@@ -970,7 +970,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     }`}
                   >
                     {isSelectedRentCovered
-                      ? 'Aluguel / Comercial  ✓ (100)'
+                      ? 'Aluguel ✓'
                       : `${formatR$(dailyRent - selectedDayRevenue)} Restante / Pendente até Aluguel / Comercial  sem`}
                   </span>
                 </div>
@@ -1023,7 +1023,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     }`}
                   >
                     {isSelectedStaffCovered
-                      ? 'Funcionário    ✓'
+                      ? 'Salários ✓'
                       : selectedRemAfterRent > 0
                       ? `${formatR$(dailyStaffAndUtilities - selectedRemAfterRent)} Restante / Pendente`
                       : 'Aguardando unid. Aluguel / Comercial'}
@@ -1078,7 +1078,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     }`}
                   >
                     {isSelectedMaterialsCovered
-                      ? 'Insumos / Produtos  ✓'
+                      ? 'Insumos ✓'
                       : selectedRemAfterStaff > 0
                       ? `${formatR$(selectedDayMaterialCost - selectedRemAfterStaff)} Restante / Pendente`
                       : 'Aguardando etapa 2'}
@@ -1133,7 +1133,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     }`}
                   >
                     {isSelectedCapExCovered
-                      ? '   ✓'
+                      ? 'Outros ✓'
                       : 'Aguardando etapa 3'}
                   </span>
                 </div>
@@ -1165,7 +1165,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                   {formatR$(selectedPureNetProfit)}
                 </span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">
-                  {selectedPureNetProfit >= 0 ? 'Lucro  em  dezque ✓' : 'até  Lucro '}
+                  {selectedPureNetProfit >= 0 ? 'Lucro no período ✓' : 'Sem lucro no período'}
                 </span>
               </div>
             </div>
@@ -1307,7 +1307,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                         day.netProfit >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'
                       }`}
                     >
-                      {day.netProfit >= 0 ? 'Lucro ✓' : 'que em até'}
+                      {day.netProfit >= 0 ? 'Lucro ✓' : 'em aberto'}
                     </span>
                   </div>
 
@@ -1319,7 +1319,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                         : 'bg-slate-200/70 dark:bg-slate-700 text-slate-600 dark:text-slate-300 group-hover:text-blue-700 dark:group-hover:text-blue-300 group-hover:bg-blue-50 dark:group-hover:bg-slate-600'
                     }`}
                   >
-                    {day.isSelected ? ' Ativo ✓' : 'clique para  🔍'}
+                    {day.isSelected ? 'Ativo ✓' : 'clique para detalhar 🔍'}
                   </div>
                 </button>
               ))}
@@ -1457,7 +1457,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                   {formatR$(selectedPureNetProfit)}
                 </span>
                 <span className="text-[9px] text-slate-500 dark:text-slate-400 font-sans block">
-                  {selectedPureNetProfit >= 0 ? 'Lucro ✓' : 'que em até'}
+                  {selectedPureNetProfit >= 0 ? 'Lucro ✓' : 'em aberto'}
                 </span>
               </div>
             </div>
@@ -2138,7 +2138,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </div>
               <div className="mt-4">
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-bold block">
-                  {periodNetProfit >= 0 ? 'Lucro  (Net Profit)' : 'Prejuízo  (Net Loss)'}
+                  {periodNetProfit >= 0 ? 'Lucro Líquido' : 'Prejuízo Líquido'}
                 </span>
                 <div className={`text-2xl font-black font-mono tracking-tight mt-1 ${
                   periodNetProfit >= 0 ? 'text-slate-900 dark:text-white' : 'text-rose-600 dark:text-rose-400'

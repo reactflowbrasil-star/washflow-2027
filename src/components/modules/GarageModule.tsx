@@ -83,12 +83,12 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
   // -------------------------------------------------------------
   // Entry Form State
   // -------------------------------------------------------------
-  const [plateType, setPlateType] = useState<PlateType>('unified');
-  const [provinceCode, setProvinceCode] = useState('');
-  const [plateLetter, setPlateLetter] = useState('');
+  const [plateType, setPlateType] = useState<PlateType>('mercosul');
+  const [stateCode, setStateCode] = useState('');
+  const [plateLetters, setPlateLetters] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
-  const [oldCategory, setOldCategory] = useState('Particular');
+  const [category, setCategory] = useState('Particular');
   const [oldNumber, setOldNumber] = useState('');
   const [carModel, setCarModel] = useState('');
   const [ownerName, setOwnerName] = useState('');
@@ -161,8 +161,8 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
     setAssignedSlot(targetSlot);
     setPlateNumber('');
     setOldNumber('');
-    setProvinceCode('');
-    setPlateLetter('');
+    setStateCode('');
+    setPlateLetters('');
     setCarModel('');
     setOwnerName('');
     setPhone('');
@@ -177,25 +177,25 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
   const handleSubmitEntry = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const currentPlateNum = plateType === 'unified' ? plateNumber.trim() : oldNumber.trim();
-    if (!currentPlateNum || (plateType === 'unified' && (!provinceCode || !plateLetter))) {
+    const currentPlateNum = plateType === 'mercosul' ? plateNumber.trim() : oldNumber.trim();
+    if (!currentPlateNum || (plateType === 'mercosul' && (!stateCode || !plateLetters))) {
       alert('Preencha UF/cidade, letra e número da placa.');
       return;
     }
 
     const currentPlate: LicensePlate =
-      plateType === 'unified'
+      plateType === 'mercosul'
         ? {
-            type: 'unified',
-            provinceCode,
-            provinceName: OFFICIAL_PROVINCES.find((p) => p.code === provinceCode)?.nameKu || 'Mercosul',
-            letter: plateLetter,
+            type: 'mercosul',
+            stateCode,
+            stateName: OFFICIAL_PROVINCES.find((p) => p.code === stateCode)?.name || 'São Paulo',
+            letters: plateLetters,
             number: currentPlateNum,
           }
         : {
             type: 'old',
-            oldCityName: oldCity,
-            oldCategory,
+            cityName: oldCity,
+            category,
             number: currentPlateNum,
           };
 
@@ -295,9 +295,9 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
       const existingIdx = (vehicles || []).findIndex(
         (v) =>
           v.plate.number === selectedRecord.plate.number &&
-          (v.plate.type === 'unified'
-            ? v.plate.letter === (selectedRecord.plate as any).letter
-            : v.plate.oldCityName === (selectedRecord.plate as any).oldCityName)
+          (v.plate.type === 'mercosul'
+            ? v.plate.letters === (selectedRecord.plate as any).letter
+            : v.plate.cityName === (selectedRecord.plate as any).cityName)
       );
 
       let updatedVehicles: Vehicle[];
@@ -309,7 +309,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
           bayEntryTime: new Date().toISOString(),
           assignedWorkerId: selectedStaffMember?.id,
           assignedWorkerName: selectedStaffMember?.name,
-          washStage: 'Espuma',
+          washStage: 'Espumação',
           status: 'active',
         };
       } else {
@@ -332,7 +332,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
           bayEntryTime: new Date().toISOString(),
           assignedWorkerId: selectedStaffMember?.id,
           assignedWorkerName: selectedStaffMember?.name,
-          washStage: 'Espuma',
+          washStage: 'Espumação',
           washHistory: [],
           status: 'active',
         };
@@ -446,12 +446,12 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                 if (reportWindow) {
                   reportWindow.document.write(`
                     <html dir="ltr">
-                      <head><title> Estacionamento / Pátio - ${new Date().toLocaleDateString('ku')}</title>
+                      <head><title> Estacionamento / Pátio - ${new Date().toLocaleDateString('pt-BR')}</title>
                       <style>body{font-family:system-ui,sans-serif;padding:20px;text-align:center;} table{width:100%;border-collapse:collapse;margin-top:20px;} th,td{border:1px solid #ccc;padding:8px;text-align:right;} th{background:#f0f0f0;}</style>
                       </head>
                       <body>
                         <h2>${settings.carWashName} -  Rápido Estacionamento / Pátio</h2>
-                        <p>Data: ${new Date().toLocaleString('ku')}</p>
+                        <p>Data: ${new Date().toLocaleString('pt-BR')}</p>
                         <p>Veículo emNome Estacionamento / Pátio: ${currentlyParkedCount} • local / vaga poraté: ${availableSlotsCount} • Faturamento Hoje: ${formatR$(todayRevenue)}</p>
                         <script>window.print();</script>
                       </body>
@@ -858,19 +858,19 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                       </td>
                       <td className="p-3">
                         <span className="font-mono font-black text-slate-900 dark:text-white">
-                          {r.plate.type === 'unified'
-                            ? `${r.plate.provinceCode} ${r.plate.letter} ${r.plate.number}`
-                            : `${r.plate.oldCityName} ${r.plate.number}`}
+                          {r.plate.type === 'mercosul'
+                            ? `${r.plate.stateCode} ${r.plate.letters} ${r.plate.number}`
+                            : `${r.plate.cityName} ${r.plate.number}`}
                         </span>
                       </td>
                       <td className="p-3">{r.carModel || '-'}</td>
                       <td className="p-3 font-mono">#{r.slotNumber}</td>
                       <td className="p-3 font-mono text-slate-500">
-                        {new Date(r.entryTime).toLocaleTimeString('ku', { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(r.entryTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="p-3 font-mono text-slate-500">
                         {r.exitTime
-                          ? new Date(r.exitTime).toLocaleTimeString('ku', { hour: '2-digit', minute: '2-digit' })
+                          ? new Date(r.exitTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
                           : '-'}
                       </td>
                       <td className="p-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">
@@ -945,14 +945,14 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
               <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl">
                 <button
                   type="button"
-                  onClick={() => setPlateType('unified')}
+                  onClick={() => setPlateType('mercosul')}
                   className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                    plateType === 'unified'
+                    plateType === 'mercosul'
                       ? 'bg-blue-600 text-white shadow-xs'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
                   }`}
                 >
-                  Placa Nova Mercosul (Unified)
+                  Placa Mercosul
                 </button>
                 <button
                   type="button"
@@ -968,53 +968,48 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
               </div>
 
               {/* License Plate Inputs */}
-              {plateType === 'unified' ? (
+              {plateType === 'mercosul' ? (
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Estado / Cidade</label>
+                    <label className="text-[11px] font-bold text-slate-500 block mb-1">UF (estado)</label>
                     <select
                       required
-                      value={provinceCode}
-                      onChange={(e) => setProvinceCode(e.target.value)}
+                      value={stateCode}
+                      onChange={(e) => setStateCode(e.target.value)}
                       className="w-full px-2.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                     >
-                      <option value="" disabled>UF / cidade</option>
+                      <option value="" disabled>UF</option>
                       {OFFICIAL_PROVINCES.map((p) => (
                         <option key={p.code} value={p.code}>
-                          {p.code} - {p.nameKu}
+                          {p.code} - {p.name}
                         </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Letra</label>
-                    <select
+                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Letras (ABC)</label>
+                    <input
+                      type="text"
                       required
-                      value={plateLetter}
-                      onChange={(e) => setPlateLetter(e.target.value)}
-                      className="w-full px-2.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white font-mono"
-                    >
-                      <option value="" disabled>Letra</option>
-                      {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((l) => (
-                        <option key={l} value={l}>
-                          {l}
-                        </option>
-                      ))}
-                    </select>
+                      value={plateLetters}
+                      onChange={(e) => setPlateLetters(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 3))}
+                      placeholder="ABC"
+                      maxLength={3}
+                      className="w-full px-2.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white font-mono uppercase tracking-widest"
+                    />
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Número *</label>
+                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Registro *</label>
                     <input
                       type="text"
                       required
                       autoFocus
                       value={plateNumber}
-                      onChange={(e) => setPlateNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                      inputMode="numeric"
+                      onChange={(e) => setPlateNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 4))}
                       autoComplete="off"
-                      placeholder=""
+                      placeholder="1D23"
                       className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-900 dark:text-white font-mono"
                     />
                   </div>
@@ -1038,8 +1033,8 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                   <div>
                     <label className="text-[11px] font-bold text-slate-500 block mb-1">Tipo</label>
                     <select
-                      value={oldCategory}
-                      onChange={(e) => setOldCategory(e.target.value)}
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
                       className="w-full px-2.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                     >
                       {OLD_PLATE_CATEGORIES.map((cat) => (
@@ -1050,13 +1045,13 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Número *</label>
+                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Registro *</label>
                     <input
                       type="text"
                       required
                       autoFocus
                       value={oldNumber}
-                      onChange={(e) => setOldNumber(e.target.value.replace(/[^0-9]/g, ''))}
+                      onChange={(e) => setOldNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 7))}
                       inputMode="numeric"
                       autoComplete="off"
                       placeholder=""
@@ -1259,7 +1254,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                 <div className="flex justify-between">
                   <span className="text-slate-500">Horário :</span>
                   <span className="font-mono text-slate-900 dark:text-white">
-                    {new Date(selectedRecord.entryTime).toLocaleTimeString('ku', { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(selectedRecord.entryTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -1370,7 +1365,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                 >
                   {services
-                    .filter((s) => s.category !== 'Lavagem Tapete' && s.category !== 'Lavagem Estofado / Sofá')
+                    .filter((s) => s.category !== 'Lavagem de Tapetes' && s.category !== 'Higienização de Estofados')
                     .map((s) => (
                       <option key={s.id} value={s.id}>
                         {s.name} - {formatR$(s.price)}
@@ -1477,7 +1472,7 @@ export const GarageModule: React.FC<GarageModuleProps> = ({
                 <div className="flex justify-between">
                   <span className="text-slate-600">Horário :</span>
                   <span className="font-mono">
-                    {new Date(selectedRecord.entryTime).toLocaleString('ku', {
+                    {new Date(selectedRecord.entryTime).toLocaleString('pt-BR', {
                       dateStyle: 'short',
                       timeStyle: 'short',
                     })}

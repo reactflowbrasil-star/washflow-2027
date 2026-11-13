@@ -53,64 +53,64 @@ interface DetailingPreset {
 
 const quickPurchasePresets: DetailingPreset[] = [
   {
-    label: 'Koch-Chemie Pw 1L',
-    name: 'Koch-Chemie Protector Wax (Pw) 1L',
-    category: 'Cera  Polimento',
-    unit: 'frascos',
+    label: 'Koch-Chemie PW 1L',
+    name: 'Koch-Chemie Protector Wax (PW) 1L',
+    category: 'Ceras e Polidores',
+    unit: 'Frascos',
     defaultCost: 28000,
     defaultQty: 2,
-    supplier: 'Vendas ',
-    notes: 'Cera     para brilho VIP',
+    supplier: 'Distribuidor Koch-Chemie Brasil',
+    notes: 'Cera de proteção com alto brilho para acabamento VIP',
   },
   {
     label: 'Koch-Chemie Green Star',
-    name: 'Koch-Chemie Green Star (Gs) 1L',
-    category: 'shampoo  Espuma',
-    unit: 'frascos',
+    name: 'Koch-Chemie Green Star (GS) 1L',
+    category: 'Shampoos e Espumas',
+    unit: 'Frascos',
     defaultCost: 20000,
     defaultQty: 4,
-    supplier: 'Total  até',
-    notes: 'que Geral  para  Interna  Bancos',
+    supplier: 'Distribuidor Koch-Chemie Brasil',
+    notes: 'Detergente alcalino concentrado para limpeza interna e bancos',
   },
   {
     label: '3M Fast Cut Plus',
-    name: 'Produtos Polimento (3M Fast Cut Plus Extreme)',
-    category: 'Cera  Polimento',
-    unit: 'frascos',
+    name: 'Massa de polimento 3M Fast Cut Plus Extreme',
+    category: 'Ceras e Polidores',
+    unit: 'Frascos',
     defaultCost: 35000,
     defaultQty: 2,
-    supplier: ' 3M',
-    notes: 'para Remover risco / arranhão    para',
+    supplier: 'Distribuidor 3M',
+    notes: 'Remove riscos e marcas leves de lixamento',
   },
   {
-    label: 'shampoo Espuma  (Snow Foam)',
-    name: 'shampoo Espuma  lava-rápido (Active Snow Foam)',
-    category: 'shampoo  Espuma',
-    unit: 'galões',
+    label: 'Snow Foam 5L',
+    name: 'Shampoo Snow Foam para lava-rápido 5L',
+    category: 'Shampoos e Espumas',
+    unit: 'Galões',
     defaultCost: 40000,
     defaultQty: 2,
-    supplier: 'Depósito / Estoque shampoo São Paulo',
-    notes: 'shampoo Espuma bomba de alta pressão Principal',
+    supplier: 'Depósito de produtos automotivos',
+    notes: 'Espuma densa para pré-lavagem com bomba de alta pressão',
   },
   {
-    label: 'toalha por',
-    name: 'toalha por  Abrir',
-    category: 'Materiais ',
-    unit: 'unid.',
+    label: 'Toalhas de microfibra',
+    name: 'Toalhas de microfibra 40x60cm',
+    category: 'Outros Insumos',
+    unit: 'Unidades',
     defaultCost: 5000,
     defaultQty: 10,
-    supplier: 'Vendas  Veículo',
-    notes: 'pano  Abrir sem  para',
+    supplier: 'Loja de acessórios automotivos',
+    notes: 'Secagem sem riscos na pintura',
   },
   {
-    label: '  bomba de alta pressão',
-    name: '  bomba de alta pressão Cidade por',
-    category: '  ',
-    unit: 'litros',
-    defaultCost: 15000,
-    defaultQty: 3,
-    supplier: ' ',
-    notes: ' Particular para   bomba de alta pressão',
+    label: 'Bomba de alta pressão',
+    name: 'Bomba de alta pressão 1.600 libras',
+    category: 'Outros Insumos',
+    unit: 'Unidades',
+    defaultCost: 150000,
+    defaultQty: 1,
+    supplier: 'Loja de equipamentos para lava-rápido',
+    notes: 'Equipamento principal da operação',
   },
 ];
 
@@ -139,9 +139,9 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
 
   // Form states
   const [formName, setFormName] = useState('');
-  const [formCategory, setFormCategory] = useState<InventoryItem['category']>('Cera  Polimento');
+  const [formCategory, setFormCategory] = useState<InventoryItem['category']>('Ceras e Polidores');
   const [formQuantity, setFormQuantity] = useState<number>(2);
-  const [formUnit, setFormUnit] = useState<string>('frascos');
+  const [formUnit, setFormUnit] = useState<string>('Frascos');
   const [formCostPerUnit, setFormCostPerUnit] = useState<number>(28000);
   const [formDate, setFormDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [formSupplier, setFormSupplier] = useState<string>('');
@@ -152,24 +152,24 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [clearPinInput, setClearPinInput] = useState('');
 
-  // Kurdish Month Names
-  const getKurdishMonthName = (yearMonth: string) => {
+  // Nomes dos meses em português
+  const getMonthLabel = (yearMonth: string) => {
     const [year, month] = yearMonth.split('-');
     const monthNames: Record<string, string> = {
-      '01': ' dois (1)',
-      '02': ' (2)',
-      '03': ' (3)',
-      '04': ' (4)',
-      '05': 'deseja (5)',
-      '06': ' (6)',
-      '07': ' (7)',
-      '08': ' (8)',
-      '09': ' (9)',
-      '10': ' que (10)',
-      '11': ' dois (11)',
-      '12': ' que (12)',
+      '01': 'Janeiro',
+      '02': 'Fevereiro',
+      '03': 'Março',
+      '04': 'Abril',
+      '05': 'Maio',
+      '06': 'Junho',
+      '07': 'Julho',
+      '08': 'Agosto',
+      '09': 'Setembro',
+      '10': 'Outubro',
+      '11': 'Novembro',
+      '12': 'Dezembro',
     };
-    return `${monthNames[month] || `Mês ${month}`} ${year}`;
+    return `${monthNames[month] || `Mês ${month}`} de ${year}`;
   };
 
   // Generate unique months from purchases
@@ -241,12 +241,12 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
   const openNewPurchaseModal = () => {
     setEditingPurchaseId(null);
     setFormName('Koch-Chemie Protector Wax (Pw) 1L');
-    setFormCategory('Cera  Polimento');
+    setFormCategory('Ceras e Polidores');
     setFormQuantity(2);
-    setFormUnit('frascos');
+    setFormUnit('Frascos');
     setFormCostPerUnit(28000);
     setFormDate(new Date().toISOString().split('T')[0]);
-    setFormSupplier('Vendas ');
+    setFormSupplier('Loja de acessórios');
     setFormNotes('');
     setRecordExpense(true);
     setIsPurchaseModalOpen(true);
@@ -274,11 +274,11 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
     const total = qty * unitCost;
 
     if (!cleanName) {
-      alert('Por favor Nome Insumos / Produtos ou por digite!');
+      alert('Informe o nome do insumo ou produto.');
       return;
     }
     if (qty <= 0) {
-      alert('Por favor Quantidade  por  digite!');
+      alert('Informe uma quantidade maior que zero.');
       return;
     }
     if (unitCost <= 0) {
@@ -342,7 +342,7 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
           name: cleanName,
           category: formCategory,
           quantity: qty,
-          unit: (formUnit as any) || 'frascos',
+          unit: (formUnit as any) || 'Frascos',
           minAlertLevel: Math.max(1, Math.round(qty * 0.3)),
           costPerUnit: unitCost,
           lastRestocked: formDate,
@@ -356,7 +356,7 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
         const newExpense: Expense = {
           id: `exp-${Date.now()}`,
           title: `compra Insumos / Produtos: ${cleanName} (${qty} ${formUnit})`,
-          category: 'Insumos / Produtos  shampoo',
+          category: 'Produtos e Shampoos',
           amount: total,
           date: formDate || new Date().toISOString().split('T')[0],
           notes: formSupplier.trim() ? ` em: ${formSupplier.trim()}` : `compra Produtos Estoque`,
@@ -383,7 +383,7 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
     e.preventDefault();
     const correctPin = settings?.adminPin || '9999';
     if (clearPinInput.trim() !== correctPin && clearPinInput.trim() !== '1234') {
-      alert(' UF  Erro!');
+      alert('Não foi possível registrar a compra.');
       return;
     }
 
@@ -391,11 +391,11 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
     onUpdatePurchases?.([]);
     setIsClearModalOpen(false);
     setClearPinInput('');
-    onNotify?.('acima / topo Insumos / Produtos  compra atéum . até você pode em  compra Registrar que.');
+    onNotify?.('Todo o estoque será convertido em uma compra registrada no financeiro.');
   };
 
   const handleRestoreDefaults = () => {
-    if (confirm('deseja tem certeza em Buscar exemplo acima / topoatéum')) {
+    if (confirm('Tem certeza de que deseja limpar os dados de exemplo?')) {
       onUpdateInventory(defaultInventoryItems);
       onNotify?.('Insumos / Produtos um .');
     }
@@ -459,7 +459,7 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
           <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 space-y-1">
             <span className="text-[11px] text-emerald-800 dark:text-emerald-300 font-bold block flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-emerald-600" />
-              Total compra Este Mês ({getKurdishMonthName(currentYearMonth)})
+              Total compra Este Mês ({getMonthLabel(currentYearMonth)})
             </span>
             <div className="text-xl sm:text-2xl font-black text-emerald-900 dark:text-emerald-200 font-mono tracking-tight">
               {formatR$(currentMonthPurchasesTotal)}
@@ -598,12 +598,12 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
                   onChange={(e) => setSelectedMonthFilter(e.target.value)}
                   className="w-full bg-transparent text-slate-900 dark:text-white outline-none text-xs font-bold cursor-pointer [&>option]:bg-white [&>option]:dark:bg-slate-900"
                 >
-                  <option value={currentYearMonth}>Este Mês: {getKurdishMonthName(currentYearMonth)}</option>
+                  <option value={currentYearMonth}>Este Mês: {getMonthLabel(currentYearMonth)}</option>
                   {availableMonths
                     .filter((m) => m !== currentYearMonth)
                     .map((m) => (
                       <option key={m} value={m}>
-                        {getKurdishMonthName(m)}
+                        {getMonthLabel(m)}
                       </option>
                     ))}
                   <option value="all">Todos Mês (Histórico de Concluído)</option>
@@ -1132,7 +1132,7 @@ export const InventoryModule: React.FC<InventoryModuleProps> = ({
                   type="submit"
                   className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black transition shadow-md shadow-emerald-500/20 cursor-pointer"
                 >
-                  {editingPurchaseId ? 'Salvar  ✓' : 'Salvar / Registrar compra ✓'}
+                  {editingPurchaseId ? 'Salvar ✓' : 'Salvar / Registrar compra ✓'}
                 </button>
                 <button
                   type="button"

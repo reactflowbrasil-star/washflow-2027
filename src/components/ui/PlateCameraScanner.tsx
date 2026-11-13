@@ -5,8 +5,8 @@ import { Camera, LoaderCircle, X } from 'lucide-react';
 import { PlateType } from '@/types';
 
 export type PlateScanResult =
-  | { type: 'unified'; provinceCode?: string; letter?: string; number?: string }
-  | { type: 'old'; oldNumber: string };
+  | { type: 'mercosul'; letters?: string; number?: string }
+  | { type: 'old'; oldNumber: string; letters?: string };
 
 interface PlateCameraScannerProps {
   currentType: PlateType;
@@ -24,25 +24,23 @@ const langPath = 'https://tessdata.projectnaptha.com/4.0.0';
 
 function parsePlate(text: string, currentType: PlateType): PlateScanResult | null {
   const cleaned = text.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  const unified = cleaned.match(/(\d{2})([A-Z])(\d{3,6})/);
-  if (unified) {
-    return {
-      type: 'unified',
-      provinceCode: unified[1],
-      letter: unified[2],
-      number: unified[3].slice(0, 4),
-    };
+
+  // Padrão Mercosul: ABC1D23
+  const mercosul = cleaned.match(/([A-Z]{3})(\d[A-Z]\d{2})/);
+  if (mercosul) {
+    return { type: 'mercosul', letters: mercosul[1], number: mercosul[2] };
   }
 
-  const oldFormat = cleaned.match(/[A-Z]{3}(\d{4})/);
-  if (oldFormat) return { type: 'old', oldNumber: oldFormat[1] };
+  // Padrão cinza antigo: ABC1234
+  const legacy = cleaned.match(/([A-Z]{3})(\d{4})/);
+  if (legacy) return { type: 'old', oldNumber: legacy[2], letters: legacy[1] };
 
-  const digits = cleaned.replace(/[A-Z]/g, '').slice(-6);
+  const digits = cleaned.replace(/[A-Z]/g, '');
   if (currentType === 'old' && digits.length >= 4) {
-    return { type: 'old', oldNumber: digits };
+    return { type: 'old', oldNumber: digits.slice(-4) };
   }
-  if (digits.length >= 3) {
-    return { type: 'unified', number: digits.slice(-4) };
+  if (digits.length >= 4) {
+    return { type: 'mercosul', number: digits.slice(-4) };
   }
   return null;
 }
@@ -212,7 +210,7 @@ export const PlateCameraScanner: React.FC<PlateCameraScannerProps> = ({ currentT
           void startCamera();
         }}
         className="inline-flex min-h-9 items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 text-xs font-bold text-blue-700 transition hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/50 dark:text-blue-300"
-        aria-label="Ler placa pela câmera"
+        aria-label="Ler placa do veículo pela câmera"
       >
         <Camera className="h-4 w-4" />
         Ler placa

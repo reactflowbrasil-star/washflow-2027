@@ -124,12 +124,12 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   // -------------------------------------------------------------
   // 1. FAST REGISTRATION FORM STATE (Caixa Rápido)
   // -------------------------------------------------------------
-  const [plateType, setPlateType] = useState<PlateType>('unified');
-  const [provinceCode, setProvinceCode] = useState('');
-  const [plateLetter, setPlateLetter] = useState('');
+  const [plateType, setPlateType] = useState<PlateType>('mercosul');
+  const [stateCode, setStateCode] = useState('');
+  const [plateLetters, setPlateLetters] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
   const [oldCity, setOldCity] = useState('Campinas');
-  const [oldCategory, setOldCategory] = useState('Particular');
+  const [category, setCategory] = useState('Particular');
   const [oldNumber, setOldNumber] = useState('');
 
   const [ownerName, setOwnerName] = useState('');
@@ -145,7 +145,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   // CARPET & UPHOLSTERY LAUNDRY REGISTRATION STATE (Lavagem Tapete)
   // -------------------------------------------------------------
   const [entryMode, setEntryMode] = useState<'car' | 'carpet'>('car');
-  const [carpetType, setCarpetType] = useState('Lavagem Tapete por ');
+  const [carpetType, setCarpetType] = useState('Tapete comum');
   const [carpetLength, setCarpetLength] = useState('4');
   const [carpetWidth, setCarpetWidth] = useState('3');
   const [carpetAreaM2, setCarpetAreaM2] = useState('12');
@@ -165,9 +165,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   };
 
   const parsedArea = parseFloat(carpetAreaM2) || 0;
-  const isSofaFixed = carpetType.includes('Estofado / Sofá') && !carpetType.includes('metros');
+  const isSofaFixed = carpetType.includes('Estofado') && !carpetType.includes('metros');
   const totalCarpetCalculatedPrice = isSofaFixed
-    ? (carpetType.includes('até') ? 6000 * carpetPiecesCount : 40000 * carpetPiecesCount)
+    ? (carpetType.includes('avulso') ? 6000 * carpetPiecesCount : 40000 * carpetPiecesCount)
     : Math.round(parsedArea * carpetRatePerM2 * carpetPiecesCount);
 
   // Active Branch & Sales Feed state (Unidade 1 / Unidade 2 (Filial))
@@ -349,7 +349,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     });
     onUpdateVehicles(updated);
     if (soundEnabled) playPosSound('success');
-    onNotify('Fiado / Débito pendenteque por sucesso   em  Salvo com sucesso.');
+    onNotify('Venda fiada registrada com sucesso.');
   };
 
   // Autocomplete & Live Search State for License Plate
@@ -359,10 +359,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   const plateContainerRef = useRef<HTMLDivElement>(null);
 
   const applyScannedPlate = (result: PlateScanResult) => {
-    if (result.type === 'unified') {
-      setPlateType('unified');
-      if (result.provinceCode) setProvinceCode(result.provinceCode);
-      if (result.letter) setPlateLetter(result.letter);
+    if (result.type === 'mercosul') {
+      setPlateType('mercosul');
+      if (result.letters) setPlateLetters(result.letters);
       if (result.number) setPlateNumber(result.number);
     } else {
       setPlateType('old');
@@ -404,11 +403,11 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   const vehicleExactPlateIndex = useMemo(() => {
     const index = new Map<string, Vehicle>();
     for (const { vehicle, unifiedNumber, oldNumber: indexedOldNumber } of vehicleSearchIndex) {
-      if (vehicle.plate.type === 'unified' && unifiedNumber) {
-        const key = `u:${vehicle.plate.provinceCode}:${vehicle.plate.letter?.toUpperCase() || ''}:${unifiedNumber}`;
+      if (vehicle.plate.type === 'mercosul' && unifiedNumber) {
+        const key = `u:${vehicle.plate.stateCode}:${vehicle.plate.letters?.toUpperCase() || ''}:${unifiedNumber}`;
         if (!index.has(key)) index.set(key, vehicle);
       } else if (vehicle.plate.type === 'old' && indexedOldNumber) {
-        const key = `o:${vehicle.plate.oldCityName || ''}:${indexedOldNumber}`;
+        const key = `o:${vehicle.plate.cityName || ''}:${indexedOldNumber}`;
         if (!index.has(key)) index.set(key, vehicle);
       }
     }
@@ -416,19 +415,19 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
   }, [vehicleSearchIndex]);
 
   const matchedExistingVehicle = useMemo(() => {
-    if (plateType === 'unified') {
+    if (plateType === 'mercosul') {
       const cleanPlateNum = normalizeDigits(plateNumber);
       if (!cleanPlateNum) return undefined;
-      return vehicleExactPlateIndex.get(`u:${provinceCode}:${plateLetter.toUpperCase()}:${cleanPlateNum}`);
+      return vehicleExactPlateIndex.get(`u:${stateCode}:${plateLetters.toUpperCase()}:${cleanPlateNum}`);
     }
     const cleanOldNum = normalizeDigits(oldNumber);
     if (!cleanOldNum) return undefined;
     return vehicleExactPlateIndex.get(`o:${oldCity}:${cleanOldNum}`);
-  }, [vehicleExactPlateIndex, plateType, provinceCode, plateLetter, oldCity, plateNumber, oldNumber]);
+  }, [vehicleExactPlateIndex, plateType, stateCode, plateLetters, oldCity, plateNumber, oldNumber]);
 
   // Active query digits/text
   const activePlateDigits = normalizeDigits(
-    (plateType === 'unified' ? plateNumber : oldNumber).trim()
+    (plateType === 'mercosul' ? plateNumber : oldNumber).trim()
   );
   const deferredPlateDigits = useDeferredValue(activePlateDigits);
 
@@ -450,10 +449,10 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       let score = (plateMatch ? 100 : 0) + (textMatch ? 20 : 0);
       if (unifiedNumber === query || oldNumber === query) score += 1000;
       if (
-        plateType === 'unified' &&
-        vehicle.plate.type === 'unified' &&
-        vehicle.plate.provinceCode === provinceCode &&
-        vehicle.plate.letter?.toUpperCase() === plateLetter.toUpperCase()
+        plateType === 'mercosul' &&
+        vehicle.plate.type === 'mercosul' &&
+        vehicle.plate.stateCode === stateCode &&
+        vehicle.plate.letters?.toUpperCase() === plateLetters.toUpperCase()
       ) score += 10;
       score += Math.min(vehicle.totalWashes || 0, 9);
 
@@ -467,22 +466,22 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     }
 
     return topMatches.map(({ vehicle }) => vehicle);
-  }, [vehicleSearchIndex, deferredPlateDigits, plateType, provinceCode, plateLetter, showPlateSuggestions]);
+  }, [vehicleSearchIndex, deferredPlateDigits, plateType, stateCode, plateLetters, showPlateSuggestions]);
 
   // Handle selecting an existing vehicle from live search suggestions
   const handleSelectExistingVehicle = (v: Vehicle, isSilent = false) => {
     clearedVehicleIdRef.current = null;
     lastAutoFilledIdRef.current = v.id;
 
-    if (v.plate.type === 'unified') {
-      setPlateType('unified');
-      if (v.plate.provinceCode) setProvinceCode(v.plate.provinceCode);
-      if (v.plate.letter) setPlateLetter(v.plate.letter.toUpperCase());
+    if (v.plate.type === 'mercosul') {
+      setPlateType('mercosul');
+      if (v.plate.stateCode) setStateCode(v.plate.stateCode);
+      if (v.plate.letters) setPlateLetters(v.plate.letters.toUpperCase());
       if (v.plate.number) setPlateNumber(normalizeDigits(v.plate.number));
     } else if (v.plate.type === 'old') {
       setPlateType('old');
-      if (v.plate.oldCityName) setOldCity(v.plate.oldCityName);
-      if (v.plate.oldCategory) setOldCategory(v.plate.oldCategory);
+      if (v.plate.cityName) setOldCity(v.plate.cityName);
+      if (v.plate.category) setCategory(v.plate.category);
       if (v.plate.oldNumber) setOldNumber(normalizeDigits(v.plate.oldNumber));
     }
 
@@ -513,7 +512,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     setColor('');
     setShowPlateSuggestions(false);
     if (soundEnabled) playPosSound('beep');
-    onNotify(' por sucesso  para Dar Entrada Novo Cliente.');
+    onNotify('Cliente pronto para dar entrada na lavagem.');
   };
 
   // Automatic auto-fill on exact plate match
@@ -724,7 +723,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
         let invChanged = false;
         let lowWarningName = '';
         const updatedInv = currentInv.map((item) => {
-          if (item.category === 'shampoo  Espuma' && item.quantity > 0) {
+          if (item.category === 'Shampoos e Espumas' && item.quantity > 0) {
             invChanged = true;
             const newQty = Math.max(0, Number((item.quantity - 0.25).toFixed(2)));
             if (newQty <= item.minAlertLevel && item.quantity > item.minAlertLevel) {
@@ -770,9 +769,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       isVipSubscription
         ? `👑 Lavagem Membro VIP sem Salvo com sucesso! ${cafeTotal > 0 ? `(: ${formatR$(cafeTotal)})` : ''}`
         : checkoutIsRainWarranty
-        ? '🌧️ prazo de garantia dia de chuva por: Lavagem dois por Grátis Salvo com sucesso!'
+        ? '🌧️ Garantia de chuva de 24h aplicada: lavagem de retorno gratuita!'
         : isLoyaltyFree
-        ? '🎉 Lavagem Grátis por (Free Loyalty) Salvo com sucesso  o recibo Pronto!'
+        ? '🎉 Lavagem grátis de fidelidade registrada! Recibo pronto.'
         : isDebt
         ? `⚠️ o Veículo como Fiado / Débito pendente Salvo com sucesso (${formatR$(finalPrice)})`
         : `✅ Valor ${formatR$(finalPrice)} por sucesso !`
@@ -789,7 +788,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       return;
     }
     if (!phone.trim()) {
-      alert('Por favor Telefone / Celular Cliente digite para Abrir Concluído!');
+      alert('Informe o telefone do cliente para concluir.');
       return;
     }
 
@@ -809,14 +808,14 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       notes: carpetNotes.trim() || undefined,
     };
 
-    const srv: ServiceItem = services.find((s) => s.category === 'Lavagem Tapete' || s.id === 'srv-carpet-1') || {
+    const srv: ServiceItem = services.find((s) => s.category === 'Lavagem de Tapetes' || s.id === 'srv-carpet-1') || {
       id: 'srv-carpet-1',
       name: `${carpetType} (${parsedArea > 0 ? `${parsedArea} ²` : `${carpetPiecesCount} unid.`})`,
       price: finalPrice,
-      category: 'Lavagem Tapete',
+      category: 'Lavagem de Tapetes',
       unit: 'm² (²)',
       durationMinutes: 120,
-      description: 'Lavagem Tapete por   ',
+      description: 'Lavagem de tapetes com produtos específicos e secagem rápida',
     };
 
     const assignedStaff = staff.find((s) => s.id === assignedStaffId) || staff[0];
@@ -841,9 +840,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       id: `carpet-${Date.now()}`,
       itemType: 'carpet',
       plate: {
-        type: 'unified',
-        provinceCode: '21',
-        letter: 'C',
+        type: 'mercosul',
+        stateCode: 'SP',
+        letters: 'C',
         number: randomTicketNumber,
       },
       ownerName: ownerName.trim(),
@@ -904,17 +903,17 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     const cleanPlateNumber = normalizeDigits(plateNumber.trim());
     const cleanOldNumber = normalizeDigits(oldNumber.trim());
 
-    if (plateType === 'unified') {
-      if (!provinceCode || !plateLetter || !cleanPlateNumber) {
+    if (plateType === 'mercosul') {
+      if (!stateCode || !plateLetters || !cleanPlateNumber) {
         alert('Selecione UF/cidade e preencha a letra e o número da placa.');
         return;
       }
-      const prov = OFFICIAL_PROVINCES.find((p) => p.code === provinceCode);
+      const prov = OFFICIAL_PROVINCES.find((p) => p.code === stateCode);
       builtPlate = {
-        type: 'unified',
-        provinceCode,
-        provinceName: prov?.name || '',
-        letter: plateLetter.toUpperCase(),
+        type: 'mercosul',
+        stateCode,
+        stateName: prov?.name || '',
+        letters: plateLetters.toUpperCase(),
         number: cleanPlateNumber,
       };
     } else {
@@ -924,8 +923,8 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       }
       builtPlate = {
         type: 'old',
-        oldCityName: oldCity,
-        oldCategory,
+        cityName: oldCity,
+        category,
         oldNumber: cleanOldNumber,
       };
     }
@@ -950,7 +949,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     const workerCommission = calculateWorkerCommission(worker, finalPrice);
 
     const isPaidNow = mode === 'pay_now';
-    const initialStage = mode === 'queue' ? ('Aguardando' as const) : ('Espuma' as const);
+    const initialStage = mode === 'queue' ? ('Aguardando' as const) : ('Espumação' as const);
 
     // Auto-detect first empty bay if entering bay directly
     const occupiedBays = vehicles
@@ -1021,7 +1020,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
         ownerName: ownerName.trim() || 'Cliente prezado(a)',
         phone: normalizeDigits(phone.trim()),
         carModel: carModel.trim() || 'Veículo',
-        color: color.trim() || 'Grátis (Fidelidade) ',
+        color: color.trim() || 'Não informada',
         size: vehicleSize,
         nfcTagId: nfcCode,
         hasNfcSticker: true,
@@ -1080,8 +1079,8 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     // Reset Form for next fast entry
     setPlateNumber('');
     setOldNumber('');
-    setProvinceCode('');
-    setPlateLetter('');
+    setStateCode('');
+    setPlateLetters('');
     setOwnerName('');
     setPhone('');
     setCarModel('');
@@ -1150,7 +1149,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
 
     onUpdateVehicles(updated);
     if (soundEnabled) playPosSound('beep');
-    onNotify('🗑️ Vendasque por sucesso em atépor .');
+    onNotify('🗑️ Venda excluída com sucesso.');
   };
 
   // Directly Remove / Clear vehicle from Bay without forcing checkout modal
@@ -1232,14 +1231,14 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     const saved = getSavedZReports();
     saveZReports([report, ...saved.filter((r) => r.date !== report.date)]);
     if (soundEnabled) playPosSound('success');
-    onNotify('Relatório Fechar Caixa / Cofre (Z-Report) por sucesso Salvo com sucesso!');
+    onNotify('Relatório de fechamento de caixa (Z-Report) gerado com sucesso!');
 
     // Automated Telegram Notification to Car Wash Owner
     if (settings.telegramBotEnabled && settings.telegramBotToken && settings.telegramChatId) {
       const telegramMsg = formatDailyZReportTelegram(report, settings);
       sendTelegramMessage(settings.telegramBotToken, settings.telegramChatId, telegramMsg).then((res) => {
         if (res.success) {
-          onNotify('🤖 Relatório Diário Z ao vivo / tempo real para  Administrador !');
+          onNotify('🤖 Relatório diário Z enviado ao administrador.');
         } else {
           console.warn('Telegram notification failed:', res.message);
         }
@@ -1319,7 +1318,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       if (salesSearch.trim()) {
         const query = salesSearch.trim().toLowerCase();
         const pNum = vehicle.plate.number || vehicle.plate.oldNumber || '';
-        const prov = vehicle.plate.provinceCode || '';
+        const prov = vehicle.plate.stateCode || '';
         const owner = (vehicle.ownerName || '').toLowerCase();
         const phone = (vehicle.phone || '').toLowerCase();
         const model = (vehicle.carModel || '').toLowerCase();
@@ -1352,16 +1351,16 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
         const updated = getSavedVehicles();
         onUpdateVehicles(updated);
         if (soundEnabled) playPosSound('success');
-        onNotify('🔄 até Vendas  Boxes de Lavagem com três por sucesso até!');
+        onNotify('🔄 Vendas e boxes de lavagem atualizados com sucesso.');
       } else {
         const currentV = getSavedVehicles();
         const seeded = seedTodaySalesData(currentV);
         onUpdateVehicles(seeded);
         if (soundEnabled) playPosSound('success');
-        onNotify('🔄 até Vendas Hoje (218,000 R$)  Box Ativo Novo!');
+        onNotify('🔄 Vendas de hoje atualizadas (R$ 2.180,00) e box ativo!');
       }
     } catch {
-      onNotify('⚠️ Problemaum em atéAbrir até .');
+      onNotify('⚠️ Não foi possível atualizar as vendas.');
     } finally {
       setIsSyncing(false);
     }
@@ -1373,7 +1372,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     const seeded = seedTodaySalesData(currentV);
     onUpdateVehicles(seeded);
     if (soundEnabled) playPosSound('success');
-    onNotify('🎉 9 Lavagem Hoje (218,000 R$)  Box Ativo !');
+    onNotify('🎉 9 lavagens hoje (R$ 2.180,00) e box ativo!');
   };
 
   // Active Yard Vehicles & Categorized Lists (Scoped to Active Branch)
@@ -1418,7 +1417,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
       if (v.id === vehicleId) {
         return {
           ...v,
-          washStage: 'Espuma' as const,
+          washStage: 'Espumação' as const,
           bayEntryTime: new Date().toISOString(),
         };
       }
@@ -1426,7 +1425,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
     });
     onUpdateVehicles(updated);
     if (soundEnabled) playPosSound('beep');
-    onNotify('🚿 o Veículo  Nome Lavagem (etapa Espuma).');
+    onNotify('🚿 Veículo movido para a etapa de espumação.');
   };
 
   // Action: 1-click Mark as Paid & print receipt
@@ -1615,7 +1614,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
           <div className="border-b border-slate-100 dark:border-slate-800 pb-2.5 flex items-center justify-between">
             <h3 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
               <Plus className="w-4 h-4 text-blue-600" />
-              {entryMode === 'car' ? 'Cadastro Rápido de Veículo' : 'Registro de Lavagem Tapete  Estofados'}
+              {entryMode === 'car' ? 'Cadastro Rápido de Veículo' : 'Registro de lavagem de tapetes e estofados'}
             </h3>
             <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl">
               {entryMode === 'car' ? 'Lavagem de Veículo' : 'Tapetes e Estofados (m²)'}
@@ -1698,31 +1697,31 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
               <div className="p-3 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/70 rounded-2xl space-y-1">
                 <span className="text-xs font-black text-teal-900 dark:text-teal-200 flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-                  Lavagem Especializada de Tapetes e Estofados    
+                  Lavagem especializada de tapetes e estofados
                 </span>
                 <p className="text-[10px] text-teal-700 dark:text-teal-300">
-                  por Tapete por    ou ao vivo / tempo real por m² (²) Grátis (Fidelidade) que até o valor por  dez.
+                  Informe a metragem ou a quantidade de peças para calcular o valor do serviço.
                 </p>
               </div>
 
               {/* Carpet Service Type */}
               <div className="space-y-1">
                 <label className="text-xs text-slate-800 dark:text-slate-200 font-extrabold block">
-                  Tipo  / Serviço:
+                  Tipo de serviço:
                 </label>
                 <div className="grid grid-cols-2 gap-1.5">
                   {[
-                    { id: 'Lavagem Tapete por ', label: '🧶 Tapete ', rate: 2500, unit: '²' },
-                    { id: 'Tapete água  feito à mão', label: '✨ Tapete água', rate: 3500, unit: '²' },
-                    { id: 'Lavagem conjunto Estofado / Sofá (7 )', label: '🛋️ conjunto Estofado / Sofá', rate: 40000, unit: 'conjunto' },
-                    { id: 'Lavagem Estofado / Sofá até / ', label: '🪑  / até', rate: 6000, unit: 'unid.' },
+                    { id: 'Tapete comum', label: '🧶 Tapete comum', rate: 2500, unit: 'm²' },
+                    { id: 'Tapete especial', label: '✨ Tapete especial', rate: 3500, unit: 'm²' },
+                    { id: 'Estofado / Sofá (conjunto 7 peças)', label: '🛋️ Estofado / Sofá (7 peças)', rate: 40000, unit: 'conjunto' },
+                    { id: 'Estofado avulso', label: '🪑 Sofá ou cadeira avulsa', rate: 6000, unit: 'Unidades' },
                   ].map((ct) => (
                     <button
                       key={ct.id}
                       type="button"
                       onClick={() => {
                         setCarpetType(ct.id);
-                        if (ct.unit === '²') {
+                        if (ct.unit === 'm²') {
                           setCarpetRatePerM2(ct.rate);
                         }
                       }}
@@ -1734,7 +1733,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                     >
                       <span className="text-xs font-bold">{ct.label}</span>
                       <span className="text-[10px] text-teal-700 dark:text-teal-400 font-mono font-bold">
-                        {formatR$(ct.rate)} {ct.unit === '²' ? '/ metros' : ''}
+                        {formatR$(ct.rate)} {ct.unit === 'm²' ? '/ m²' : ''}
                       </span>
                     </button>
                   ))}
@@ -1910,9 +1909,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
               <div className="grid grid-cols-2 gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
                 <button
                   type="button"
-                  onClick={() => setPlateType('unified')}
+                  onClick={() => setPlateType('mercosul')}
                   className={`py-1.5 rounded-lg font-bold text-xs transition ${
-                    plateType === 'unified'
+                    plateType === 'mercosul'
                       ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
@@ -1932,19 +1931,19 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                 </button>
               </div>
 
-              {/* License Plate Inputs - Realistic Kurdistan / Traffic Design */}
+              {/* Entrada de placa — padrão brasileiro */}
               <div ref={plateContainerRef} className="relative space-y-2">
                 <div className="flex justify-end">
                   <PlateCameraScanner currentType={plateType} onRead={applyScannedPlate} />
                 </div>
-                {plateType === 'unified' ? (
+                {plateType === 'mercosul' ? (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">
-                        Placa Padrão Mercosul (Brasil):
+                        Placa Mercosul (padrão atual):
                       </label>
                       <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400">
-                        {provinceCode ? `UF ${provinceCode} (${OFFICIAL_PROVINCES.find((p) => p.code === provinceCode)?.name || ''})` : 'Selecione UF / cidade'}
+                        {stateCode ? `UF ${stateCode} (${OFFICIAL_PROVINCES.find((p) => p.code === stateCode)?.name || ''})` : 'Selecione a UF'}
                       </span>
                     </div>
 
@@ -1970,15 +1969,15 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       <div className="plate-control-group relative px-1.5 sm:px-2 shrink-0">
                         <select
                           required
-                          value={provinceCode}
+                          value={stateCode}
                           onChange={(e) => {
-                            setProvinceCode(e.target.value);
+                            setStateCode(e.target.value);
                             setShowPlateSuggestions(true);
                           }}
                           className="plate-control-select bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
                           title="UF Cidade"
                         >
-                          <option value="" disabled>UF / cidade</option>
+                          <option value="" disabled>UF</option>
                           {OFFICIAL_PROVINCES.map((p) => (
                             <option key={p.code} value={p.code} className="text-xs font-sans font-bold">
                               {p.code} - {p.name}
@@ -1998,26 +1997,22 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                         </div>
                       </div>
 
-                      {/* Letter Selector: A, B, C... MI, MF... */}
+                      {/* Prefixo de 3 letras (ABC) */}
                       <div className="plate-control-group relative px-1.5 sm:px-2 shrink-0">
-                        <select
+                        <input
+                          type="text"
                           required
-                          value={plateLetter}
+                          value={plateLetters}
                           onChange={(e) => {
-                            setPlateLetter(e.target.value);
+                            setPlateLetters(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 3));
                             setShowPlateSuggestions(true);
                           }}
-                          className="plate-control-select bg-transparent text-xl font-black text-black focus:outline-none cursor-pointer appearance-none text-center pr-3"
-                          title="Letra Placa"
-                        >
-                          <option value="" disabled>Letra</option>
-                          {UNIFIED_PLATE_LETTERS.map((l) => (
-                            <option key={l} value={l} className="text-xs font-mono font-bold">
-                              {l}
-                            </option>
-                          ))}
-                        </select>
-                        <span className="absolute right-0.5 top-1/2 -translate-y-1/2 text-[8px] text-slate-400 pointer-events-none">▼</span>
+                          onFocus={() => setShowPlateSuggestions(true)}
+                          className="plate-control-input w-16 bg-transparent text-xl font-black text-black focus:outline-none text-center uppercase font-mono tracking-[0.15em]"
+                          placeholder="ABC"
+                          maxLength={3}
+                          aria-label="Três letras da placa"
+                        />
                       </div>
 
                       {/* Registration Number Input */}
@@ -2026,16 +2021,15 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                         required
                         inputMode="numeric"
                         autoComplete="off"
-                        placeholder=""
                         value={plateNumber}
                         onChange={(e) => {
-                          setPlateNumber(normalizeDigits(e.target.value));
+                          setPlateNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 4));
                           setShowPlateSuggestions(true);
                         }}
                         onFocus={() => setShowPlateSuggestions(true)}
                         className="plate-number-entry h-full px-2 sm:px-3 text-xl font-black text-black bg-transparent tracking-widest focus:outline-none placeholder:text-slate-300 font-mono"
-                        inputMode="numeric"
                         maxLength={4}
+                        placeholder="1D23"
                       />
                     </div>
                   </div>
@@ -2043,10 +2037,10 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">
-                        Placa Padrão / Cinza ( São Paulo  Cidade):
+                        Placa Cinza (padrão antigo):
                       </label>
                       <span className="text-[10px] font-bold text-slate-500">
-                        {oldCity} - {oldCategory}
+                        {oldCity} - {category}
                       </span>
                     </div>
 
@@ -2057,21 +2051,21 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       {/* Category Tag with Official Color */}
                       <div className="plate-control-group h-full shrink-0 relative flex items-center border-l border-black">
                         <select
-                          value={oldCategory}
+                          value={category}
                           onChange={(e) => {
-                            setOldCategory(e.target.value);
+                            setCategory(e.target.value);
                             setShowPlateSuggestions(true);
                           }}
                           className={`plate-category-select h-full px-2 sm:px-3 text-xs font-black cursor-pointer appearance-none focus:outline-none transition ${
-                            oldCategory === 'Aluguel / Comercial'
+                            category === 'Aluguel / Comercial'
                               ? 'bg-amber-400 text-slate-950 font-black'
-                              : oldCategory === 'Oficial'
+                              : category === 'Oficial'
                               ? 'bg-slate-900 text-white'
-                              : oldCategory === 'Carga'
+                              : category === 'Carga'
                               ? 'bg-blue-600 text-white'
-                              : oldCategory === 'Agrícola' || oldCategory === 'Construção'
+                              : category === 'Agrícola' || category === 'Construção'
                               ? 'bg-emerald-600 text-white'
-                              : oldCategory === 'motor elétrico'
+                              : category === 'motor elétrico'
                               ? 'bg-purple-600 text-white'
                               : 'bg-rose-600 text-white'
                           }`}
@@ -2106,30 +2100,28 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       <input
                         type="text"
                         required
-                        inputMode="numeric"
                         autoComplete="off"
-                        placeholder=""
                         value={oldNumber}
                         onChange={(e) => {
-                          setOldNumber(normalizeDigits(e.target.value));
+                          setOldNumber(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 7));
                           setShowPlateSuggestions(true);
                         }}
                         onFocus={() => setShowPlateSuggestions(true)}
                         className="plate-number-entry h-full px-2 sm:px-3 text-lg font-black text-slate-900 bg-transparent tracking-widest focus:outline-none placeholder:text-slate-300 font-mono text-left"
-                        inputMode="numeric"
-                        maxLength={6}
+                        maxLength={7}
+                        placeholder="ABC1234"
                         dir="ltr"
                       />
 
-                      {/* KR Stamp */}
+                      {/* UF Stamp */}
                       <div className="plate-control-group h-full px-1.5 sm:px-3 bg-slate-100 border-r border-slate-300 flex items-center justify-center text-xs font-black font-mono text-slate-700 shrink-0">
-                        KR
+                        BR
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Live Suggestions Dropdown (como três  sem) */}
+                {/* Sugestões de veículos já cadastrados */}
                 {showPlateSuggestions && matchingVehicleSuggestions.length > 0 && (
                   <div
                     className="absolute z-50 left-0 right-0 top-full mt-1 bg-white dark:bg-slate-900 rounded-2xl border-2 border-blue-500 shadow-2xl p-2 space-y-1.5 animate-fade-in max-h-72 overflow-y-auto"
@@ -2150,10 +2142,10 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                     </div>
 
                     {matchingVehicleSuggestions.map((sug) => {
-                      const isUnified = sug.plate.type === 'unified';
+                      const isUnified = sug.plate.type === 'mercosul';
                       const plateLabel = isUnified
-                        ? `${sug.plate.provinceCode || ''} ${sug.plate.letter || ''} ${sug.plate.number || ''}`
-                        : `${sug.plate.oldCityName || ''} ${sug.plate.oldNumber || ''}`;
+                        ? `${sug.plate.stateCode || ''} ${sug.plate.letters || ''} ${sug.plate.number || ''}`
+                        : `${sug.plate.cityName || ''} ${sug.plate.oldNumber || ''}`;
                       const debt = getVehicleTotalDebt(sug);
 
                       return (
@@ -2565,12 +2557,12 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                       {activeListTab === 'waiting'
                         ? 'Nenhum Veículo em Fila de Aguardando não há'
                         : activeListTab === 'washing'
-                        ? 'em até Nenhum Veículo em Lavagem não há'
+                        ? 'Nenhum veículo em lavagem no momento.'
                         : activeListTab === 'unpaid'
                         ? 'Nenhum Veículoum Valor Restante / Pendente (Todos )'
                         : activeListTab === 'ready'
-                        ? 'Nenhum Veículoum Concluído em  Restante / Pendente'
-                        : 'em até Nenhum Veículoum em lava-rápido não há'}
+                        ? 'Nenhum veículo concluído no período.'
+                        : 'Nenhum veículo no lava-rápido no momento.'}
                     </p>
                     <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
                       Horário em  dez Número Placa  dezque ao vivo / tempo real    Aguardando Lavagem dezsem.
@@ -2679,7 +2671,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                           )}
                         </div>
 
-                        {/* Kurdish / Iraq Plate Display */}
+                        {/* Visualização da placa brasileira */}
                         <div className="flex justify-center py-0.5">
                           {car.itemType === 'carpet' || car.carpetSpecs ? (
                             <div className="px-3.5 py-1.5 bg-teal-50 dark:bg-teal-950/70 border border-teal-300 dark:border-teal-700/80 rounded-xl text-teal-900 dark:text-teal-200 text-xs font-bold flex items-center gap-1.5 shadow-2xs">
@@ -2735,7 +2727,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                                 [
                                   { id: 'Espuma', label: 'Espuma 🧼' },
                                   { id: 'Lavagem Externa', label: 'água 🚿' },
-                                  { id: 'Abrir  Polimento', label: ' 💨' },
+                                  { id: 'Polimento', label: 'Polimento 💨' },
                                   { id: 'Concluído', label: 'Concluído ✨' },
                                 ] as const
                               ).map((st) => (
@@ -3003,7 +2995,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                 <div className="py-12 text-center space-y-2 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
                   <Receipt className="w-8 h-8 mx-auto text-slate-400" />
                   <p className="text-xs font-bold text-slate-600 dark:text-slate-300">
-                    {salesSearch ? 'Nenhum Recibo / Comprovanteum por Buscar ' : 'até até Nenhum Vendas para Hoje Registrar não realizado'}
+                    {salesSearch ? 'Nenhum recibo encontrado para a busca.' : 'Nenhuma venda registrada hoje.'}
                   </p>
                 </div>
               ) : (
@@ -3011,7 +3003,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                   {filteredTodaySales.map(({ vehicle, record }, idx) => {
                     const isDebt = record.paymentStatus === 'unpaid';
                     const branchLabel = record.branchName || (record.branchId === 'branch-2' ? 'Unidade 2 (Filial)' : 'Unidade 1');
-                    const timeString = record.date ? new Date(record.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+                    const timeString = record.date ? new Date(record.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
 
                     return (
                       <div
@@ -3254,7 +3246,7 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                 <div className="space-y-2 max-h-52 overflow-y-auto pr-1 text-xs">
                   {(() => {
                     const carWashServices = services.filter(
-                      (s) => s.category === 'Veículo' || s.category === 'Polimento  Vitrificação / Nano cerâmica'
+                      (s) => s.category === 'Veículo' || s.category === 'Polimento e Vitrificação'
                     );
                     const listToDisplay = carWashServices.length > 0 ? carWashServices : services;
 
@@ -3358,9 +3350,9 @@ export const CashierCommand: React.FC<CashierCommandProps> = ({
                 <label className="text-xs text-slate-800 dark:text-slate-200 font-extrabold block">Método Recebimento Valor:</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-black">
                   {[
-                    { id: 'cash', label: '💵  (Cash)', color: 'border-emerald-500 bg-emerald-600 text-white shadow-emerald-600/30 ring-2 ring-emerald-500/20' },
+                    { id: 'cash', label: '💵 Dinheiro', color: 'border-emerald-500 bg-emerald-600 text-white shadow-emerald-600/30 ring-2 ring-emerald-500/20' },
                     { id: 'fastpay', label: '📱 FastPay', color: 'border-amber-500 bg-amber-600 text-white shadow-amber-600/30 ring-2 ring-amber-500/20' },
-                    { id: 'fib', label: '🏦 FIB ', color: 'border-blue-500 bg-blue-600 text-white shadow-blue-600/30 ring-2 ring-blue-500/20' },
+                    { id: 'fib', label: '🏦 PIX / Débito', color: 'border-blue-500 bg-blue-600 text-white shadow-blue-600/30 ring-2 ring-blue-500/20' },
                     { id: 'debt', label: '⚠️ Fiado / Débito pendente (Debt)', color: 'border-rose-500 bg-rose-600 text-white shadow-rose-600/30 ring-2 ring-rose-500/20' },
                   ].map((pm) => (
                     <button

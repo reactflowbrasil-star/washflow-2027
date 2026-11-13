@@ -108,10 +108,10 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     const updateTime = () => {
       const now = new Date();
       setCurrentTime(
-        now.toLocaleTimeString('en-US', {
+        now.toLocaleTimeString('pt-BR', {
           hour: '2-digit',
           minute: '2-digit',
-          hour12: true,
+          hour12: false,
         })
       );
     };
@@ -271,12 +271,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           const matchesPhone = normalizeDigits(v.phone || '').includes(cleanQ);
           const matchesModel = v.carModel.toLowerCase().includes(rawQ);
           const matchesPlateNumber =
-            v.plate.type === 'unified'
+            v.plate.type === 'mercosul'
               ? normalizeDigits(v.plate.number || '').includes(cleanQ) ||
-                (v.plate.letter || '').toLowerCase().includes(rawQ) ||
-                (v.plate.provinceName || '').includes(rawQ)
+                (v.plate.letters || '').toLowerCase().includes(rawQ) ||
+                (v.plate.stateName || '').includes(rawQ)
               : normalizeDigits(v.plate.oldNumber || '').includes(cleanQ) ||
-                (v.plate.oldCityName || '').includes(rawQ);
+                (v.plate.cityName || '').includes(rawQ);
           return matchesOwner || matchesPhone || matchesModel || matchesPlateNumber;
         })
         .slice(0, 5)

@@ -94,7 +94,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
     const dateStr = new Date().toISOString().split('T')[0];
     const fileName = `carwash-backup-${dateStr}.json`;
     downloadFile(JSON.stringify(backupData, null, 2), fileName, 'application/json');
-    onNotify('📁  aplicativo Concluído  por sucesso .');
+    onNotify('📁 Backup completo exportado com sucesso.');
   };
 
   // 2. Import and Restore JSON Backup
@@ -111,13 +111,13 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
         const parsed = JSON.parse(content);
 
         if (!parsed.data) {
-          alert('este em  aplicativo  este sistema não há!');
+          alert('Este arquivo não pertence a este sistema.');
           setIsRestoring(false);
           return;
         }
 
         const dateStr = parsed.exportedAt
-          ? new Date(parsed.exportedAt).toLocaleDateString('ku')
+          ? new Date(parsed.exportedAt).toLocaleDateString('pt-BR')
           : 'antes de';
         const confirmed = window.confirm(
           `deseja tem certeza em Buscar aplicativo «${
@@ -137,7 +137,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
           if (Array.isArray(parsed.data.cafeItems)) saveCafeItems(parsed.data.cafeItems);
           if (Array.isArray(parsed.data.zreports)) saveZReports(parsed.data.zreports);
 
-          onNotify('✅ aplicativo por sucesso   Todos por Novo.');
+          onNotify('✅ Backup restaurado com sucesso. Todos os dados foram atualizados.');
           if (onDataRestored) {
             onDataRestored();
           } else {
@@ -146,7 +146,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
           onClose();
         }
       } catch (err) {
-        alert('Erroum em   aplicativo !');
+        alert('Erro ao restaurar o backup.');
       } finally {
         setIsRestoring(false);
         if (fileInputRef.current) fileInputRef.current.value = '';
@@ -162,12 +162,12 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
 
     vehicles.forEach((v) => {
       const plate =
-        v.plate.type === 'unified'
-          ? `${v.plate.provinceCode || ''} | ${v.plate.letter || ''} ${v.plate.number || ''}`
-          : `${v.plate.oldCityName || ''} / ${v.plate.oldNumber || ''}`;
+        v.plate.type === 'mercosul'
+          ? `${v.plate.letters || ''}${v.plate.number || ''}${v.plate.stateCode ? ` (${v.plate.stateCode})` : ''}`
+          : `${v.plate.cityName || ''} / ${v.plate.oldNumber || ''}`;
 
       (v.washHistory || []).forEach((w) => {
-        const dateStr = w.date ? new Date(w.date).toLocaleDateString('ku') : '';
+        const dateStr = w.date ? new Date(w.date).toLocaleDateString('pt-BR') : '';
         rows.push(
           [
             `"${dateStr}"`,
@@ -200,7 +200,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
       `washes-${new Date().toISOString().split('T')[0]}.csv`,
       'text/csv;charset=utf-8;'
     );
-    onNotify('📊   Lavagens (washes.csv) .');
+    onNotify('📊 Relatório de lavagens (washes.csv) exportado.');
   };
 
   // 4. Export CSV: Registered Vehicles & Loyalty
@@ -209,11 +209,11 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
     const BOM = '\uFEFF';
     const rows = vehicles.map((v) => {
       const plate =
-        v.plate.type === 'unified'
-          ? `${v.plate.provinceCode || ''} | ${v.plate.letter || ''} ${v.plate.number || ''}`
-          : `${v.plate.oldCityName || ''} / ${v.plate.oldNumber || ''}`;
-      const lastVisit = v.lastVisitDate ? new Date(v.lastVisitDate).toLocaleDateString('ku') : '';
-      const regDate = v.registeredDate ? new Date(v.registeredDate).toLocaleDateString('ku') : '';
+        v.plate.type === 'mercosul'
+          ? `${v.plate.letters || ''}${v.plate.number || ''}${v.plate.stateCode ? ` (${v.plate.stateCode})` : ''}`
+          : `${v.plate.cityName || ''} / ${v.plate.oldNumber || ''}`;
+      const lastVisit = v.lastVisitDate ? new Date(v.lastVisitDate).toLocaleDateString('pt-BR') : '';
+      const regDate = v.registeredDate ? new Date(v.registeredDate).toLocaleDateString('pt-BR') : '';
 
       return [
         `"${v.ownerName}"`,
@@ -224,7 +224,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
         v.totalWashes,
         v.currentCycleWashes,
         v.freeWashesClaimed,
-        `"${v.status === 'active' ? 'Ativo' : 'poracima / topo'}"`,
+        `"${v.status === 'active' ? 'Ativo' : 'Todo o período'}"`,
         `"${lastVisit}"`,
         `"${regDate}"`,
       ].join(',');
@@ -243,7 +243,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
       `vehicles-${new Date().toISOString().split('T')[0]}.csv`,
       'text/csv;charset=utf-8;'
     );
-    onNotify('🚗   Veículo Salvo com sucessocomo .');
+    onNotify('🚗 Cadastro de veículos exportado com sucesso.');
   };
 
   // 5. Export CSV: Expenses & Petty Cash
@@ -251,13 +251,13 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
     const expenses = getSavedExpenses();
     const BOM = '\uFEFF';
     const rows = expenses.map((e) => {
-      const dateStr = e.date ? new Date(e.date).toLocaleDateString('ku') : '';
+      const dateStr = e.date ? new Date(e.date).toLocaleDateString('pt-BR') : '';
       return [
         `"${dateStr}"`,
         `"${e.title}"`,
         `"${e.category}"`,
         e.amount,
-        `"${e.isPettyCash ? 'por (Caixa / Cofre)' : ''}"`,
+        `"${e.isPettyCash ? 'Movimentações de caixa' : ''}"`,
         `"${e.paidTo || ''}"`,
         `"${e.notes || ''}"`,
       ].join(',');
@@ -276,7 +276,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
       `expenses-${new Date().toISOString().split('T')[0]}.csv`,
       'text/csv;charset=utf-8;'
     );
-    onNotify('💸   Despesas .');
+    onNotify('💸 Despesas exportadas.');
   };
 
   // 6. Export CSV: Inventory & Chemicals
@@ -286,7 +286,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
     const rows = inventory.map((item) => {
       const totalVal = (item.quantity || 0) * (item.costPerUnit || 0);
       const lastRestock = item.lastRestocked
-        ? new Date(item.lastRestocked).toLocaleDateString('ku')
+        ? new Date(item.lastRestocked).toLocaleDateString('pt-BR')
         : '';
       return [
         `"${item.name}"`,
@@ -314,7 +314,7 @@ export const BackupManagerModal: React.FC<BackupManagerModalProps> = ({
       `inventory-${new Date().toISOString().split('T')[0]}.csv`,
       'text/csv;charset=utf-8;'
     );
-    onNotify('📦   Estoque & Insumos .');
+    onNotify('📦 Estoque e insumos exportados.');
   };
 
   return (

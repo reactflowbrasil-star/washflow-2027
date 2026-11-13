@@ -43,14 +43,14 @@ export const NfcStickerModal: React.FC<NfcStickerModalProps> = ({
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText(portalUrl);
       setCopied(true);
-      if (onNotify) onNotify('🔗 Link até NFC Total !');
+      if (onNotify) onNotify('🔗 Link NFC gerado com sucesso!');
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
   const handleWhatsApp = () => {
     if (!vehicle.phone) {
-      if (onNotify) onNotify('Por favor acima / topoaté Número Telefone / Celular Cliente Registrar que!');
+      if (onNotify) onNotify('Informe o telefone do cliente para registrar.');
       return;
     }
     const msg = `Olá prezado(a) ${vehicle.ownerName}\neste Link cartão  VIP  Fidelidade o Veículo em ${carWashName}:\n${portalUrl}\nvocê pode  Histórico de Lavagens  Lavagem Grátis (Fidelidade) (4 + 1 Grátis) que.`;
