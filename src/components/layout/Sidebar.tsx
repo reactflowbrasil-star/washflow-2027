@@ -330,7 +330,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             /* When collapsed: single perfectly centered toggle button with purple gradient */
             <button
               onClick={handleToggleCollapse}
-              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#6366F1] via-[#7C3AED] to-[#8B5CF6] flex items-center justify-center text-white shadow-md shadow-indigo-500/25 mx-auto hover:scale-105 transition-transform group"
+              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 ring-1 ring-white/20 mx-auto hover:scale-105 transition-transform group wf-sheen"
               title="Expandir menu"
             >
               <PanelRightOpen className="w-4 h-4 text-white transition-transform group-hover:scale-110" />
@@ -339,12 +339,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             /* When expanded: brand logo + name on right, toggle button on left */
             <>
               <div className="flex items-center gap-2.5 overflow-hidden">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6366F1] via-[#7C3AED] to-[#8B5CF6] flex items-center justify-center text-white shadow-md shadow-indigo-500/25 shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 ring-1 ring-white/20 shrink-0 wf-sheen">
                   <Layers className="w-4 h-4 text-white" />
                 </div>
 
                 <div className="overflow-hidden animate-fade-in">
-                  <h1 className="font-extrabold text-xs text-slate-900 dark:text-slate-100 truncate tracking-tight">
+                  <h1 className="font-extrabold text-[13px] text-slate-900 dark:text-slate-50 truncate tracking-tight leading-tight">
                     {carWashName || 'ProPanel'}
                   </h1>
                   <span className={`text-[10px] font-bold block truncate ${userRole === 'cashier' ? 'text-blue-600 dark:text-blue-400' : 'text-purple-600 dark:text-purple-400'}`}>
@@ -410,9 +410,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {/* 2. NAVIGATION BODY */}
-        <nav className="flex-1 p-2 space-y-1 overflow-y-auto scrollbar-none">
+        <nav className="flex-1 p-2.5 space-y-1 overflow-y-auto scrollbar-none">
           {!isCollapsed && (
-            <div className="px-2.5 pt-1.5 pb-0.5 text-[9px] font-black text-slate-400 uppercase tracking-widest">
+            <div className="px-2.5 pt-1.5 pb-1 text-[9px] font-black text-slate-400/90 dark:text-slate-500 uppercase tracking-[0.18em]">
               MENU • NAVEGAÇÃO
             </div>
           )}
@@ -442,10 +442,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       }
                     }}
                     title={isCollapsed ? item.label : undefined}
-                    className={`w-full flex items-center justify-between py-2 px-2.5 rounded-xl text-xs font-bold transition-all group ${
+                    className={`w-full flex items-center justify-between py-2.5 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 group ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#6366F1] via-[#7C3AED] to-[#8B5CF6] text-white shadow-md shadow-indigo-500/25'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                        ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500 text-white shadow-lg shadow-indigo-500/30 ring-1 ring-white/15'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/70'
                     } ${isCollapsed ? 'justify-center px-0' : ''}`}
                   >
                     <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : 'gap-2.5'}`}>
@@ -561,7 +561,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         {/* 3. FOOTER: USER PROFILE CARD (Matching "Alex Morgan - Pro Member" in the shot) */}
-        <div className="p-2 border-t border-slate-100 dark:border-slate-800 space-y-1.5 bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="p-2.5 border-t border-slate-200/70 dark:border-slate-800 space-y-1.5 bg-white/40 dark:bg-slate-900/30">
           {/* Quick Install Mobile App button */}
           {!isCollapsed && (
             <button

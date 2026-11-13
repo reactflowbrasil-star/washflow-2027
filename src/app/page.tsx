@@ -293,10 +293,17 @@ export default function MainPage() {
 
   if (isLoadingSession) {
     return (
-      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center font-sans" dir="ltr">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
-          <span className="text-xs font-bold text-slate-400">Carregando sistema...</span>
+      <div className="app-shell min-h-screen flex items-center justify-center font-sans" dir="ltr">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 wf-sheen">
+            <Layers className="w-6 h-6" />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Carregando sistema...</span>
+            <div className="w-40 h-1 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+              <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 animate-pulse" />
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -377,8 +384,10 @@ export default function MainPage() {
 
         {/* Global Toast Notification */}
         {notification && (
-          <div role="status" aria-live="polite" className="app-toast fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-5 py-2.5 rounded-2xl shadow-2xl font-bold text-xs flex items-center gap-2 animate-fade-in border border-emerald-400">
-            <CheckCircle2 className="w-4 h-4" />
+          <div role="status" aria-live="polite" className="app-toast fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 dark:bg-white/95 text-white dark:text-slate-900 px-4 py-2.5 rounded-2xl shadow-xl font-semibold text-xs flex items-center gap-2.5 animate-fade-in border border-white/10 dark:border-slate-200/80 backdrop-blur-xl">
+            <span className="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-500 dark:text-emerald-600 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            </span>
             {notification}
           </div>
         )}
@@ -398,7 +407,7 @@ export default function MainPage() {
           onLogout={handleLogout}
         />
 
-        <main className="app-content flex-1 p-2 sm:p-4 w-full max-w-full min-w-0 overflow-x-hidden pb-28 lg:pb-6">
+        <main className="app-content flex-1 p-3 sm:p-5 w-full max-w-full min-w-0 overflow-x-hidden pb-32 lg:pb-8">
           {activeTab === 'analytics' && (
             <AnalyticsDashboard
               setupItems={setupItems}

@@ -738,11 +738,11 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       {/* ============================================================= */}
       {/* UNIFIED EXECUTIVE COMMAND BAR & SUB-NAV TABS                  */}
       {/* ============================================================= */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xs space-y-4">
+      <div className="wf-surface rounded-3xl p-4 sm:p-5 space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
-              <Sparkles className="w-6 h-6 text-yellow-300" />
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 ring-1 ring-white/20 shrink-0 wf-sheen">
+              <Sparkles className="w-6 h-6 text-yellow-200" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">

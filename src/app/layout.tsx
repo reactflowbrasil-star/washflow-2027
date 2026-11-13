@@ -3,7 +3,10 @@ import './globals.css';
 import { InstallPwaPrompt } from '@/components/ui/InstallPwaPrompt';
 
 export const viewport: Viewport = {
-  themeColor: '#0f172a',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f4f6fb' },
+    { media: '(prefers-color-scheme: dark)', color: '#080d18' },
+  ],
   width: 'device-width',
   initialScale: 1,
   userScalable: true,
@@ -48,7 +51,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
               </head>
-      <body className="min-h-screen bg-[#F4F6FA] text-slate-900 antialiased selection:bg-blue-600 selection:text-white font-sans overflow-x-hidden max-w-full w-full">
+      <body className="min-h-screen bg-[#f4f6fb] text-slate-900 antialiased selection:bg-indigo-600 selection:text-white font-sans overflow-x-hidden max-w-full w-full">
         <InstallPwaPrompt />
         {children}
       </body>

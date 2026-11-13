@@ -131,7 +131,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
 
   return (
     <div
-      className="min-h-screen w-full bg-[#0B0F19] text-white flex flex-col justify-between items-center relative overflow-hidden font-sans p-4 sm:p-6 select-none"
+      className="login-shell min-h-screen w-full text-white flex flex-col justify-between items-center relative overflow-hidden font-sans p-4 sm:p-6 select-none"
       dir="ltr"
     >
       {/* Background Ambient Glow Orbs */}
@@ -142,7 +142,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
       {/* Top Header / Brand Bar */}
       <header className="w-full max-w-md flex items-center justify-between z-10 pt-2 sm:pt-4">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shadow-lg shadow-indigo-500/20 flex items-center justify-center">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-500 p-0.5 shadow-lg shadow-indigo-500/30 ring-1 ring-white/20 flex items-center justify-center wf-sheen">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -157,7 +157,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
       </header>
 
       {/* Center Interactive Login Box */}
-      <main className="w-full max-w-sm flex flex-col items-center z-10 my-auto py-4">
+      <main className="login-card w-full max-w-sm flex flex-col items-center z-10 my-auto rounded-[28px] p-4 sm:p-5">
         {/* Shield & Greeting */}
         <div className="relative mb-5 flex flex-col items-center">
           <div
@@ -166,7 +166,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
                 ? 'bg-emerald-500 text-white shadow-emerald-500/30 scale-105'
                 : isShaking
                 ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30 shadow-rose-500/20'
-                : 'bg-gradient-to-tr from-slate-800 to-slate-900 border border-slate-700/80 text-indigo-400 shadow-indigo-500/10'
+                : 'bg-white/[0.06] border border-white/10 text-indigo-300 shadow-indigo-500/10 ring-1 ring-white/5'
             }`}
           >
             {isSuccess ? (
@@ -260,7 +260,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
               key={digit}
               type="button"
               onClick={() => handleDigit(digit)}
-              className="h-14 sm:h-16 rounded-2xl bg-slate-900/80 hover:bg-slate-800 active:scale-95 border border-slate-800 hover:border-slate-700 text-xl font-bold font-mono text-white flex items-center justify-center transition shadow-sm cursor-pointer"
+              className="h-14 sm:h-16 rounded-2xl bg-white/[0.05] hover:bg-white/[0.11] active:scale-95 border border-white/10 hover:border-indigo-400/40 text-xl font-bold font-mono text-white flex items-center justify-center transition shadow-sm cursor-pointer"
             >
               {digit}
             </button>
@@ -270,7 +270,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
           <button
             type="button"
             onClick={handleClear}
-            className="h-14 sm:h-16 rounded-2xl bg-slate-900/40 hover:bg-rose-950/40 active:scale-95 border border-slate-800/80 hover:border-rose-900/60 text-xs font-bold text-slate-400 hover:text-rose-400 flex items-center justify-center transition cursor-pointer"
+            className="h-14 sm:h-16 rounded-2xl bg-white/[0.02] hover:bg-rose-500/15 active:scale-95 border border-white/5 hover:border-rose-400/40 text-xs font-bold text-slate-400 hover:text-rose-300 flex items-center justify-center transition cursor-pointer"
           >
             Limpar
           </button>
@@ -279,7 +279,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
           <button
             type="button"
             onClick={() => handleDigit('0')}
-            className="h-14 sm:h-16 rounded-2xl bg-slate-900/80 hover:bg-slate-800 active:scale-95 border border-slate-800 hover:border-slate-700 text-xl font-bold font-mono text-white flex items-center justify-center transition shadow-sm cursor-pointer"
+            className="h-14 sm:h-16 rounded-2xl bg-white/[0.05] hover:bg-white/[0.11] active:scale-95 border border-white/10 hover:border-indigo-400/40 text-xl font-bold font-mono text-white flex items-center justify-center transition shadow-sm cursor-pointer"
           >
             0
           </button>
@@ -289,7 +289,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ settings, onLoginSucce
             type="button"
             onClick={handleBackspace}
             aria-label="Apagar"
-            className="h-14 sm:h-16 rounded-2xl bg-slate-900/40 hover:bg-slate-800 active:scale-95 border border-slate-800/80 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
+            className="h-14 sm:h-16 rounded-2xl bg-white/[0.02] hover:bg-white/[0.09] active:scale-95 border border-white/5 hover:border-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
           >
             <Delete className="w-5 h-5 rotate-180" />
           </button>

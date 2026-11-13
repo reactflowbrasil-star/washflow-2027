@@ -284,14 +284,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
   return (
     <header
-      className="app-header header-safe-top h-11 sm:h-12 border-b border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 sm:px-4 flex items-center justify-between select-none sticky top-0 z-30 shadow-2xs text-slate-800 dark:text-slate-100 w-full max-w-full overflow-hidden"
+      className="app-header header-safe-top h-12 sm:h-[54px] border-b border-slate-200/80 dark:border-slate-800 px-2.5 sm:px-4 flex items-center justify-between select-none sticky top-0 z-30 text-slate-800 dark:text-slate-100 w-full max-w-full overflow-hidden"
     >
       {/* Right side: Mobile Hamburger, Brand Name, Mobile Search Button, Live Desktop Search Bar & Clock */}
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         {onToggleMobileMenu && (
           <button
             onClick={onToggleMobileMenu}
-            className="lg:hidden p-1.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs shrink-0 cursor-pointer hover:opacity-95 active:scale-95 transition"
+            className="lg:hidden p-2 sm:px-3 sm:py-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-indigo-500/25 ring-1 ring-white/15 shrink-0 cursor-pointer hover:opacity-95 active:scale-95 transition"
             title="Menu Principal"
           >
             <Menu className="w-3.5 h-3.5" />
@@ -305,8 +305,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         </span>
 
         {/* Compact Clock (Desktop) */}
-        <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#F1F3F7] dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 whitespace-nowrap shrink-0">
-          <Clock className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+        <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/70 dark:bg-slate-800/70 border border-slate-200/70 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 whitespace-nowrap shrink-0 shadow-2xs">
+          <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
           <span className="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-200" suppressHydrationWarning>
             {currentTime || '...'}
           </span>
@@ -319,8 +319,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         <div
           className={`hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-xl border text-xs font-bold transition shrink-0 shadow-xs cursor-default ${
             isOnline
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60'
-              : 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60 ring-1 ring-amber-400/30 animate-pulse'
+              ? 'bg-emerald-50/80 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/60'
+              : 'bg-amber-50/80 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60 ring-1 ring-amber-400/30 animate-pulse'
           }`}
           title={
             isOnline
@@ -346,8 +346,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
             className={`relative p-1.5 sm:p-2 rounded-xl transition shadow-xs flex items-center justify-center shrink-0 cursor-pointer ${
               isNotificationOpen
-                ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                : 'bg-[#F1F3F7] hover:bg-purple-50 text-slate-600 hover:text-purple-600 border border-slate-200/60 hover:border-purple-200'
+                ? 'bg-gradient-to-tr from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/30'
+                : 'bg-white/70 dark:bg-slate-800/70 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200/70 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-800'
             }`}
             title="Central de Notificações"
           >
@@ -506,11 +506,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         {/* Profile Avatar / User & Logout */}
         <div className="flex items-center gap-1.5 sm:gap-2 pr-1 sm:pr-2 border-l border-slate-200 dark:border-slate-700 whitespace-nowrap shrink-0">
           <div
-            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl ${
+            className={`w-8 h-8 rounded-xl ${
               currentUser?.role === 'admin'
-                ? 'bg-gradient-to-tr from-purple-600 to-indigo-600'
-                : 'bg-gradient-to-tr from-blue-600 to-cyan-600'
-            } text-white flex items-center justify-center text-[10px] sm:text-xs font-black shadow-xs shrink-0`}
+                ? 'bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-500'
+                : 'bg-gradient-to-tr from-sky-500 to-cyan-500'
+            } text-white flex items-center justify-center text-[10px] sm:text-xs font-black shadow-md shadow-indigo-500/20 ring-1 ring-white/25 shrink-0`}
           >
             {currentUser?.avatar || (currentUser?.role === 'admin' ? '👑' : 'CW')}
           </div>

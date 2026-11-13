@@ -16,6 +16,13 @@
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-plate: 'FE-Font', 'JetBrains Mono', monospace;
+
+  /* Refined elevation scale — softer, cooler, more layered */
+  --shadow-2xs: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-xs: 0 0 0 1px rgb(15 23 42 / 0.03), 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --shadow-sm: 0 0 0 1px rgb(15 23 42 / 0.03), 0 1px 3px rgb(15 23 42 / 0.05), 0 10px 26px -18px rgb(15 23 42 / 0.28);
+  --shadow-md: 0 1px 2px rgb(15 23 42 / 0.05), 0 14px 32px -14px rgb(15 23 42 / 0.20);
+  --shadow-lg: 0 1px 2px rgb(15 23 42 / 0.04), 0 24px 48px -18px rgb(15 23 42 / 0.24);
 }
 
 .font-plate {
@@ -96,13 +103,15 @@ body {
   :root {
     --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    --app-bg: #f3f5f8;
+    --app-bg: #f4f6fb;
     --app-surface: #ffffff;
-    --app-text: #172033;
+    --app-text: #101828;
     --app-muted: #667085;
-    --app-border: #e5e9f0;
-    --app-accent: #2563eb;
-    --app-radius: 16px;
+    --app-border: #e6ebf4;
+    --app-accent: #4f46e5;
+    --app-radius: 18px;
+    --app-elevation-1: 0 1px 2px rgb(15 23 42 / 0.04), 0 12px 28px -22px rgb(15 23 42 / 0.35);
+    --app-elevation-2: 0 1px 2px rgb(15 23 42 / 0.05), 0 22px 44px -24px rgb(15 23 42 / 0.35);
   }
   
   * {
@@ -763,3 +772,219 @@ html.dark body {
     display: none !important;
   }
 }
+
+/* ============================================================
+   WASHFLOW VISUAL SYSTEM 2.0
+   Camada de refinamento global: ambiência, superfícies, chrome
+   ============================================================ */
+
+/* --- Ambiência do app (fundo com profundidade sutil) ------- */
+.app-shell {
+  background-color: var(--app-bg);
+  background-image:
+    radial-gradient(1100px 620px at 100% -12%, rgba(99, 102, 241, 0.11), transparent 62%),
+    radial-gradient(760px 480px at -8% 4%, rgba(14, 165, 233, 0.08), transparent 58%);
+  background-attachment: fixed;
+}
+
+.dark .app-shell {
+  background-color: #080d18;
+  background-image:
+    radial-gradient(1100px 620px at 100% -12%, rgba(124, 58, 237, 0.20), transparent 60%),
+    radial-gradient(760px 480px at -8% 4%, rgba(14, 165, 233, 0.10), transparent 58%);
+}
+
+.app-main {
+  background: transparent !important;
+}
+
+/* --- Header de vidro -------------------------------------- */
+.app-header {
+  background-color: rgba(255, 255, 255, 0.80) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(226, 232, 240, 0.75) !important;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04), 0 10px 30px -26px rgba(15, 23, 42, 0.5);
+}
+
+.dark .app-header {
+  background-color: rgba(9, 15, 28, 0.80) !important;
+  border-color: rgba(38, 51, 76, 0.85) !important;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* --- Sidebar translúcida ---------------------------------- */
+.app-sidebar {
+  background-color: rgba(255, 255, 255, 0.90) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  border-color: var(--app-border) !important;
+}
+
+.dark .app-sidebar {
+  background-color: rgba(12, 19, 34, 0.92) !important;
+  border-color: #1c273d !important;
+}
+
+/* --- Dock inferior flutuante ------------------------------ */
+.app-dock {
+  left: 10px !important;
+  right: 10px !important;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+  border: 1px solid rgba(226, 232, 240, 0.85) !important;
+  border-radius: 22px !important;
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: 0 -2px 8px rgba(15, 23, 42, 0.04), 0 18px 38px -18px rgba(15, 23, 42, 0.35) !important;
+}
+
+.dark .app-dock {
+  background-color: rgba(15, 23, 42, 0.94) !important;
+  border-color: rgba(51, 65, 85, 0.8) !important;
+}
+
+/* --- Ritmo tipográfico dentro dos módulos ------------------ */
+.app-content :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.app-content :where(thead th) {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.dark .app-content :where(thead th) {
+  color: #94a3b8;
+}
+
+.app-content :where(tbody tr) {
+  transition: background-color 160ms ease;
+}
+
+/* --- Formulários com foco suave --------------------------- */
+.app-content :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]), select, textarea) {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(203, 213, 225, 0.8);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.app-content :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]), select, textarea):focus {
+  outline: none;
+  border-color: rgba(129, 140, 248, 0.95) !important;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14), 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.dark .app-content :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]), select, textarea) {
+  background-color: rgba(15, 24, 41, 0.85) !important;
+  border-color: #2a3a58 !important;
+  box-shadow: none;
+}
+
+.dark .app-content :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]), select, textarea):focus {
+  border-color: rgba(129, 140, 248, 0.9) !important;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.22);
+}
+
+/* --- Scrollbars mais discretas ----------------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.55);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.8);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+/* --- Utilitários do sistema visual ------------------------- */
+.wf-surface {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-elevation-1);
+}
+
+.dark .wf-surface {
+  background: #111a2e;
+  border-color: #1e2b45;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.wf-gradient-text {
+  background-image: linear-gradient(120deg, #4f46e5, #7c3aed 55%, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wf-hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.45), transparent);
+}
+
+.wf-lift {
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
+}
+
+.wf-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--app-elevation-2);
+}
+
+.wf-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.wf-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 42%);
+  pointer-events: none;
+}
+
+@keyframes wfGlowPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.wf-glow-pulse {
+  animation: wfGlowPulse 3.2s ease-in-out infinite;
+}
+
+/* Login: fundo com grade e aurora */
+.login-shell {
+  background-color: #070b14;
+  background-image:
+    radial-gradient(880px 520px at 12% 0%, rgba(79, 70, 229, 0.28), transparent 60%),
+    radial-gradient(760px 520px at 92% 100%, rgba(14, 165, 233, 0.22), transparent 62%),
+    radial-gradient(900px 640px at 50% 50%, rgba(168, 85, 247, 0.16), transparent 66%),
+    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: auto, auto, auto, 42px 42px, 42px 42px;
+}
+
+.login-card {
+  background: linear-gradient(180deg, rgba(23, 32, 54, 0.72), rgba(12, 18, 32, 0.82));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 30px 70px -30px rgba(0, 0, 0, 0.9);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+}
+
