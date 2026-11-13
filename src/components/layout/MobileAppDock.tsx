@@ -107,7 +107,7 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
       <nav
         dir="ltr"
         aria-label="Menu Inferior Mobile"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200/90 dark:border-slate-800 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.08)] select-none"
+        className="washflow-mobile-dock lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200/90 dark:border-slate-800 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.08)] select-none"
         style={{
           paddingBottom: 'max(8px, env(safe-area-inset-bottom, 8px))',
           paddingTop: '6px',
@@ -123,6 +123,7 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
                 key={item.id}
                 type="button"
                 onClick={() => handleSelectTab(item.id)}
+                aria-current={isActive ? "page" : undefined}
                 className={`relative min-w-0 w-full flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl transition-all duration-200 active:scale-95 cursor-pointer ${
                   isActive
                     ? 'text-blue-600 dark:text-blue-400 font-black'
@@ -192,7 +193,10 @@ export const MobileAppDock: React.FC<MobileAppDockProps> = ({
           onClick={() => setIsMoreSheetOpen(false)}
         >
           <div
-            className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 rounded-t-[32px] shadow-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mais opções do sistema"
+            className="washflow-more-sheet bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 rounded-t-[32px] shadow-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up"
             style={{
               paddingBottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
             }}

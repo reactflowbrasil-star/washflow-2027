@@ -284,7 +284,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
   return (
     <header
-      className="header-safe-top h-11 sm:h-12 border-b border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 sm:px-4 flex items-center justify-between select-none sticky top-0 z-30 shadow-2xs text-slate-800 dark:text-slate-100 w-full max-w-full overflow-hidden"
+      className="washflow-header header-safe-top h-14 sm:h-16 border-b border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between select-none sticky top-0 z-30 shadow-2xs text-slate-800 dark:text-slate-100 w-full max-w-full overflow-hidden"
     >
       {/* Right side: Mobile Hamburger, Brand Name, Mobile Search Button, Live Desktop Search Bar & Clock */}
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">

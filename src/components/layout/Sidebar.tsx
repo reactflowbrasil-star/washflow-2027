@@ -315,7 +315,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       <aside
-        className={`fixed lg:sticky top-0 left-0 h-screen bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 flex flex-col justify-between shrink-0 select-none z-50 transition-all duration-300 ease-in-out shadow-xl lg:shadow-xs ${
+        aria-label="Navegação principal"
+        className={`washflow-sidebar fixed lg:sticky top-0 left-0 h-screen bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 flex flex-col justify-between shrink-0 select-none z-50 transition-all duration-300 ease-in-out shadow-xl lg:shadow-xs ${
           isMobileOpen
             ? 'translate-x-0 w-72 sm:w-80'
             : isCollapsed
