@@ -17,9 +17,6 @@ const nextConfig = {
     '*.ngrok-free.app',
     '*.trycloudflare.com',
   ],
-  experimental: {
-    useWasmBinary: true,
-  },
 };
 
 export default nextConfig;

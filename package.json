@@ -13,6 +13,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@capacitor/android": "^8.6.2",
     "@next/swc-wasm-nodejs": "^16.4.6",
     "@upstash/redis": "^1.41.0",
     "clsx": "^2.1.1",
@@ -23,6 +24,7 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "1.20.12",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
@@ -31,6 +33,7 @@
     "lightningcss-wasm": "^1.33.0",
     "postcss": "^8.5.31",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "4.148.0"
   }
 }

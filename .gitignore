@@ -36,3 +36,6 @@ next-env.d.ts
 /tools/
 /backups/
 *.tmp.*
+/freebuff-sites-build/
+/.open-next/
+/.wrangler/

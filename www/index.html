@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>WashFlow - Lava-Rápido</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    #iframe { width: 100%; height: 100%; border: none; }
+  </style>
+</head>
+<body>
+  <iframe id="iframe" src="https://site-183152c810994b758820268311a5b359.freebuff.page/" 
+          allow="clipboard-read; clipboard-write; fullscreen; camera; microphone; payment"
+          referrerpolicy="no-referrer-when-downgrade"
+          style="width: 100%; height: 100%; border: none;">
+  </iframe>
+  
+  <script>
+    // Adjust iframe height for mobile address bar
+    function adjustIframe() {
+      const iframe = document.getElementById('iframe');
+      const updateHeight = () => {
+        iframe.style.height = Math.max(document.documentElement.clientHeight, 100) + 'px';
+      };
+      updateHeight();
+      window.addEventListener('resize', updateHeight);
+      // Handle mobile address bar show/hide
+      if ('addEventListener' in window) {
+        window.addEventListener('orientationchange', updateHeight);
+      }
+    }
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.userAgent && navigator.userAgent.indexOf('Mac') > 0 && window.innerWidth > 0)) {
+      // iOS specific handling
+    }
+    adjustIframe();
+  </script>
+</body>
+</html>
